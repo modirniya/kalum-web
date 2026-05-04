@@ -80,7 +80,7 @@ src/pages/index.astro
 src/pages/how-it-works.astro
 src/pages/404.astro
 src/assets/kalum-icon.{svg,jpg}      Brand mark (rotary phone)
-src/assets/screenshots/dialer.png    Hero device screenshot
+src/assets/screenshots/home.jpg      Hero device screenshot
 ```
 
 ## Brand tokens

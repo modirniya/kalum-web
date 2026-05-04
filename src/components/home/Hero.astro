@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import dialer from "../../assets/screenshots/dialer.png";
+import heroScreen from "../../assets/screenshots/home.jpg";
 import GooglePlayBadge from "../GooglePlayBadge.astro";
 ---
 
@@ -48,10 +48,10 @@ import GooglePlayBadge from "../GooglePlayBadge.astro";
         ></div>
         <div class="relative rounded-[2.2rem] border-[10px] border-black/80 bg-black shadow-2xl ring-1 ring-white/10">
           <Image
-            src={dialer}
-            alt="Kalum dialer screen showing $47.50 balance and a 10-digit phone number"
-            width={320}
-            height={693}
+            src={heroScreen}
+            alt="Kalum dialer showing the per-minute rate to Mexico before placing a call"
+            widths={[260, 300, 600]}
+            sizes="(min-width: 640px) 300px, 260px"
             class="h-auto w-[260px] rounded-[1.6rem] sm:w-[300px]"
             loading="eager"
           />
