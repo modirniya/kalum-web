@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Steps from "../components/howitworks/Steps.astro";
+import FAQ from "../components/howitworks/FAQ.astro";
+import WaitlistForm from "../components/WaitlistForm.astro";
+---
+
+<BaseLayout
+  title="How Kalum Works — Cheap Calls With No App for Recipients"
+  description="Sign up with your number, add $2 in credit, dial any phone. The person you call doesn't need an app or internet — they just pick up."
+  canonical="https://www.kalum.app/how-it-works"
+>
+  <Steps />
+  <FAQ />
+
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-20 text-center md:px-8 md:py-24">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        Be first to get Kalum.
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-white/85">
+        We'll email you once when the app launches. Nothing else.
+      </p>
+      <div class="mx-auto mt-8 max-w-lg text-left">
+        <WaitlistForm variant="dark" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

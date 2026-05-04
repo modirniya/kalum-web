@@ -1,0 +1,62 @@
+---
+const steps = [
+  {
+    n: "1",
+    title: "Sign up with your phone number",
+    body: "Open Kalum, type your number, and enter the verification code you receive by SMS. No email, no password to remember. Your account is created in under a minute.",
+    note: "Your phone number is how you log in. We use it for verification only.",
+  },
+  {
+    n: "2",
+    title: "Add $2 in credit",
+    body: "Top up with any debit or credit card. Start with $2 to test the connection to your destination country, then add more whenever you want. Pay-as-you-go, no monthly fees, no contracts.",
+    note: "Your credit never expires. Whatever you add stays on your account.",
+  },
+  {
+    n: "3",
+    title: "Dial like any phone",
+    body: "Pick the country code, type the number, and hit call. The person you're calling answers their regular phone — landline or mobile, smartphone or feature phone, anywhere in the world. They don't need Kalum.",
+    note: "See the per-minute rate before you dial. No surprises.",
+  },
+];
+---
+
+<section class="bg-white py-20 md:py-28">
+  <div class="mx-auto max-w-4xl px-5 md:px-8">
+    <header class="text-center">
+      <h1 class="text-4xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-5xl">
+        How Kalum works
+      </h1>
+      <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
+        Three steps to call anyone, anywhere &mdash; even when they have no
+        internet and no smartphone.
+      </p>
+    </header>
+
+    <ol class="mt-16 space-y-12">
+      {
+        steps.map((step) => (
+          <li class="grid gap-6 md:grid-cols-[auto_1fr] md:gap-10">
+            <div
+              aria-hidden="true"
+              class="text-7xl font-extrabold leading-none text-[var(--color-teal)] md:text-8xl"
+            >
+              {step.n}
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-[var(--color-text)] sm:text-3xl">
+                {step.title}
+              </h2>
+              <p class="mt-3 text-lg leading-relaxed text-[var(--color-text)]/85">
+                {step.body}
+              </p>
+              <p class="mt-4 border-l-4 border-[var(--color-maroon)] pl-4 text-base italic text-[var(--color-muted)]">
+                {step.note}
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

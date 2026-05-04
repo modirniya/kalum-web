@@ -1,0 +1,27 @@
+---
+const items = [
+  "180+ countries",
+  "No subscriptions",
+  "No contracts",
+  "Credit never expires",
+  "HD voice",
+  "See the rate before you dial",
+];
+---
+
+<section class="bg-[var(--color-navy)] text-white">
+  <div class="mx-auto max-w-6xl px-5 py-7 md:px-8">
+    <ul class="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-center text-sm font-medium text-white/85 md:gap-x-3">
+      {
+        items.map((item, i) => (
+          <>
+            <li>{item}</li>
+            {i < items.length - 1 && (
+              <li aria-hidden="true" class="text-white/40">&middot;</li>
+            )}
+          </>
+        ))
+      }
+    </ul>
+  </div>
+</section>
