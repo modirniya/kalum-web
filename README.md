@@ -23,11 +23,10 @@ Out of scope until later phases per the project's phased plan: support form (Pha
 
 ## TODOs before going live
 
-1. **Buttondown handle** — `src/components/WaitlistForm.astro` contains `BUTTONDOWN_HANDLE_TODO` in the form `action` and the `onsubmit` popup URL. Create the Buttondown account, then replace both occurrences with the real handle.
-2. **Wordmark** — Header and Footer currently render "KALUM" as Inter caps. Drop a real logotype into `src/assets/` and swap the `<span>` for an `<Image>` when ready.
-3. **OG image** — `BaseLayout.astro` references `/og-default.png` but the file does not exist yet. Add a 1200×630 image to `public/` before sharing on social.
-4. **Favicons** — `public/favicon.png` and `public/apple-touch-icon.png` are placeholders (the rotary-phone JPG renamed). Generate a proper favicon set when designing assets.
-5. **Privacy / Terms** — Footer renders these as disabled spans. Add `/privacy` and `/terms` pages and convert to links in Phase 4.
+1. **Wordmark** — Header and Footer currently render "KALUM" as Inter caps. Drop a real logotype into `src/assets/` and swap the `<span>` for an `<Image>` when ready.
+2. **OG image** — `BaseLayout.astro` references `/og-default.png` but the file does not exist yet. Add a 1200×630 image to `public/` before sharing on social.
+3. **Favicons** — `public/favicon.png` and `public/apple-touch-icon.png` are placeholders (the rotary-phone JPG renamed). Generate a proper favicon set when designing assets.
+4. **Privacy / Terms** — Footer renders these as disabled spans. Add `/privacy` and `/terms` pages and convert to links in Phase 4.
 
 ## Publishing to GitHub Pages
 

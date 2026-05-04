@@ -1,8 +1,7 @@
 ---
-// Phase 1: Buttondown embed for pre-launch waitlist.
-// TODO: Replace BUTTONDOWN_HANDLE_TODO with the real Buttondown handle once
-// the account is created. Phase 2 will swap action= for the Cloudflare Worker
-// endpoint; the form markup below should remain unchanged.
+// Phase 1: Buttondown embed for pre-launch waitlist (handle: neuera).
+// Phase 2 will swap action= for the Cloudflare Worker endpoint; the form
+// markup below should remain unchanged.
 interface Props {
   variant?: "light" | "dark";
 }
@@ -23,10 +22,10 @@ const microClass = variant === "dark" ? "text-white/70" : "text-[var(--color-mut
 ---
 
 <form
-  action="https://buttondown.com/api/emails/embed-subscribe/BUTTONDOWN_HANDLE_TODO"
+  action="https://buttondown.com/api/emails/embed-subscribe/neuera"
   method="post"
   target="popupwindow"
-  onsubmit="window.open('https://buttondown.com/BUTTONDOWN_HANDLE_TODO', 'popupwindow')"
+  onsubmit="window.open('https://buttondown.com/neuera', 'popupwindow')"
   class="flex flex-col gap-3 sm:flex-row"
 >
   <label for="bd-email" class="sr-only">Email address</label>
