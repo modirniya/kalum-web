@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SupportForm from "../components/SupportForm.astro";
+---
+
+<BaseLayout
+  title="Support — Kalum"
+  description="Need help with Kalum? Send us a message and we'll get back to you. Questions about your account, calls, or billing welcome."
+  canonical="https://www.kalum.app/support"
+>
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-2xl px-5 md:px-8">
+      <header>
+        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-maroon)]">
+          We're here to help
+        </p>
+        <h1 class="mt-4 text-4xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-5xl">
+          Get in touch
+        </h1>
+        <p class="mt-5 text-lg leading-relaxed text-[var(--color-muted)]">
+          Send us a message about your account, a call you made,
+          billing, or anything else. We'll reply by email, usually within a day.
+        </p>
+      </header>
+
+      <div class="mt-10 rounded-2xl border border-black/5 bg-white p-6 shadow-sm sm:p-8">
+        <SupportForm />
+      </div>
+
+      <p class="mt-6 text-sm text-[var(--color-muted)]">
+        Prefer email? Write to
+        <a
+          href="mailto:hello@neuera.app"
+          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)]"
+        >
+          hello@neuera.app
+        </a>
+        directly.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,129 @@
+<form
+  id="support-form"
+  action="https://formspree.io/f/meenayzv"
+  method="POST"
+  class="space-y-5"
+>
+  <input type="hidden" name="_subject" value="Kalum Support — new message" />
+  <input
+    type="text"
+    name="_gotcha"
+    tabindex="-1"
+    autocomplete="off"
+    class="absolute -left-[9999px] h-0 w-0 opacity-0"
+    aria-hidden="true"
+  />
+
+  <div>
+    <label for="name" class="block text-sm font-semibold text-[var(--color-text)]">
+      Your name
+    </label>
+    <input
+      id="name"
+      type="text"
+      name="name"
+      required
+      autocomplete="name"
+      class="mt-2 w-full rounded-md border border-black/10 bg-white px-4 py-3 text-base text-[var(--color-text)] placeholder:text-[var(--color-muted)] outline-none focus:border-[var(--color-maroon)] focus:ring-2 focus:ring-[var(--color-maroon)]/30"
+      placeholder="Your full name"
+    />
+  </div>
+
+  <div>
+    <label for="email" class="block text-sm font-semibold text-[var(--color-text)]">
+      Email address
+    </label>
+    <input
+      id="email"
+      type="email"
+      name="email"
+      required
+      autocomplete="email"
+      class="mt-2 w-full rounded-md border border-black/10 bg-white px-4 py-3 text-base text-[var(--color-text)] placeholder:text-[var(--color-muted)] outline-none focus:border-[var(--color-maroon)] focus:ring-2 focus:ring-[var(--color-maroon)]/30"
+      placeholder="you@example.com"
+    />
+    <p class="mt-2 text-xs text-[var(--color-muted)]">
+      We'll only use this to reply to your message.
+    </p>
+  </div>
+
+  <div>
+    <label for="message" class="block text-sm font-semibold text-[var(--color-text)]">
+      Your message
+    </label>
+    <textarea
+      id="message"
+      name="message"
+      required
+      rows="6"
+      minlength="10"
+      class="mt-2 w-full rounded-md border border-black/10 bg-white px-4 py-3 text-base text-[var(--color-text)] placeholder:text-[var(--color-muted)] outline-none focus:border-[var(--color-maroon)] focus:ring-2 focus:ring-[var(--color-maroon)]/30"
+      placeholder="Tell us what's going on. The phone number you used to sign up helps us find your account."
+    ></textarea>
+  </div>
+
+  <div
+    id="support-form-error"
+    role="alert"
+    class="hidden rounded-md border border-[var(--color-error)]/40 bg-[var(--color-error)]/10 px-4 py-3 text-sm text-[var(--color-error)]"
+  >
+    Something went wrong. Please try again, or email
+    <a href="mailto:hello@neuera.app" class="underline">hello@neuera.app</a> directly.
+  </div>
+
+  <button
+    type="submit"
+    id="support-form-submit"
+    class="w-full rounded-md bg-[var(--color-maroon)] px-5 py-3 text-base font-semibold text-white hover:bg-[var(--color-maroon-light)] disabled:cursor-not-allowed disabled:opacity-60 transition sm:w-auto"
+  >
+    Send message
+  </button>
+</form>
+
+<div
+  id="support-form-success"
+  class="hidden rounded-2xl border border-[var(--color-success)]/30 bg-[var(--color-success)]/10 p-6"
+>
+  <h3 class="text-xl font-bold text-[var(--color-text)]">Message received.</h3>
+  <p class="mt-2 text-base text-[var(--color-text)]/80">
+    We've got your message and will reply to the email you gave us.
+    No need to do anything else &mdash; just keep an eye on your inbox.
+  </p>
+</div>
+
+<script>
+  const form = document.getElementById("support-form") as HTMLFormElement | null;
+  const submitBtn = document.getElementById("support-form-submit") as HTMLButtonElement | null;
+  const errorBox = document.getElementById("support-form-error");
+  const successBox = document.getElementById("support-form-success");
+
+  if (form && submitBtn && errorBox && successBox) {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      errorBox.classList.add("hidden");
+      submitBtn.disabled = true;
+      const originalLabel = submitBtn.textContent;
+      submitBtn.textContent = "Sending…";
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" },
+        });
+
+        if (response.ok) {
+          form.classList.add("hidden");
+          successBox.classList.remove("hidden");
+          successBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        } else {
+          throw new Error(`Formspree responded with ${response.status}`);
+        }
+      } catch (_err) {
+        errorBox.classList.remove("hidden");
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
+    });
+  }
+</script>
