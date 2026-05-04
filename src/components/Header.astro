@@ -2,9 +2,8 @@
 import { Image } from "astro:assets";
 import icon from "../assets/kalum-icon.jpg";
 
-const path = Astro.url.pathname;
-const onHome = path === "/" || path === "";
-const waitlistHref = onHome ? "#waitlist" : "/#waitlist";
+const playStoreHref =
+  "https://play.google.com/store/apps/details?id=app.kalum.mobile&utm_source=kalum-web-header";
 ---
 
 <header class="sticky top-0 z-30 bg-[var(--color-maroon)]/95 backdrop-blur-sm">
@@ -24,10 +23,11 @@ const waitlistHref = onHome ? "#waitlist" : "/#waitlist";
       <a href="/how-it-works" class="hover:text-white transition">How it works</a>
       <a href="/support" class="hover:text-white transition">Support</a>
       <a
-        href={waitlistHref}
+        href={playStoreHref}
+        rel="noopener"
         class="rounded-md bg-white px-4 py-2 font-semibold text-[var(--color-maroon)] hover:bg-[var(--color-cream)] transition"
       >
-        Join waitlist
+        Get on Android
       </a>
     </nav>
 
@@ -43,10 +43,11 @@ const waitlistHref = onHome ? "#waitlist" : "/#waitlist";
         <a href="/how-it-works" class="block py-2 text-white/90 hover:text-white">How it works</a>
         <a href="/support" class="block py-2 text-white/90 hover:text-white">Support</a>
         <a
-          href={waitlistHref}
+          href={playStoreHref}
+          rel="noopener"
           class="mt-2 block rounded-md bg-white px-4 py-2 text-center font-semibold text-[var(--color-maroon)]"
         >
-          Join waitlist
+          Get on Android
         </a>
       </div>
     </details>

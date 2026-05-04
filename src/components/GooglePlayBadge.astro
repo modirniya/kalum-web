@@ -1,0 +1,30 @@
+---
+interface Props {
+  size?: "lg" | "md" | "sm";
+  utm?: string;
+}
+
+const { size = "lg", utm = "kalum-web" } = Astro.props;
+
+const widthClass =
+  size === "lg" ? "w-56" : size === "md" ? "w-48" : "w-40";
+
+const href = `https://play.google.com/store/apps/details?id=app.kalum.mobile&utm_source=${utm}`;
+---
+
+<a
+  href={href}
+  rel="noopener"
+  aria-label="Download Kalum on Google Play"
+  class="inline-block transition hover:scale-[1.02]"
+>
+  <img
+    src="/badges/google-play.png"
+    alt="Get it on Google Play"
+    width="646"
+    height="250"
+    class={`h-auto ${widthClass}`}
+    loading="eager"
+    decoding="async"
+  />
+</a>

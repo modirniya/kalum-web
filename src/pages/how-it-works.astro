@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Steps from "../components/howitworks/Steps.astro";
 import FAQ from "../components/howitworks/FAQ.astro";
+import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import WaitlistForm from "../components/WaitlistForm.astro";
 ---
 
@@ -16,13 +17,24 @@ import WaitlistForm from "../components/WaitlistForm.astro";
   <section class="brand-gradient text-white">
     <div class="mx-auto max-w-3xl px-5 py-20 text-center md:px-8 md:py-24">
       <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
-        Be first to get Kalum.
+        Ready to make your first call?
       </h2>
       <p class="mx-auto mt-4 max-w-xl text-lg text-white/85">
-        We'll email you once when the app launches. Nothing else.
+        Available now on Android. iPhone coming soon.
       </p>
-      <div class="mx-auto mt-8 max-w-lg text-left">
-        <WaitlistForm variant="dark" />
+
+      <div class="mt-8 flex justify-center">
+        <GooglePlayBadge size="lg" utm="kalum-web-howitworks" />
+      </div>
+
+      <div class="mx-auto mt-12 max-w-lg rounded-2xl border border-white/10 bg-white/5 p-6 text-left backdrop-blur-sm">
+        <h3 class="text-lg font-bold">On iPhone?</h3>
+        <p class="mt-1 text-sm text-white/80">
+          Drop your email and we'll send one message when Kalum is on the App Store.
+        </p>
+        <div class="mt-4">
+          <WaitlistForm variant="dark" />
+        </div>
       </div>
     </div>
   </section>

@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import icon from "../assets/kalum-icon.jpg";
+import GooglePlayBadge from "./GooglePlayBadge.astro";
 
 const year = new Date().getFullYear();
 ---
@@ -48,15 +49,18 @@ const year = new Date().getFullYear();
 
     <div>
       <h4 class="text-xs font-semibold uppercase tracking-widest text-white">Get the app</h4>
+      <div class="mt-4">
+        <GooglePlayBadge size="md" utm="kalum-web-footer" />
+      </div>
       <p class="mt-4 text-sm leading-relaxed">
-        Coming soon to iPhone and Android.
+        Coming soon to iPhone.
+        <a
+          href="/#ios-waitlist"
+          class="font-semibold text-[var(--color-teal-light)] hover:text-white"
+        >
+          Get notified
+        </a>
       </p>
-      <a
-        href="/#waitlist"
-        class="mt-3 inline-block rounded-md bg-[var(--color-teal)] px-4 py-2 text-sm font-semibold text-[var(--color-navy)] hover:bg-[var(--color-teal-light)] transition"
-      >
-        Join the waitlist
-      </a>
     </div>
   </div>
 
