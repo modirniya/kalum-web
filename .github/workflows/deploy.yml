@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # Monday 03:00 UTC — keeps /privacy and /terms within ~7 days of the
+    # legal.neuera.app source (build-time fetch).
+    - cron: '0 3 * * 1'
 
 permissions:
   contents: read
