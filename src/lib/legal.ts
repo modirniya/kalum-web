@@ -47,5 +47,13 @@ export async function fetchLegal(url: string): Promise<FetchedLegal> {
     .replace(/href="\/kalum\/privacy\/?"/gi, 'href="/privacy"')
     .replace(/href="\/kalum\/terms\/?"/gi, 'href="/terms"');
 
+  // Send "version history" links back to the canonical archive on
+  // legal.neuera.app — the relative ./archive.html href would otherwise
+  // resolve to a 404 under kalum.app/privacy or kalum.app/terms. Done
+  // after the kalum.app rewrites so the inserted absolute URL isn't
+  // caught by the /kalum/privacy/ → /privacy rule above.
+  const archiveUrl = url.replace(/\/$/, "") + "/archive.html";
+  body = body.replace(/href="\.\/archive\.html"/gi, `href="${archiveUrl}"`);
+
   return { body, fetchedAt: new Date().toISOString() };
 }
