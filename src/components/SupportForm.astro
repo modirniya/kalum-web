@@ -1,13 +1,7 @@
-<form
-  id="support-form"
-  action="https://formspree.io/f/meenayzv"
-  method="POST"
-  class="space-y-5"
->
-  <input type="hidden" name="_subject" value="Kalum Support — new message" />
+<form id="support-form" class="space-y-5" novalidate>
   <input
     type="text"
-    name="_gotcha"
+    name="company"
     tabindex="-1"
     autocomplete="off"
     class="absolute -left-[9999px] h-0 w-0 opacity-0"
@@ -23,6 +17,7 @@
       type="text"
       name="name"
       required
+      maxlength="80"
       autocomplete="name"
       class="mt-2 w-full rounded-md border border-black/10 bg-white px-4 py-3 text-base text-[var(--color-text)] placeholder:text-[var(--color-muted)] outline-none focus:border-[var(--color-maroon)] focus:ring-2 focus:ring-[var(--color-maroon)]/30"
       placeholder="Your full name"
@@ -38,6 +33,7 @@
       type="email"
       name="email"
       required
+      maxlength="200"
       autocomplete="email"
       class="mt-2 w-full rounded-md border border-black/10 bg-white px-4 py-3 text-base text-[var(--color-text)] placeholder:text-[var(--color-muted)] outline-none focus:border-[var(--color-maroon)] focus:ring-2 focus:ring-[var(--color-maroon)]/30"
       placeholder="you@example.com"
@@ -57,6 +53,7 @@
       required
       rows="6"
       minlength="10"
+      maxlength="5000"
       class="mt-2 w-full rounded-md border border-black/10 bg-white px-4 py-3 text-base text-[var(--color-text)] placeholder:text-[var(--color-muted)] outline-none focus:border-[var(--color-maroon)] focus:ring-2 focus:ring-[var(--color-maroon)]/30"
       placeholder="Tell us what's going on. The phone number you used to sign up helps us find your account."
     ></textarea>
@@ -92,24 +89,55 @@
 </div>
 
 <script>
+  // Shared NeuEra support endpoint — multi-app, identified by the `app` field.
+  const WEBHOOK_URL = "https://n8n.neuera.app/webhook/support-playlounge";
+
   const form = document.getElementById("support-form") as HTMLFormElement | null;
   const submitBtn = document.getElementById("support-form-submit") as HTMLButtonElement | null;
   const errorBox = document.getElementById("support-form-error");
   const successBox = document.getElementById("support-form-success");
 
+  function validEmail(s: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+  }
+
   if (form && submitBtn && errorBox && successBox) {
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       errorBox.classList.add("hidden");
+
+      const data = new FormData(form);
+      const payload = {
+        app: "kalum",
+        category: "general",
+        name: (data.get("name") || "").toString().trim(),
+        email: (data.get("email") || "").toString().trim(),
+        message: (data.get("message") || "").toString().trim(),
+        honeypot: (data.get("company") || "").toString(),
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString(),
+      };
+
+      if (!payload.name || !payload.email || !payload.message) {
+        errorBox.textContent = "Please fill in every field.";
+        errorBox.classList.remove("hidden");
+        return;
+      }
+      if (!validEmail(payload.email)) {
+        errorBox.textContent = "That email address doesn't look right.";
+        errorBox.classList.remove("hidden");
+        return;
+      }
+
       submitBtn.disabled = true;
       const originalLabel = submitBtn.textContent;
       submitBtn.textContent = "Sending…";
 
       try {
-        const response = await fetch(form.action, {
+        const response = await fetch(WEBHOOK_URL, {
           method: "POST",
-          body: new FormData(form),
-          headers: { Accept: "application/json" },
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         });
 
         if (response.ok) {
@@ -117,7 +145,7 @@
           successBox.classList.remove("hidden");
           successBox.scrollIntoView({ behavior: "smooth", block: "center" });
         } else {
-          throw new Error(`Formspree responded with ${response.status}`);
+          throw new Error(`Webhook responded with ${response.status}`);
         }
       } catch (_err) {
         errorBox.classList.remove("hidden");
