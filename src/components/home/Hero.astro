@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import heroScreen from "../../assets/screenshots/home.png";
 import GooglePlayBadge from "../GooglePlayBadge.astro";
+import AppStoreBadge from "../AppStoreBadge.astro";
 ---
 
 <section class="brand-gradient relative overflow-hidden text-white">
@@ -25,14 +26,9 @@ import GooglePlayBadge from "../GooglePlayBadge.astro";
         Just a regular phone call.
       </p>
 
-      <div class="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-hero" />
         <GooglePlayBadge size="lg" utm="kalum-web-hero" />
-        <a
-          href="#ios-waitlist"
-          class="text-sm font-medium text-white/85 underline-offset-4 hover:text-white hover:underline"
-        >
-          iPhone? Get notified when iOS launches &rarr;
-        </a>
       </div>
 
       <p class="mt-5 text-sm text-white/70">

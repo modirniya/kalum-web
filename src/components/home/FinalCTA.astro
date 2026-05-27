@@ -1,9 +1,9 @@
 ---
 import GooglePlayBadge from "../GooglePlayBadge.astro";
-import WaitlistForm from "../WaitlistForm.astro";
+import AppStoreBadge from "../AppStoreBadge.astro";
 ---
 
-<section class="brand-gradient relative overflow-hidden text-white">
+<section id="download" class="brand-gradient relative overflow-hidden text-white">
   <div class="absolute inset-0 opacity-[0.06]" aria-hidden="true">
     <div class="absolute top-0 right-0 h-96 w-96 rounded-full bg-white blur-3xl"></div>
     <div class="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
@@ -15,24 +15,12 @@ import WaitlistForm from "../WaitlistForm.astro";
     </h2>
     <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
       No commitment. Add more anytime. Cheap calls to Lebanon, Iraq,
-      Jordan, Kuwait and 180+ countries &mdash; available now on Android.
+      Jordan, Kuwait and 180+ countries &mdash; on iPhone and Android.
     </p>
 
-    <div class="mt-10 flex justify-center">
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+      <AppStoreBadge size="lg" utm="kalum-web-final" />
       <GooglePlayBadge size="lg" utm="kalum-web-final" />
-    </div>
-
-    <div
-      id="ios-waitlist"
-      class="mx-auto mt-16 max-w-lg rounded-2xl border border-white/10 bg-white/5 p-6 text-left backdrop-blur-sm"
-    >
-      <h3 class="text-xl font-bold">Launching soon on iPhone.</h3>
-      <p class="mt-2 text-sm text-white/80">
-        Drop your email and we'll send one message when Kalum is live on the App Store.
-      </p>
-      <div class="mt-5">
-        <WaitlistForm variant="dark" />
-      </div>
     </div>
   </div>
 </section>

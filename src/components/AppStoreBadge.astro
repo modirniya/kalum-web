@@ -1,0 +1,33 @@
+---
+interface Props {
+  size?: "lg" | "md" | "sm";
+  utm?: string;
+}
+
+const { size = "lg", utm = "kalum-web" } = Astro.props;
+
+// Sized to match GooglePlayBadge's apparent height at each size.
+// Apple badge aspect ratio ≈ 2.99:1, Google Play ≈ 2.58:1.
+// lg widths chosen so heights line up with GooglePlayBadge w-56/w-48/w-40.
+const widthClass =
+  size === "lg" ? "w-[260px]" : size === "md" ? "w-[222px]" : "w-[185px]";
+
+const href = `https://apps.apple.com/us/app/kalum-middle-east-calling/id6763210844?utm_source=${utm}`;
+---
+
+<a
+  href={href}
+  rel="noopener"
+  aria-label="Download Kalum on the App Store"
+  class="inline-block transition hover:scale-[1.02]"
+>
+  <img
+    src="/badges/app-store.svg"
+    alt="Download on the App Store"
+    width="119.66"
+    height="40"
+    class={`h-auto ${widthClass}`}
+    loading="eager"
+    decoding="async"
+  />
+</a>

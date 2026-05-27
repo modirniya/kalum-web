@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Steps from "../components/howitworks/Steps.astro";
 import FAQ from "../components/howitworks/FAQ.astro";
 import GooglePlayBadge from "../components/GooglePlayBadge.astro";
-import WaitlistForm from "../components/WaitlistForm.astro";
+import AppStoreBadge from "../components/AppStoreBadge.astro";
 ---
 
 <BaseLayout
@@ -20,21 +20,12 @@ import WaitlistForm from "../components/WaitlistForm.astro";
         Ready to make your first call?
       </h2>
       <p class="mx-auto mt-4 max-w-xl text-lg text-white/85">
-        Available now on Android. Launching soon on iPhone.
+        Available on iPhone and Android.
       </p>
 
-      <div class="mt-8 flex justify-center">
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-howitworks" />
         <GooglePlayBadge size="lg" utm="kalum-web-howitworks" />
-      </div>
-
-      <div class="mx-auto mt-12 max-w-lg rounded-2xl border border-white/10 bg-white/5 p-6 text-left backdrop-blur-sm">
-        <h3 class="text-lg font-bold">On iPhone?</h3>
-        <p class="mt-1 text-sm text-white/80">
-          Drop your email and we'll send one message when Kalum is on the App Store.
-        </p>
-        <div class="mt-4">
-          <WaitlistForm variant="dark" />
-        </div>
       </div>
     </div>
   </section>
