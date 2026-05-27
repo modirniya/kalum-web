@@ -6,8 +6,13 @@ interface Props {
 
 const { size = "lg", utm = "kalum-web" } = Astro.props;
 
+// Sized to match AppStoreBadge heights. Google Play asset is the trimmed
+// 564x168 PNG (aspect 3.357) with the official 41px transparent padding
+// removed — paired with Apple's edge-to-edge SVG at the same heights this
+// keeps the two badges visually balanced. Widths chosen so the rendered
+// height matches AppStoreBadge at each size: lg 87px, md 74px, sm 62px.
 const widthClass =
-  size === "lg" ? "w-56" : size === "md" ? "w-48" : "w-40";
+  size === "lg" ? "w-[292px]" : size === "md" ? "w-[248px]" : "w-[208px]";
 
 const href = `https://play.google.com/store/apps/details?id=app.kalum.mobile&utm_source=${utm}`;
 ---
@@ -21,8 +26,8 @@ const href = `https://play.google.com/store/apps/details?id=app.kalum.mobile&utm
   <img
     src="/badges/google-play.png"
     alt="Get it on Google Play"
-    width="646"
-    height="250"
+    width="564"
+    height="168"
     class={`h-auto ${widthClass}`}
     loading="eager"
     decoding="async"
