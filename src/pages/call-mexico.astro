@@ -2,15 +2,16 @@
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import AppStoreBadge from "../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import brandIcon from "../assets/kalum-icon.jpg";
 import heroScreen from "../assets/screenshots/home.png";
 
 // ────────────────────────────────────────────────────────────────────────────
 // Standalone paid-traffic landing page for the "Call Mexico" Google Ads test.
 //  - noindex: paid-only, must not compete with the MENA-oriented organic site.
-//  - bare:    no site-wide Header/Footer (those carry MENA copy + a Google Play
-//             badge that would send clicks to a not-yet-live Android listing).
-//  - iOS only: render the App Store CTA exclusively until Android is confirmed.
+//  - bare:    no site-wide Header/Footer (those carry MENA-oriented copy that
+//             would dilute the Mexico message).
+//  - Both stores live: App Store + Google Play CTAs, identical for all visitors.
 //  - No client-side device routing / content swapping (keeps us cloaking-safe
 //    on static GitHub Pages — Googlebot and users get identical HTML).
 //
@@ -90,6 +91,7 @@ const finePrint = "Calls billed by the minute, 60-second minimum.";
 
         <div class="mt-9 flex flex-wrap items-center gap-4">
           <AppStoreBadge size="lg" utm={utm} cta={true} />
+          <GooglePlayBadge size="lg" utm={utm} cta={true} />
         </div>
 
         <p class="mt-5 text-sm text-white/70">
@@ -173,8 +175,9 @@ const finePrint = "Calls billed by the minute, 60-second minimum.";
       <p class="mt-4 text-white/85">
         Download Kalum, add credit, and dial. Pay only for the minutes you use.
       </p>
-      <div class="mt-8 flex justify-center">
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
         <AppStoreBadge size="lg" utm={utm} cta={true} />
+        <GooglePlayBadge size="lg" utm={utm} cta={true} />
       </div>
       <p class="mt-5 text-sm text-white/70">
         No contract, no subscription, no hidden fees. {finePrint}
