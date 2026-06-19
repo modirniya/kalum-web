@@ -1,0 +1,210 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AppStoreBadge from "../components/AppStoreBadge.astro";
+import brandIcon from "../assets/kalum-icon.jpg";
+import heroScreen from "../assets/screenshots/home.png";
+
+// ────────────────────────────────────────────────────────────────────────────
+// Standalone paid-traffic landing page for the "Call Mexico" Google Ads test.
+//  - noindex: paid-only, must not compete with the MENA-oriented organic site.
+//  - bare:    no site-wide Header/Footer (those carry MENA copy + a Google Play
+//             badge that would send clicks to a not-yet-live Android listing).
+//  - iOS only: render the App Store CTA exclusively until Android is confirmed.
+//  - No client-side device routing / content swapping (keeps us cloaking-safe
+//    on static GitHub Pages — Googlebot and users get identical HTML).
+//
+// CONVERSION TRACKING — fill these two placeholders once the Google Ads
+// conversion action is created, then redeploy:
+//   AW_CONVERSION_ID    e.g. "AW-1234567890"
+//   AW_CONVERSION_LABEL e.g. "AbC-D_efGh1234567890"
+// The CTA fires gtag('event','conversion') on every App Store click below.
+const AW_CONVERSION_ID = "AW-CONVERSION_ID";
+const AW_CONVERSION_LABEL = "CONVERSION_LABEL";
+
+const utm = "us-call-mexico";
+
+const finePrint = "Calls billed by the minute, 60-second minimum.";
+---
+
+<BaseLayout
+  title="Call Mexico from the US — 6¢/min to Any Phone | Kalum"
+  description="Call any phone in Mexico — landlines and cell phones — for 6¢ a minute. No app, smartphone, or internet needed on their end. No contract, no subscription, no hidden fees."
+  canonical="https://www.kalum.app/call-mexico"
+  ogImage="/og-default.png"
+  noindex={true}
+  bare={true}
+>
+  <!-- Google Ads conversion scaffold (gtag). Loads only on this LP. -->
+  <Fragment slot="head">
+    <script
+      is:inline
+      async
+      src={`https://www.googletagmanager.com/gtag/js?id=${AW_CONVERSION_ID}`}
+    ></script>
+    <script is:inline define:vars={{ AW_CONVERSION_ID }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", AW_CONVERSION_ID);
+    </script>
+  </Fragment>
+
+  <!-- Minimal brand bar — no nav, keeps the visitor on-message. -->
+  <header class="bg-[var(--color-maroon)]">
+    <div class="mx-auto flex max-w-6xl items-center gap-3 px-5 py-4 md:px-8">
+      <Image
+        src={brandIcon}
+        alt=""
+        width={36}
+        height={36}
+        densities={[1, 2, 3]}
+        class="h-9 w-9 rounded-md bg-white p-0.5"
+      />
+      <span class="text-lg font-extrabold tracking-[0.18em] text-white">KALUM</span>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-[1.15fr_1fr] md:gap-10 md:px-8 md:py-28 lg:py-32">
+      <div class="flex flex-col justify-center">
+        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
+          Calling Mexico from the United States
+        </p>
+        <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+          Call Mexico for 6¢ a minute.
+          <span class="block text-white/85">Landlines and cell phones.</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/85 sm:text-xl">
+          Reach any phone in Mexico at one flat rate. They don't need an app,
+          a smartphone, or internet — they just answer their phone.
+        </p>
+
+        <div class="mt-9 flex flex-wrap items-center gap-4">
+          <AppStoreBadge size="lg" utm={utm} cta={true} />
+        </div>
+
+        <p class="mt-5 text-sm text-white/70">
+          No contract, no subscription, no hidden fees. {finePrint}
+        </p>
+      </div>
+
+      <div class="relative flex items-center justify-center md:justify-end">
+        <div class="relative">
+          <div
+            class="absolute -inset-4 rounded-[2.5rem] bg-black/30 blur-2xl"
+            aria-hidden="true"
+          ></div>
+          <div class="relative rounded-[2.2rem] border-[10px] border-black/80 bg-black shadow-2xl ring-1 ring-white/10">
+            <Image
+              src={heroScreen}
+              alt="Kalum dialer showing the per-minute rate to Mexico before placing a call"
+              widths={[260, 300, 600]}
+              sizes="(min-width: 640px) 300px, 260px"
+              class="h-auto w-[260px] rounded-[1.6rem] sm:w-[300px]"
+              loading="eager"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value props -->
+  <section class="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-20">
+    <div class="grid gap-8 md:grid-cols-3">
+      <div class="rounded-2xl bg-white p-7 shadow-sm ring-1 ring-black/5">
+        <p class="text-3xl font-extrabold text-[var(--color-maroon)]">6¢/min</p>
+        <h2 class="mt-3 text-lg font-bold">One flat rate</h2>
+        <p class="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+          Every call to Mexico is six cents per minute — a landline in
+          Guadalajara or a cell phone in Mexico City, same price. No tiers,
+          no surprises.
+        </p>
+      </div>
+
+      <div class="rounded-2xl bg-white p-7 shadow-sm ring-1 ring-black/5">
+        <p class="text-3xl font-extrabold text-[var(--color-maroon)]">No app</p>
+        <h2 class="mt-3 text-lg font-bold">They just pick up</h2>
+        <p class="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+          Your family in Mexico needs nothing on their end — no app, no
+          smartphone, no internet. Their phone simply rings like any other call.
+        </p>
+      </div>
+
+      <div class="rounded-2xl bg-white p-7 shadow-sm ring-1 ring-black/5">
+        <p class="text-3xl font-extrabold text-[var(--color-maroon)]">Prepaid</p>
+        <h2 class="mt-3 text-lg font-bold">Pay as you go</h2>
+        <p class="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+          Add credit and pay only for the minutes you use. No monthly bill,
+          no commitment — your credit is there when you need to call.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing band -->
+  <section class="bg-[var(--color-cream)]">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <p class="text-5xl font-extrabold tracking-tight text-[var(--color-maroon)] sm:text-6xl">
+        6¢/min
+      </p>
+      <p class="mt-3 text-lg font-semibold">
+        To any phone in Mexico — landlines &amp; cell phones, one rate.
+      </p>
+      <p class="mt-2 text-sm text-[var(--color-muted)]">{finePrint}</p>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        Ready to call Mexico?
+      </h2>
+      <p class="mt-4 text-white/85">
+        Download Kalum, add credit, and dial. Pay only for the minutes you use.
+      </p>
+      <div class="mt-8 flex justify-center">
+        <AppStoreBadge size="lg" utm={utm} cta={true} />
+      </div>
+      <p class="mt-5 text-sm text-white/70">
+        No contract, no subscription, no hidden fees. {finePrint}
+      </p>
+    </div>
+  </section>
+
+  <!-- Minimal footer — legal links for ad-quality compliance, no MENA copy. -->
+  <footer class="bg-[var(--color-navy)] text-white/70">
+    <div class="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-8 text-xs md:flex-row md:items-center md:justify-between md:px-8">
+      <p>&copy; {new Date().getFullYear()} Neuera &middot; Kalum is a product of Neuera</p>
+      <nav class="flex flex-wrap gap-x-5 gap-y-2">
+        <a href="/privacy" class="hover:text-white">Privacy policy</a>
+        <a href="/terms" class="hover:text-white">Terms of service</a>
+        <a href="/support" class="hover:text-white">Support</a>
+        <a href="mailto:hello@neuera.app" class="hover:text-white">hello@neuera.app</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Fire the Google Ads conversion on every App Store CTA click. -->
+  <script is:inline define:vars={{ AW_CONVERSION_ID, AW_CONVERSION_LABEL }}>
+    document.querySelectorAll("a[data-aw-cta]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        if (typeof gtag === "function") {
+          gtag("event", "conversion", {
+            send_to: AW_CONVERSION_ID + "/" + AW_CONVERSION_LABEL,
+          });
+        }
+      });
+    });
+  </script>
+</BaseLayout>
