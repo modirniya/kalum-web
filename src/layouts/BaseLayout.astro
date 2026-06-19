@@ -14,6 +14,10 @@ interface Props {
   description: string;
   canonical: string;
   ogImage?: string;
+  /** Add <meta name="robots" content="noindex"> — for paid-traffic-only pages. */
+  noindex?: boolean;
+  /** Omit the site-wide Header and Footer (focused landing pages). */
+  bare?: boolean;
 }
 
 const {
@@ -21,6 +25,8 @@ const {
   description,
   canonical,
   ogImage = "/og-default.png",
+  noindex = false,
+  bare = false,
 } = Astro.props;
 
 const siteUrl = "https://www.kalum.app";
@@ -38,6 +44,7 @@ const absoluteOg = ogImage.startsWith("http") ? ogImage : `${siteUrl}${ogImage}`
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
 
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -55,12 +62,14 @@ const absoluteOg = ogImage.startsWith("http") ? ogImage : `${siteUrl}${ogImage}`
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={absoluteOg} />
+
+    <slot name="head" />
   </head>
   <body class="min-h-screen flex flex-col bg-[var(--color-cream)] text-[var(--color-text)]">
-    <Header />
+    {!bare && <Header />}
     <main class="flex-1">
       <slot />
     </main>
-    <Footer />
+    {!bare && <Footer />}
   </body>
 </html>

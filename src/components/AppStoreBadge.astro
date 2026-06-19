@@ -2,9 +2,11 @@
 interface Props {
   size?: "lg" | "md" | "sm";
   utm?: string;
+  /** Tag this link as a conversion CTA (adds data-aw-cta for gtag tracking). */
+  cta?: boolean;
 }
 
-const { size = "lg", utm = "kalum-web" } = Astro.props;
+const { size = "lg", utm = "kalum-web", cta = false } = Astro.props;
 
 // Sized to match GooglePlayBadge's apparent height at each size.
 // Apple badge aspect ratio ≈ 2.99:1, Google Play ≈ 2.58:1.
@@ -20,6 +22,7 @@ const href = `https://apps.apple.com/us/app/kalum-middle-east-calling/id67632108
   rel="noopener"
   aria-label="Download Kalum on the App Store"
   class="inline-block transition hover:scale-[1.02]"
+  data-aw-cta={cta ? "" : undefined}
 >
   <img
     src="/badges/app-store.svg"
