@@ -31,6 +31,43 @@ const {
 
 const siteUrl = "https://www.kalum.app";
 const absoluteOg = ogImage.startsWith("http") ? ogImage : `${siteUrl}${ogImage}`;
+
+// Site-wide structured data. Claims kept to verified facts only — no ratings
+// or invented figures.
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: "Kalum",
+      url: siteUrl,
+      logo: `${siteUrl}/apple-touch-icon.png`,
+      parentOrganization: { "@type": "Organization", name: "Neuera" },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: "Kalum",
+      publisher: { "@id": `${siteUrl}/#organization` },
+      inLanguage: "en",
+    },
+    {
+      "@type": "MobileApplication",
+      name: "Kalum: International Calling",
+      operatingSystem: "iOS, Android",
+      applicationCategory: "CommunicationApplication",
+      url: siteUrl,
+      publisher: { "@id": `${siteUrl}/#organization` },
+      offers: {
+        "@type": "Offer",
+        price: "2.99",
+        priceCurrency: "USD",
+      },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -62,6 +99,8 @@ const absoluteOg = ogImage.startsWith("http") ? ogImage : `${siteUrl}${ogImage}`
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={absoluteOg} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
     <slot name="head" />
   </head>

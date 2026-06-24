@@ -1,0 +1,73 @@
+---
+// Homepage FAQ. Kept distinct from the longer /how-it-works FAQ to avoid
+// duplicate content. Doubles as keyword-rich body copy and emits FAQPage
+// structured data for rich results. Copy must stay within verified claims.
+const faqs = [
+  {
+    q: "What is Kalum?",
+    a: "Kalum is an app for cheap international calls to any phone abroad. You call landlines and mobiles in 180+ countries straight from your iPhone or Android, and the person on the other end answers on whatever phone they already have.",
+  },
+  {
+    q: "Does the person I call need the app or internet?",
+    a: "No. They need no app, no smartphone, and no internet. Kalum routes through real phone networks, so their phone simply rings like any normal call — even an old landline or feature phone works.",
+  },
+  {
+    q: "How cheap are international calls with Kalum?",
+    a: "You can start from $2.99 in credit, and you see the exact per-minute rate for each country before you dial. Rates vary by destination, so you always know the price up front.",
+  },
+  {
+    q: "Is there a subscription or contract?",
+    a: "No subscriptions and no contracts. You add credit when you want it, top up anytime, and your credit never expires.",
+  },
+  {
+    q: "Which countries can I call?",
+    a: "Over 180 destinations worldwide — landlines and mobiles across Africa, the Americas, Asia, Europe, and the Middle East.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+---
+
+<section class="bg-[var(--color-cream)] py-20 md:py-28">
+  <div class="mx-auto max-w-3xl px-5 md:px-8">
+    <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+      Cheap international calls, answered.
+    </h2>
+    <p class="mt-4 text-lg leading-relaxed text-[var(--color-muted)]">
+      The questions people ask before they call abroad with Kalum.
+    </p>
+
+    <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
+      {
+        faqs.map((faq) => (
+          <li>
+            <details class="group py-5">
+              <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
+                <span>{faq.q}</span>
+                <span
+                  aria-hidden="true"
+                  class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
+                >
+                  +
+                </span>
+              </summary>
+              <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
+                {faq.a}
+              </p>
+            </details>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
