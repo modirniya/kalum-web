@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.kalum.app/sitemap.xml
+Sitemap: https://kalum.app/sitemap.xml

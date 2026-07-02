@@ -1,28 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Canonical, indexable URLs only:
+   - /call-mexico/ is noindex (paid-traffic LP) — deliberately excluded.
+   - /privacy/ and /terms/ canonicalize to legal.neuera.app — excluded so the
+     sitemap never lists a URL whose canonical points elsewhere.
+  Keep <lastmod> honest: update it when a page's content meaningfully changes.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.kalum.app/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <loc>https://kalum.app/</loc>
+    <lastmod>2026-07-02</lastmod>
   </url>
   <url>
-    <loc>https://www.kalum.app/how-it-works</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://kalum.app/how-it-works/</loc>
+    <lastmod>2026-07-02</lastmod>
   </url>
   <url>
-    <loc>https://www.kalum.app/support</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.kalum.app/privacy</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://www.kalum.app/terms</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
+    <loc>https://kalum.app/support/</loc>
+    <lastmod>2026-07-02</lastmod>
   </url>
 </urlset>

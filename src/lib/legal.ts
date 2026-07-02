@@ -42,10 +42,10 @@ export async function fetchLegal(url: string): Promise<FetchedLegal> {
 
   // Rewrite legal.neuera.app cross-references onto kalum.app paths.
   body = body
-    .replace(/https:\/\/legal\.neuera\.app\/kalum\/privacy\/?/gi, "/privacy")
-    .replace(/https:\/\/legal\.neuera\.app\/kalum\/terms\/?/gi, "/terms")
-    .replace(/href="\/kalum\/privacy\/?"/gi, 'href="/privacy"')
-    .replace(/href="\/kalum\/terms\/?"/gi, 'href="/terms"');
+    .replace(/https:\/\/legal\.neuera\.app\/kalum\/privacy\/?/gi, "/privacy/")
+    .replace(/https:\/\/legal\.neuera\.app\/kalum\/terms\/?/gi, "/terms/")
+    .replace(/href="\/kalum\/privacy\/?"/gi, 'href="/privacy/"')
+    .replace(/href="\/kalum\/terms\/?"/gi, 'href="/terms/"');
 
   // Send "version history" links back to the canonical archive on
   // legal.neuera.app — the relative ./archive.html href would otherwise
