@@ -32,6 +32,12 @@ const {
 const siteUrl = "https://kalum.app";
 const absoluteOg = ogImage.startsWith("http") ? ogImage : `${siteUrl}${ogImage}`;
 
+// Official store listings — connect the web entity to the app entities.
+const storeUrls = [
+  "https://apps.apple.com/us/app/kalum-middle-east-calling/id6763210844",
+  "https://play.google.com/store/apps/details?id=app.kalum.mobile",
+];
+
 // Site-wide structured data. Claims kept to verified facts only — no ratings
 // or invented figures.
 const structuredData = {
@@ -43,6 +49,7 @@ const structuredData = {
       name: "Kalum",
       url: siteUrl,
       logo: `${siteUrl}/apple-touch-icon.png`,
+      sameAs: storeUrls,
       parentOrganization: { "@type": "Organization", name: "Neuera" },
     },
     {
@@ -59,6 +66,8 @@ const structuredData = {
       operatingSystem: "iOS, Android",
       applicationCategory: "CommunicationApplication",
       url: siteUrl,
+      sameAs: storeUrls,
+      installUrl: storeUrls,
       publisher: { "@id": `${siteUrl}/#organization` },
       offers: {
         "@type": "Offer",
