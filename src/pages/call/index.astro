@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AppStoreBadge from "../../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
+import { destinations, rateLabel, RATES_AS_OF } from "../../lib/destinations";
+---
+
+<BaseLayout
+  title="International Calling Rates by Country | Kalum"
+  description="Per-minute rates for cheap international calls with Kalum — Mexico, Egypt, Lebanon, Jordan, and more. Landlines and mobiles, no app needed on their end."
+  canonical="https://kalum.app/call/"
+>
+  <section class="bg-[var(--color-cream)] py-16 md:py-24">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-maroon)]">
+        Destinations
+      </p>
+      <h1 class="mt-4 text-4xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-5xl">
+        Cheap international calls, by destination.
+      </h1>
+      <p class="mt-5 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
+        One per-minute rate per country, landlines and mobiles alike — and the
+        person you call never needs an app or internet. These are some of our
+        most-called destinations; the app shows live rates for 180+ countries
+        before you dial.
+      </p>
+
+      <ul class="mt-12 grid gap-4 sm:grid-cols-2">
+        {
+          destinations.map((d) => (
+            <li>
+              <a
+                href={`/call/${d.slug}/`}
+                class="flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white p-6 shadow-sm transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
+              >
+                <span>
+                  <span class="block text-lg font-bold text-[var(--color-text)]">
+                    Call {d.name}
+                  </span>
+                  <span class="mt-1 block text-sm text-[var(--color-muted)]">
+                    +{d.dialCode} &middot; landlines &amp; mobiles
+                  </span>
+                </span>
+                <span class="shrink-0 text-2xl font-extrabold text-[var(--color-maroon)]">
+                  {rateLabel(d)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="mt-8 text-sm text-[var(--color-muted)]">
+        Rates as of {RATES_AS_OF}. Calls billed by the minute, 60-second
+        minimum. The app always shows the current rate before you dial.
+      </p>
+    </div>
+  </section>
+
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        Don't see your country?
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-white/85">
+        Kalum reaches landlines and mobiles in 180+ countries. Download the
+        app and check the live rate for any destination — free to look, no
+        subscription.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-destinations" />
+        <GooglePlayBadge size="lg" utm="kalum-web-destinations" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
