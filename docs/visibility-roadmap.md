@@ -41,9 +41,10 @@ Repo-only, no external inputs. Shipped in one commit.
       to the BreadcrumbList JSON-LD.
 - [x] **Smart App Banner:** `apple-itunes-app` now includes
       `app-argument=${canonical}` (per-page).
-- [x] **"From the US" phrasing:** destination H2 → "How to call {name} from
-      the US"; added FAQ "Can I call {name} from my cell phone?" (now 6
-      FAQs/page, in body + FAQPage schema). No worked numbers added.
+- [x] **"From the US" phrasing:** added FAQ "Can I call {name} from my cell
+      phone?" (now 6 FAQs/page, in body + FAQPage schema). No worked numbers
+      added. H2 kept geo-neutral ("How to call {name}") by owner decision —
+      the site serves diaspora globally, not US-only.
 
 **Done:** build passes (20 pages); icons validate as PNG; all JSON-LD
 parses; breadcrumb visible text/URLs identical to JSON-LD.
