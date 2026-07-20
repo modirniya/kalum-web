@@ -52,6 +52,10 @@ const faqs = [
     a: `Download Kalum on iPhone or Android, sign up with your phone number, and add credit starting from $2.99. Pick ${d.name} (+${d.dialCode}) in the dialer, type the local number, and hit call.`,
   },
   {
+    q: `Can I call ${d.name} from my cell phone?`,
+    a: `Yes. Kalum runs on your own iPhone or Android, so you call ${d.name} straight from your cell phone over Wi-Fi or mobile data. The person you reach picks up on whatever phone they already have — no app or internet needed on their end.`,
+  },
+  {
     q: `What is the number format for calling ${d.name}?`,
     a: `${d.dialingNote} In the Kalum dialer you just pick ${d.name} (+${d.dialCode}) and type the local number — the country code is set for you.`,
   },
@@ -89,6 +93,15 @@ const structuredData = {
     </div>
 
     <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <nav aria-label="Breadcrumb" class="mb-6 text-sm text-white/70">
+        <ol class="flex flex-wrap items-center gap-x-2">
+          <li><a href="/" class="hover:text-white transition">Home</a></li>
+          <li aria-hidden="true" class="text-white/40">/</li>
+          <li><a href="/call/" class="hover:text-white transition">Destinations</a></li>
+          <li aria-hidden="true" class="text-white/40">/</li>
+          <li aria-current="page" class="text-white/90">Call {d.name}</li>
+        </ol>
+      </nav>
       <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
         Calling {d.name} &middot; +{d.dialCode}
       </p>
@@ -113,7 +126,7 @@ const structuredData = {
   <section class="bg-white py-20 md:py-28">
     <div class="mx-auto max-w-4xl px-5 md:px-8">
       <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
-        How to call {d.name}
+        How to call {d.name} from the US
       </h2>
 
       <ol class="mt-12 grid gap-6 md:grid-cols-3">

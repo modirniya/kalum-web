@@ -3,10 +3,14 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import AppStoreBadge from "../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
 import { destinations, rateLabel, RATES_AS_OF } from "../../lib/destinations";
+
+// Lead the title with the cheapest listed rate so the hook self-updates
+// when destinations.ts changes — no hardcoded figure to drift.
+const minRate = Math.min(...destinations.map((d) => d.rateCents));
 ---
 
 <BaseLayout
-  title="International Calling Rates by Country | Kalum"
+  title={`International Calling Rates by Country — from ${minRate}¢/min | Kalum`}
   description="Per-minute rates for cheap international calls with Kalum — Mexico, Egypt, Lebanon, Jordan, and more. Landlines and mobiles, no app needed on their end."
   canonical="https://kalum.app/call/"
 >

@@ -33,8 +33,9 @@ const siteUrl = "https://kalum.app";
 const absoluteOg = ogImage.startsWith("http") ? ogImage : `${siteUrl}${ogImage}`;
 
 // Official store listings — connect the web entity to the app entities.
+// Apple slug verified against the App Store lookup API (id6763210844).
 const storeUrls = [
-  "https://apps.apple.com/us/app/kalum-middle-east-calling/id6763210844",
+  "https://apps.apple.com/us/app/kalum-call-abroad-over-wifi/id6763210844",
   "https://play.google.com/store/apps/details?id=app.kalum.mobile",
 ];
 
@@ -62,16 +63,17 @@ const structuredData = {
     },
     {
       "@type": "MobileApplication",
-      name: "Kalum: International Calling",
+      name: "Kalum: Call Abroad over WiFi",
       operatingSystem: "iOS, Android",
       applicationCategory: "CommunicationApplication",
       url: siteUrl,
       sameAs: storeUrls,
       installUrl: storeUrls,
       publisher: { "@id": `${siteUrl}/#organization` },
+      // The app is free; $2.99 is the minimum credit top-up, not a price.
       offers: {
         "@type": "Offer",
-        price: "2.99",
+        price: "0",
         priceCurrency: "USD",
       },
     },
@@ -95,7 +97,7 @@ const structuredData = {
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <meta name="apple-itunes-app" content="app-id=6763210844" />
+    <meta name="apple-itunes-app" content={`app-id=6763210844, app-argument=${canonical}`} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Kalum" />

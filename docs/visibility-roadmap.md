@@ -19,39 +19,37 @@ before the repo work can finish.
 
 ---
 
-## Phase 1 — Hygiene & metadata correctness
+## Phase 1 — Hygiene & metadata correctness ✅ DONE (2026-07-20)
 
-Repo-only, no external inputs. One batch commit.
+Repo-only, no external inputs. Shipped in one commit.
 
-- [ ] **Favicon/touch icon are mislabeled JPEGs.** Re-export
-      `public/favicon.png` (96×96 or 192×192) and
-      `public/apple-touch-icon.png` (180×180) as genuine PNGs from
-      `src/assets/kalum-icon.svg`. Confirm the Organization `logo` URL in
-      `BaseLayout.astro` points at a real PNG.
-- [ ] **Schema price is wrong.** In `BaseLayout.astro` MobileApplication
-      offer: price `"0"` (app is free; $2.99 is the minimum credit
-      purchase). Do NOT add aggregateRating.
-- [ ] **Store listing renamed.** Update MobileApplication `name` to the
-      current store name ("Kalum: Call Abroad over WiFi") and the Apple
-      store URL in `storeUrls` to the current slug
-      (`kalum-call-abroad-over-wifi`). Verify both live listings first.
-- [ ] **404 page:** pass `noindex={true}` in `src/pages/404.astro`; fix its
-      canonical to trailing-slash form.
-- [ ] **`/call/` title hook:** compute min rate from `destinations.ts` at
-      build time → "International Calling Rates by Country — from 6¢/min |
-      Kalum" (self-updates when rates change).
-- [ ] **Visible breadcrumb on destination pages:** add Home › Destinations ›
-      Call {Country} nav to `src/pages/call/[slug].astro` matching the
-      existing BreadcrumbList JSON-LD exactly (markup and visible content
-      must agree — cloaking-adjacent concern).
-- [ ] **Smart App Banner:** append `app-argument=${canonical}` to the
-      `apple-itunes-app` meta in `BaseLayout.astro`.
-- [ ] **"From the US" phrasing:** destination-page H2 → "How to call {name}
-      from the US"; add FAQ "Can I call {name} from my cell phone?". Any
-      worked dialing example must use clearly fictitious numbers.
+- [x] **Favicon/touch icon are mislabeled JPEGs.** Re-exported
+      `public/favicon.png` (192×192) and `public/apple-touch-icon.png`
+      (180×180) as genuine PNGs from the SVG's embedded master (lossless).
+      Organization `logo` → `apple-touch-icon.png` (real PNG, >112px min).
+- [x] **Schema price is wrong.** MobileApplication offer price → `"0"`
+      (confirmed "Free" via Apple lookup API). No aggregateRating.
+- [x] **Store listing renamed.** Verified via Apple lookup API + Play title:
+      both stores now "Kalum: Call Abroad over WiFi". Updated
+      MobileApplication `name` and Apple `storeUrls` slug to
+      `kalum-call-abroad-over-wifi`.
+- [x] **404 page:** `noindex={true}`; canonical → `https://kalum.app/404/`.
+- [x] **`/call/` title hook:** min rate computed from `destinations.ts` →
+      "International Calling Rates by Country — from 6¢/min | Kalum".
+- [x] **Visible breadcrumb on destination pages:** Home / Destinations /
+      Call {Country} nav in `[slug].astro`; text + URLs verified identical
+      to the BreadcrumbList JSON-LD.
+- [x] **Smart App Banner:** `apple-itunes-app` now includes
+      `app-argument=${canonical}` (per-page).
+- [x] **"From the US" phrasing:** destination H2 → "How to call {name} from
+      the US"; added FAQ "Can I call {name} from my cell phone?" (now 6
+      FAQs/page, in body + FAQPage schema). No worked numbers added.
 
-**Done when:** build passes; icons validate as PNG; schema validates in
-Rich Results test; breadcrumb visible and identical to JSON-LD.
+**Done:** build passes (20 pages); icons validate as PNG; all JSON-LD
+parses; breadcrumb visible text/URLs identical to JSON-LD.
+
+**Deferred to owner (surfaced during Phase 1, belongs to Phase 2):** Apple
+`sellerUrl` is null — set the App Store Marketing/Support URLs.
 
 ---
 
