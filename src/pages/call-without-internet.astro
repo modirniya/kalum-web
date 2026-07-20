@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import AppStoreBadge from "../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import { destinations, rateLabel } from "../lib/destinations";
+import { alternatesFor } from "../lib/i18n";
 
 // Evergreen page for the core differentiator: the person you call needs no
 // internet, app, or smartphone. Copy stays within verified claims.
@@ -56,6 +57,7 @@ const reasons = [
   title="Call Someone Without Internet — Their Phone Just Rings | Kalum"
   description="Call people who have no internet, no smartphone, and no apps. Kalum routes your call through real phone networks, so any landline or feature phone in 180+ countries just rings."
   canonical="https://kalum.app/call-without-internet/"
+  alternates={alternatesFor("/call-without-internet/")}
 >
   <!-- Hero -->
   <section class="brand-gradient relative overflow-hidden text-white">

@@ -7,6 +7,47 @@ import { featuredDestinations } from "../lib/destinations";
 
 const year = new Date().getFullYear();
 const popular = featuredDestinations();
+
+const path = Astro.url.pathname;
+const isES = path === "/es/" || path.startsWith("/es/");
+
+const t = isES
+  ? {
+      blurb:
+        "Llamadas económicas a teléfonos fijos y celulares en más de 180 países. Solo contestan su teléfono.",
+      product: "Producto",
+      legal: "Legal",
+      getApp: "Descargar la app",
+      productLinks: [
+        { href: "/es/call/mexico/", label: "Llamar a México" },
+        { href: "/es/call-without-internet/", label: "Llamar sin internet" },
+      ],
+      legalLinks: [
+        { href: "/privacy/", label: "Privacidad" },
+        { href: "/terms/", label: "Términos" },
+      ],
+      madeBy: "Kalum es un producto de Neuera",
+    }
+  : {
+      blurb:
+        "Cheap calls to landlines and mobiles in 180+ countries. They just pick up the phone.",
+      product: "Product",
+      legal: "Legal",
+      getApp: "Get the app",
+      productLinks: [
+        { href: "/how-it-works/", label: "How it works" },
+        { href: "/call/", label: "Destinations" },
+        { href: "/call-without-internet/", label: "Call without internet" },
+        { href: "/calling-app-vs-internet-calling/", label: "App vs internet calling" },
+        { href: "/whatsapp-calls-blocked/", label: "WhatsApp calls blocked?" },
+        { href: "/support/", label: "Support" },
+      ],
+      legalLinks: [
+        { href: "/privacy/", label: "Privacy policy" },
+        { href: "/terms/", label: "Terms of service" },
+      ],
+      madeBy: "Kalum is a product of Neuera",
+    };
 ---
 
 <footer class="bg-[var(--color-navy)] text-white/80">
@@ -23,34 +64,29 @@ const popular = featuredDestinations();
         />
         <span class="text-lg font-extrabold tracking-[0.18em] text-white">KALUM</span>
       </div>
-      <p class="mt-4 max-w-xs text-sm leading-relaxed">
-        Cheap calls to landlines and mobiles in 180+ countries.
-        They just pick up the phone.
-      </p>
+      <p class="mt-4 max-w-xs text-sm leading-relaxed">{t.blurb}</p>
     </div>
 
     <div>
-      <h4 class="text-xs font-semibold uppercase tracking-widest text-white">Product</h4>
+      <h4 class="text-xs font-semibold uppercase tracking-widest text-white">{t.product}</h4>
       <ul class="mt-4 space-y-2 text-sm">
-        <li><a href="/how-it-works/" class="hover:text-white">How it works</a></li>
-        <li><a href="/call/" class="hover:text-white">Destinations</a></li>
-        <li><a href="/call-without-internet/" class="hover:text-white">Call without internet</a></li>
-        <li><a href="/calling-app-vs-internet-calling/" class="hover:text-white">App vs internet calling</a></li>
-        <li><a href="/whatsapp-calls-blocked/" class="hover:text-white">WhatsApp calls blocked?</a></li>
-        <li><a href="/support/" class="hover:text-white">Support</a></li>
+        {t.productLinks.map((l) => (
+          <li><a href={l.href} class="hover:text-white">{l.label}</a></li>
+        ))}
       </ul>
     </div>
 
     <div>
-      <h4 class="text-xs font-semibold uppercase tracking-widest text-white">Legal</h4>
+      <h4 class="text-xs font-semibold uppercase tracking-widest text-white">{t.legal}</h4>
       <ul class="mt-4 space-y-2 text-sm">
-        <li><a href="/privacy/" class="hover:text-white">Privacy policy</a></li>
-        <li><a href="/terms/" class="hover:text-white">Terms of service</a></li>
+        {t.legalLinks.map((l) => (
+          <li><a href={l.href} class="hover:text-white">{l.label}</a></li>
+        ))}
       </ul>
     </div>
 
     <div>
-      <h4 class="text-xs font-semibold uppercase tracking-widest text-white">Get the app</h4>
+      <h4 class="text-xs font-semibold uppercase tracking-widest text-white">{t.getApp}</h4>
       <div class="mt-4 flex flex-col gap-3">
         <AppStoreBadge size="md" utm="kalum-web-footer" />
         <GooglePlayBadge size="md" utm="kalum-web-footer" />
@@ -58,35 +94,35 @@ const popular = featuredDestinations();
     </div>
   </div>
 
-  <div class="border-t border-white/10">
-    <div class="mx-auto max-w-6xl px-5 py-6 md:px-8">
-      <h4 class="text-xs font-semibold uppercase tracking-widest text-white">
-        Popular destinations
-      </h4>
-      <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-        {
-          popular.map((d) => (
+  {
+    !isES && (
+      <div class="border-t border-white/10">
+        <div class="mx-auto max-w-6xl px-5 py-6 md:px-8">
+          <h4 class="text-xs font-semibold uppercase tracking-widest text-white">
+            Popular destinations
+          </h4>
+          <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            {popular.map((d) => (
+              <li>
+                <a href={`/call/${d.slug}/`} class="hover:text-white">
+                  Call {d.name}
+                </a>
+              </li>
+            ))}
             <li>
-              <a href={`/call/${d.slug}/`} class="hover:text-white">
-                Call {d.name}
+              <a href="/call/" class="font-semibold text-white/90 hover:text-white">
+                All destinations &rarr;
               </a>
             </li>
-          ))
-        }
-        <li>
-          <a href="/call/" class="font-semibold text-white/90 hover:text-white">
-            All destinations &rarr;
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
+          </ul>
+        </div>
+      </div>
+    )
+  }
 
   <div class="border-t border-white/10">
     <div class="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-6 text-xs text-white/60 md:flex-row md:items-center md:justify-between md:px-8">
-      <p>
-        &copy; {year} Neuera &middot; Kalum is a product of Neuera
-      </p>
+      <p>&copy; {year} Neuera &middot; {t.madeBy}</p>
       <p>
         <a href="mailto:hello@neuera.app" class="hover:text-white">hello@neuera.app</a>
         &middot; kalum.app

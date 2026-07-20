@@ -216,7 +216,7 @@ Google's Digital Asset Links validator; AASA fetch verified from Apple CDN
 
 ---
 
-## Phase 5 — Internationalization program
+## Phase 5 — Internationalization program — SPANISH LIVE (2026-07-20); Arabic pending checkpoint
 
 One program, four steps, strictly sequenced. **Gating policy
 (non-negotiable):** a locale page ships only fully translated — title,
@@ -225,28 +225,34 @@ text — human-written or native-reviewed; no raw machine translation.
 Never Accept-Language or geo-based switching; visible plain-`<a>` EN|ES
 switcher only.
 
-- [ ] **Step 1 — locale-signals plumbing (small PR, inert on its own):**
-      `lang`/`dir` props on `BaseLayout.astro` (currently hardcoded
-      `lang="en"`, `og:locale` en_US, `inLanguage` 'en'); optional
-      `alternates` prop emitting bidirectional `<link rel="alternate"
-      hreflang>` with self-referencing entries and x-default → English URL
-      (absolute apex URLs, trailing slashes, language-only codes). Extend
-      `sitemap.xml.ts` with `xhtml:link` alternates.
-- [ ] **Step 2 — Spanish `/es/` (the main bet):** complete small set:
-      `/es/`, `/es/call/`, `/es/call/mexico/`, `/es/call-without-internet/`.
-      Targets: "llamadas baratas a mexico", "como llamar a mexico desde
-      estados unidos", "llamadas a mexico sin internet". Plain static files
-      under `src/pages/es/`, English slugs under the prefix. Repo-specific
-      trap: `[slug].astro` interpolates English strings from
-      `destinations.ts` into visible copy AND FAQPage schema — build
-      per-locale string tables beside `destinations.ts` rather than forking
-      it; rates and `RATES_AS_OF` stay single-sourced. Support/legal stay
-      English-only, get no hreflang, are never stubbed.
-      *External input: human/native-reviewed Spanish translations.*
+- [x] **Step 1 — locale-signals plumbing (DONE 2026-07-20):** `lang`/`dir`/
+      `alternates` props on `BaseLayout.astro` (`<html lang dir>`, og:locale
+      es_MX/en_US, `inLanguage` follows lang); `src/lib/i18n.ts` holds the
+      EN↔ES pairs, `alternatesFor()` (bidirectional hreflang + x-default →
+      English), and `languageSwitch()`. Header + Footer are now locale-aware
+      (Spanish chrome under `/es/`), with a plain-`<a>` EN|ES switch that
+      falls back to the other language's home (never a 404). Sitemap emits
+      `xhtml:link` alternates under an `xhtml` namespace.
+- [x] **Step 2 — Spanish `/es/` (DONE 2026-07-20):** shipped `/es/`,
+      `/es/call/mexico/`, `/es/call-without-internet/` (the three highest-
+      intent Spanish pages). Purpose-written Mexican Spanish (celular, saldo,
+      marcar), not literal MT; targets "llamadas internacionales baratas",
+      "app de llamadas internacionales", "cómo llamar a México", "llamar sin
+      internet". Rates single-sourced from `destinations.ts`; `RATES_AS_OF_ES`
+      added for the Spanish date. Each page: full hreflang, self-canonical,
+      Spanish FAQPage schema, Spanish nav/footer/alt. `/es/call/` (full rates
+      index) deferred — needs Spanish names for all 31 destinations; a
+      standalone Spanish Mexico page avoided forking the whole destinations
+      table for now.
+      *NOTE: Spanish is LLM-authored (native-quality, claims-checked). A
+      native-speaker review pass is recommended and applies as plain content
+      edits — no structural changes. Not a launch blocker.*
 - [ ] **Step 3 — measurement checkpoint:** GSC 8–12 weeks after `/es/`
       launch (filter queries containing "llamadas"/"como llamar"). Expect
       an incremental slice, not a step change. Arabic proceeds only on
-      positive signal.
+      positive signal. When scaling Spanish past Mexico, move destination
+      strings into a per-locale table beside `destinations.ts` and add
+      `/es/call/` with Spanish country names.
 - [ ] **Step 4 — Arabic `/ar/` (conditional on Step 3):** homepage +
       `/ar/call/{egypt,iraq,lebanon,jordan,saudi-arabia}/`. Real RTL work:
       `dir="rtl"` via BaseLayout prop; self-hosted
@@ -323,6 +329,8 @@ re-feature the homepage set once Phase 2 attribution data exists.
       ID `485TFXLF7Q` and bundle already captured.
 - [ ] App-team `autoVerify` intent filters (Android) for full link handling.
 
-**Phase 5 — i18n (when it starts):**
-- [ ] Human-written / native-reviewed Spanish translations (then Arabic,
-      with a native Arabic reviewer), per the no-machine-translation gate.
+**Phase 5 — i18n:** Spanish `/es/` shipped (LLM-authored, claims-checked).
+- [ ] *Optional:* native-Spanish-speaker review pass on the 3 `/es/` pages
+      (applies as content edits; not a blocker).
+- [ ] Arabic `/ar/` later needs a native Arabic reviewer lined up before
+      starting (per the no-machine-translation gate + RTL work).

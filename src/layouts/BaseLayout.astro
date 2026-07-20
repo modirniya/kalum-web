@@ -9,6 +9,7 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { storeUrls } from "../lib/stores";
+import type { Alternate } from "../lib/i18n";
 
 interface Props {
   title: string;
@@ -19,6 +20,12 @@ interface Props {
   noindex?: boolean;
   /** Omit the site-wide Header and Footer (focused landing pages). */
   bare?: boolean;
+  /** Page language (BCP-47). Drives <html lang>, og:locale, inLanguage. */
+  lang?: string;
+  /** Text direction — "rtl" for Arabic, when it lands. */
+  dir?: "ltr" | "rtl";
+  /** hreflang alternates from alternatesFor(); omit for single-locale pages. */
+  alternates?: Alternate[];
 }
 
 const {
@@ -28,10 +35,14 @@ const {
   ogImage = "/og-default.png",
   noindex = false,
   bare = false,
+  lang = "en",
+  dir = "ltr",
+  alternates,
 } = Astro.props;
 
 const siteUrl = "https://kalum.app";
 const absoluteOg = ogImage.startsWith("http") ? ogImage : `${siteUrl}${ogImage}`;
+const ogLocale = lang === "es" ? "es_MX" : "en_US";
 
 // storeUrls (clean canonical listing URLs) come from src/lib/stores.ts —
 // the same source the download badges use, so the two never drift apart.
@@ -56,7 +67,7 @@ const structuredData = {
       url: siteUrl,
       name: "Kalum",
       publisher: { "@id": `${siteUrl}/#organization` },
-      inLanguage: "en",
+      inLanguage: lang,
     },
     {
       "@type": "MobileApplication",
@@ -79,7 +90,7 @@ const structuredData = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang} dir={dir}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -91,6 +102,12 @@ const structuredData = {
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, follow" />}
 
+    {
+      alternates?.map((alt) => (
+        <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+      ))
+    }
+
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
@@ -98,7 +115,7 @@ const structuredData = {
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Kalum" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={ogLocale} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

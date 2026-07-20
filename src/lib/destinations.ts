@@ -33,6 +33,8 @@ export interface Destination {
  * destination page prints it next to the rate.
  */
 export const RATES_AS_OF = "March 23, 2026";
+/** Spanish rendering of RATES_AS_OF — keep both in sync when rates change. */
+export const RATES_AS_OF_ES = "23 de marzo de 2026";
 
 export const destinations: Destination[] = [
   {

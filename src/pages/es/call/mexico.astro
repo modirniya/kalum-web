@@ -1,0 +1,210 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import AppStoreBadge from "../../../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../../../components/GooglePlayBadge.astro";
+import { destinations, rateLabel, RATES_AS_OF_ES } from "../../../lib/destinations";
+import { alternatesFor } from "../../../lib/i18n";
+
+// Spanish Mexico destination page — the primary Spanish corridor. The rate is
+// single-sourced from destinations.ts so it never drifts from the English
+// page; the prose is purpose-written Mexican Spanish. Scaling Spanish to more
+// countries later should move these strings into a per-locale table rather
+// than copy this file.
+const d = destinations.find((x) => x.slug === "mexico")!;
+const rate = rateLabel(d);
+const canonical = "https://kalum.app/es/call/mexico/";
+
+const rateNote = `Tarifa vigente al ${RATES_AS_OF_ES}. Las llamadas se cobran por minuto, con un mínimo de 60 segundos. La app siempre muestra la tarifa actual antes de marcar.`;
+
+const faqs = [
+  {
+    q: "¿Cuánto cuesta llamar a México con Kalum?",
+    a: `${rate} por minuto a cualquier número mexicano — fijos y celulares, una sola tarifa (vigente al ${RATES_AS_OF_ES}). Las llamadas se cobran por minuto con un mínimo de 60 segundos, y siempre ves la tarifa actual en la app antes de marcar.`,
+  },
+  {
+    q: "¿La persona en México necesita la app o internet?",
+    a: "No. Kalum pasa por las redes telefónicas reales, así que su teléfono suena como cualquier llamada normal. No necesita app, ni smartphone, ni internet — funciona hasta con un fijo o un teléfono básico.",
+  },
+  {
+    q: "¿Puedo llamar a teléfonos fijos en México?",
+    a: `Sí. Los fijos y los celulares en México cuestan lo mismo, ${rate} por minuto. A quien llames contesta en el teléfono que ya tiene.`,
+  },
+  {
+    q: "¿Cómo llamo a México desde Estados Unidos?",
+    a: "Descarga Kalum en iPhone o Android, regístrate con tu número de teléfono y agrega saldo desde $2.99. Elige México (+52) en el marcador, escribe el número local y llama.",
+  },
+  {
+    q: "¿Puedo llamar a México desde mi celular?",
+    a: "Sí. Kalum funciona en tu propio iPhone o Android, así que llamas a México directo desde tu celular por Wi-Fi o datos móviles. La persona contesta en el teléfono que ya tiene — sin app ni internet de su lado.",
+  },
+  {
+    q: "¿Cuál es el formato de los números en México?",
+    a: "Los números de México son de 10 dígitos, tanto fijos como celulares. En el marcador de Kalum solo eliges México (+52) y escribes los 10 dígitos — el código de país ya está puesto.",
+  },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Inicio", item: "https://kalum.app/es/" },
+        { "@type": "ListItem", position: 2, name: "Llamar a México", item: canonical },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title={`Llamar a México — ${rate}/min a Cualquier Teléfono | Kalum`}
+  description={`Llama a México desde ${rate} por minuto con Kalum — fijos y celulares, una sola tarifa. Sin app ni internet del lado de quien recibe. Saldo de prepago que nunca vence.`}
+  canonical={canonical}
+  lang="es"
+  alternates={alternatesFor("/es/call/mexico/")}
+>
+  <!-- Hero -->
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <nav aria-label="Ruta de navegación" class="mb-6 text-sm text-white/70">
+        <ol class="flex flex-wrap items-center gap-x-2">
+          <li><a href="/es/" class="hover:text-white transition">Inicio</a></li>
+          <li aria-hidden="true" class="text-white/40">/</li>
+          <li aria-current="page" class="text-white/90">Llamar a México</li>
+        </ol>
+      </nav>
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
+        Llamando a México &middot; +{d.dialCode}
+      </p>
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        Llama a México por {rate} el minuto.
+        <span class="block text-white/85">Fijos y celulares. Solo contestan.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        Una sola tarifa para cualquier número mexicano — un fijo en Guadalajara
+        o un celular en la Ciudad de México, los mismos seis centavos por
+        minuto.
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-es-call-mexico" />
+        <GooglePlayBadge size="lg" utm="kalum-web-es-call-mexico" />
+      </div>
+
+      <p class="mt-5 max-w-2xl text-sm text-white/70">{rateNote}</p>
+    </div>
+  </section>
+
+  <!-- How to call -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Cómo llamar a México
+      </h2>
+
+      <ol class="mt-12 grid gap-6 md:grid-cols-3">
+        <li class="rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
+          <span aria-hidden="true" class="text-6xl font-extrabold leading-none text-[var(--color-teal)]">1</span>
+          <h3 class="mt-4 text-xl font-bold text-[var(--color-text)]">Descarga Kalum</h3>
+          <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+            Descarga la app en iPhone o Android y regístrate con tu número. Un
+            código de verificación — sin correo ni contraseña.
+          </p>
+        </li>
+        <li class="rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
+          <span aria-hidden="true" class="text-6xl font-extrabold leading-none text-[var(--color-teal)]">2</span>
+          <h3 class="mt-4 text-xl font-bold text-[var(--color-text)]">Agrega saldo</h3>
+          <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+            Empieza con $2.99 y recarga cuando quieras. Sin suscripción ni
+            contrato — tu saldo nunca vence.
+          </p>
+        </li>
+        <li class="rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
+          <span aria-hidden="true" class="text-6xl font-extrabold leading-none text-[var(--color-teal)]">3</span>
+          <h3 class="mt-4 text-xl font-bold text-[var(--color-text)]">Marca +{d.dialCode}</h3>
+          <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+            Elige México (+{d.dialCode}) en el marcador, escribe el número local
+            y llama. Su teléfono suena como cualquier llamada.
+          </p>
+        </li>
+      </ol>
+
+      <div class="mt-8 rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
+        <h3 class="text-xl font-bold text-[var(--color-text)]">
+          El formato de los números mexicanos
+        </h3>
+        <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+          Los números de México son de 10 dígitos, tanto fijos como celulares.
+          En el marcador de Kalum solo eliges México (+{d.dialCode}) y escribes
+          los 10 dígitos — el código de país ya está puesto.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Llamar a México, sin dudas.
+      </h2>
+
+      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
+        {
+          faqs.map((faq) => (
+            <li>
+              <details class="group py-5">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
+                  <span>{faq.q}</span>
+                  <span
+                    aria-hidden="true"
+                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
+                  {faq.a}
+                </p>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        ¿Listo para llamar a México?
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-white/85">
+        Descarga Kalum, agrega $2.99 de saldo y marca. Pagas solo los minutos
+        que usas.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-es-call-mexico" />
+        <GooglePlayBadge size="lg" utm="kalum-web-es-call-mexico" />
+      </div>
+      <p class="mt-5 text-sm text-white/70">{rateNote}</p>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</BaseLayout>

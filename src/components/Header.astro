@@ -1,13 +1,35 @@
 ---
 import { Image } from "astro:assets";
 import icon from "../assets/kalum-icon.jpg";
+import { languageSwitch } from "../lib/i18n";
 
-const downloadHref = "/#download";
+const path = Astro.url.pathname;
+const isES = path === "/es/" || path.startsWith("/es/");
+const sw = languageSwitch(path);
+
+const home = isES ? "/es/" : "/";
+const homeLabel = isES ? "Inicio de Kalum" : "Kalum home";
+const downloadHref = isES ? "/es/" : "/#download";
+const downloadLabel = isES ? "Descargar" : "Get the app";
+const menuLabel = isES ? "Abrir menú" : "Open menu";
+const switchLabel = sw.label === "ES" ? "Cambiar a español" : "Switch to English";
+const switchHreflang = sw.label === "ES" ? "es" : "en";
+
+const nav = isES
+  ? [
+      { label: "Llamar a México", href: "/es/call/mexico/" },
+      { label: "Llamar sin internet", href: "/es/call-without-internet/" },
+    ]
+  : [
+      { label: "How it works", href: "/how-it-works/" },
+      { label: "Destinations", href: "/call/" },
+      { label: "Support", href: "/support/" },
+    ];
 ---
 
 <header class="sticky top-0 z-30 bg-[var(--color-maroon)]/95 backdrop-blur-sm">
   <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 md:px-8">
-    <a href="/" class="flex items-center gap-3 text-white" aria-label="Kalum home">
+    <a href={home} class="flex items-center gap-3 text-white" aria-label={homeLabel}>
       <Image
         src={icon}
         alt="Kalum"
@@ -20,20 +42,28 @@ const downloadHref = "/#download";
     </a>
 
     <nav class="hidden items-center gap-7 text-sm font-medium text-white/90 md:flex">
-      <a href="/how-it-works/" class="hover:text-white transition">How it works</a>
-      <a href="/call/" class="hover:text-white transition">Destinations</a>
-      <a href="/support/" class="hover:text-white transition">Support</a>
+      {nav.map((item) => (
+        <a href={item.href} class="hover:text-white transition">{item.label}</a>
+      ))}
+      <a
+        href={sw.href}
+        hreflang={switchHreflang}
+        aria-label={switchLabel}
+        class="font-semibold text-white/70 hover:text-white transition"
+      >
+        {sw.label}
+      </a>
       <a
         href={downloadHref}
         rel="noopener"
         class="rounded-md bg-white px-4 py-2 font-semibold text-[var(--color-maroon)] hover:bg-[var(--color-cream)] transition"
       >
-        Get the app
+        {downloadLabel}
       </a>
     </nav>
 
     <details class="md:hidden text-white">
-      <summary class="cursor-pointer list-none p-2 -mr-2" aria-label="Open menu">
+      <summary class="cursor-pointer list-none p-2 -mr-2" aria-label={menuLabel}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -41,15 +71,23 @@ const downloadHref = "/#download";
         </svg>
       </summary>
       <div class="absolute right-5 top-full mt-2 w-56 rounded-lg bg-[var(--color-navy)] p-4 shadow-xl">
-        <a href="/how-it-works/" class="block py-2 text-white/90 hover:text-white">How it works</a>
-        <a href="/call/" class="block py-2 text-white/90 hover:text-white">Destinations</a>
-        <a href="/support/" class="block py-2 text-white/90 hover:text-white">Support</a>
+        {nav.map((item) => (
+          <a href={item.href} class="block py-2 text-white/90 hover:text-white">{item.label}</a>
+        ))}
+        <a
+          href={sw.href}
+          hreflang={switchHreflang}
+          aria-label={switchLabel}
+          class="block py-2 font-semibold text-white/70 hover:text-white"
+        >
+          {sw.label}
+        </a>
         <a
           href={downloadHref}
           rel="noopener"
           class="mt-2 block rounded-md bg-white px-4 py-2 text-center font-semibold text-[var(--color-maroon)]"
         >
-          Get the app
+          {downloadLabel}
         </a>
       </div>
     </details>

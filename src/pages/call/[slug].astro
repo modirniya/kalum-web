@@ -8,6 +8,7 @@ import {
   RATES_AS_OF,
   type Destination,
 } from "../../lib/destinations";
+import { alternatesFor } from "../../lib/i18n";
 
 // Organic destination pages — indexable, unlike the /call-mexico paid LP.
 // Every rate figure comes from src/lib/destinations.ts (synced from the live
@@ -84,7 +85,12 @@ const structuredData = {
 };
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical}>
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  alternates={alternatesFor(`/call/${d.slug}/`)}
+>
   <!-- Hero -->
   <section class="brand-gradient relative overflow-hidden text-white">
     <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">

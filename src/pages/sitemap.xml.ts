@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { destinations } from "../lib/destinations";
+import { alternatesFor } from "../lib/i18n";
 
 // Generated sitemap — canonical, indexable URLs only:
 //  - /call-mexico/ is noindex (paid-traffic LP), deliberately excluded.
@@ -8,11 +9,13 @@ import { destinations } from "../lib/destinations";
 // lastmod is set per page below (NOT the build date — the weekly cron
 // redeploy must not bump it); update a page's date when its content
 // meaningfully changes.
+// Localized pages carry xhtml:link hreflang alternates (from alternatesFor),
+// listed on every URL in the language group per Google's guidance.
 
 const SITE = "https://kalum.app";
 
 // 2026-07-20: app-keyword homepage copy, rates explainer on /call/, dialing
-// format blocks on destination pages, two new evergreen pages.
+// format blocks on destination pages, evergreen pages, and the /es/ locale.
 const SEO_CONTENT_UPDATE = "2026-07-20";
 
 const pages: { path: string; lastmod: string }[] = [
@@ -27,19 +30,34 @@ const pages: { path: string; lastmod: string }[] = [
     path: `/call/${d.slug}/`,
     lastmod: SEO_CONTENT_UPDATE,
   })),
+  // Spanish locale
+  { path: "/es/", lastmod: SEO_CONTENT_UPDATE },
+  { path: "/es/call/mexico/", lastmod: SEO_CONTENT_UPDATE },
+  { path: "/es/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
 ];
 
 export const GET: APIRoute = () => {
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${pages
-  .map(
-    (p) => `  <url>
+  const urls = pages
+    .map((p) => {
+      const alternates = alternatesFor(p.path);
+      const links = alternates
+        ? alternates
+            .map(
+              (a) =>
+                `\n    <xhtml:link rel="alternate" hreflang="${a.hreflang}" href="${a.href}" />`,
+            )
+            .join("")
+        : "";
+      return `  <url>
     <loc>${SITE}${p.path}</loc>
-    <lastmod>${p.lastmod}</lastmod>
-  </url>`
-  )
-  .join("\n")}
+    <lastmod>${p.lastmod}</lastmod>${links}
+  </url>`;
+    })
+    .join("\n");
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${urls}
 </urlset>
 `;
 

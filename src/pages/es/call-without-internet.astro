@@ -1,0 +1,201 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AppStoreBadge from "../../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
+import { alternatesFor } from "../../lib/i18n";
+
+// Spanish version of /call-without-internet/ — the core differentiator for
+// the Mexico corridor. Purpose-written Spanish, verified claims only.
+const reasons = [
+  {
+    title: "Casas con teléfono fijo",
+    body: "Papás y abuelos que nunca dejaron el teléfono de casa. Un fijo no puede instalar una app — con Kalum no hace falta.",
+  },
+  {
+    title: "Teléfonos básicos",
+    body: "Buena parte del mundo llama desde teléfonos de botones. Cualquier número, en cualquier compañía, suena — sin necesidad de smartphone.",
+  },
+  {
+    title: "Internet poco confiable",
+    body: "Cortes de luz, mala señal, datos caros. Cuando el internet de su lado falla, una llamada telefónica normal igual entra.",
+  },
+];
+
+const faqs = [
+  {
+    q: "¿Puedo llamar a alguien que no tiene internet?",
+    a: "Sí. Kalum pasa la llamada por las redes telefónicas reales, así que la persona a la que llamas no necesita internet, ni app, ni smartphone. Un fijo viejo o un teléfono básico suena como en cualquier llamada normal.",
+  },
+  {
+    q: "¿Necesito internet para hacer la llamada?",
+    a: "Sí, pero solo de tu lado. La app de Kalum usa tus datos o Wi-Fi para iniciar la llamada y luego la pasa a las redes telefónicas normales. La persona a la que llamas nunca necesita conexión.",
+  },
+  {
+    q: "¿Puedo llamar a teléfonos fijos?",
+    a: "Sí. Kalum llama a fijos y celulares en más de 180 países. A quien llames contesta en el teléfono que ya tiene — nada que descargar, nada que configurar de su lado.",
+  },
+  {
+    q: "¿Cuánto cuesta?",
+    a: "Las tarifas son por país, y la app te muestra la tarifa exacta por minuto antes de marcar. Agregas saldo de prepago desde $2.99 — sin suscripción, y tu saldo nunca vence.",
+  },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+---
+
+<BaseLayout
+  title="Llamar a Alguien Sin Internet — Su Teléfono Suena | Kalum"
+  description="Llama a personas sin internet, sin smartphone y sin apps. Kalum pasa por las redes telefónicas reales, así que cualquier fijo o teléfono básico en más de 180 países simplemente suena."
+  canonical="https://kalum.app/es/call-without-internet/"
+  lang="es"
+  alternates={alternatesFor("/es/call-without-internet/")}
+>
+  <!-- Hero -->
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
+        Sin internet de su lado
+      </p>
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        Llama a quien no tiene internet.
+        <span class="block text-white/85">Su teléfono suena igual.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        Kalum es una app de llamadas internacionales que marca a números de
+        teléfono reales — fijos y celulares en más de 180 países. La persona a
+        la que llamas no necesita app, ni smartphone, ni internet.
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-es-sin-internet" />
+        <GooglePlayBadge size="lg" utm="kalum-web-es-sin-internet" />
+      </div>
+
+      <p class="mt-5 text-sm text-white/70">
+        Empieza con $2.99. Sin suscripción. Tu saldo nunca vence.
+      </p>
+    </div>
+  </section>
+
+  <!-- Explainer -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Tú necesitas internet. Ellos no.
+      </h2>
+      <div class="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-muted)]">
+        <p>
+          Las apps de llamadas por internet solo funcionan cuando ambos lados
+          están en línea con la misma app instalada. Kalum funciona distinto: la
+          app usa tus datos o Wi-Fi para iniciar la llamada y luego la pasa por
+          las redes telefónicas normales hasta el número que marcaste.
+        </p>
+        <p>
+          Del otro lado, nada cambia. Su teléfono suena como cualquier
+          llamada — ya sea un fijo en la pared de la cocina o un teléfono básico
+          de hace quince años. Contestan, y hablas.
+        </p>
+        <p>
+          Ves la tarifa por minuto de su país antes de marcar, y las llamadas
+          se cobran por minuto con un mínimo de 60 segundos.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who this is for -->
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-6xl px-5 md:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+          Hecho para los teléfonos que las apps olvidaron.
+        </h2>
+      </div>
+
+      <div class="mt-14 grid gap-6 md:grid-cols-3">
+        {
+          reasons.map((reason) => (
+            <div class="rounded-2xl border border-black/5 bg-white p-8 shadow-sm">
+              <h3 class="text-xl font-bold text-[var(--color-text)]">{reason.title}</h3>
+              <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">{reason.body}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="mt-10 text-center">
+        <a
+          href="/es/call/mexico/"
+          class="inline-flex items-center gap-2 text-base font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+        >
+          Ver tarifas para llamar a México
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Llamar sin internet, sin dudas.
+      </h2>
+
+      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
+        {
+          faqs.map((faq) => (
+            <li>
+              <details class="group py-5">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
+                  <span>{faq.q}</span>
+                  <span
+                    aria-hidden="true"
+                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
+                  {faq.a}
+                </p>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        ¿Listo para llamar?
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-white/85">
+        Descarga Kalum, agrega $2.99 de saldo y marca a cualquier fijo o celular
+        en más de 180 países. Pagas solo los minutos que usas.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-es-sin-internet" />
+        <GooglePlayBadge size="lg" utm="kalum-web-es-sin-internet" />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</BaseLayout>
