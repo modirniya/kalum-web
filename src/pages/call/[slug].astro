@@ -51,6 +51,10 @@ const faqs = [
     q: `How do I call ${d.name}?`,
     a: `Download Kalum on iPhone or Android, sign up with your phone number, and add credit starting from $2.99. Pick ${d.name} (+${d.dialCode}) in the dialer, type the local number, and hit call.`,
   },
+  {
+    q: `What is the number format for calling ${d.name}?`,
+    a: `${d.dialingNote} In the Kalum dialer you just pick ${d.name} (+${d.dialCode}) and type the local number — the country code is set for you.`,
+  },
 ];
 
 const structuredData = {
@@ -138,6 +142,16 @@ const structuredData = {
           </p>
         </li>
       </ol>
+
+      <div class="mt-8 rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
+        <h3 class="text-xl font-bold text-[var(--color-text)]">
+          The {d.demonym} number format
+        </h3>
+        <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+          {d.dialingNote} In the Kalum dialer you just pick {d.name} (+{d.dialCode})
+          and type the local number — the country code is set for you.
+        </p>
+      </div>
 
       <div class="mt-12 text-center">
         <a

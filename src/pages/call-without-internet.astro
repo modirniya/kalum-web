@@ -1,0 +1,233 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AppStoreBadge from "../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../components/GooglePlayBadge.astro";
+import { destinations, rateLabel } from "../lib/destinations";
+
+// Evergreen page for the core differentiator: the person you call needs no
+// internet, app, or smartphone. Copy stays within verified claims.
+
+const faqs = [
+  {
+    q: "Can I call someone who has no internet at all?",
+    a: "Yes. Kalum routes your call through real phone networks, so the person you call needs no internet, no app, and no smartphone. An old landline or a basic feature phone rings like it would for any normal call.",
+  },
+  {
+    q: "Do I need internet to make the call?",
+    a: "Yes — on your end only. The Kalum app uses your data or Wi-Fi to start the call, then hands it over to regular phone networks. The person you call never needs a connection.",
+  },
+  {
+    q: "Can I call landlines?",
+    a: "Yes. Kalum calls landlines and mobiles in 180+ countries. Whoever you call answers on whatever phone they already have — nothing to download, nothing to set up on their side.",
+  },
+  {
+    q: "What does it cost?",
+    a: "Rates are per-country, and the app shows the exact per-minute rate before you dial. You add prepaid credit starting from $2.99 — no subscription, and your credit never expires.",
+  },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+
+const reasons = [
+  {
+    title: "Landline-only households",
+    body: "Parents and grandparents who never moved past the home phone. Their landline can't install an app — with Kalum it doesn't have to.",
+  },
+  {
+    title: "Feature phones",
+    body: "Plenty of the world still calls from phones with buttons. Any number on any carrier rings, no smartphone required.",
+  },
+  {
+    title: "Unreliable internet",
+    body: "Power cuts, weak coverage, expensive data. When the internet on their side is down, a regular phone call still gets through.",
+  },
+];
+---
+
+<BaseLayout
+  title="Call Someone Without Internet — Their Phone Just Rings | Kalum"
+  description="Call people who have no internet, no smartphone, and no apps. Kalum routes your call through real phone networks, so any landline or feature phone in 180+ countries just rings."
+  canonical="https://kalum.app/call-without-internet/"
+>
+  <!-- Hero -->
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
+        No internet needed on their side
+      </p>
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        Call people who don't have internet.
+        <span class="block text-white/85">Their phone just rings.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        Kalum is an international calling app that reaches real phone
+        numbers — landlines and mobiles in 180+ countries. The person you
+        call needs no app, no smartphone, and no internet.
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-no-internet" />
+        <GooglePlayBadge size="lg" utm="kalum-web-no-internet" />
+      </div>
+
+      <p class="mt-5 text-sm text-white/70">
+        Start with $2.99. No subscription. Credit never expires.
+      </p>
+    </div>
+  </section>
+
+  <!-- How it reaches a phone with no internet -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        You need internet. They don't.
+      </h2>
+      <div class="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-muted)]">
+        <p>
+          Internet calling apps only work when both sides are online with the
+          same app installed. Kalum works differently: the app uses your data
+          or Wi-Fi to start the call, then routes it through regular phone
+          networks to the number you dialed.
+        </p>
+        <p>
+          From the other person's side, nothing changes. Their phone rings
+          like any other call — whether it's a landline on a kitchen wall or
+          a feature phone from fifteen years ago. They pick up, and you talk.
+        </p>
+        <p>
+          You see the per-minute rate for their country before you dial, and
+          calls are billed by the minute with a 60-second minimum. No
+          connection fees, no hidden charges.
+          <a
+            href="/how-it-works/"
+            class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+          >See how Kalum works &rarr;</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who this is for -->
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-6xl px-5 md:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+          Made for the phones apps forgot.
+        </h2>
+      </div>
+
+      <div class="mt-14 grid gap-6 md:grid-cols-3">
+        {
+          reasons.map((reason) => (
+            <div class="rounded-2xl border border-black/5 bg-white p-8 shadow-sm">
+              <h3 class="text-xl font-bold text-[var(--color-text)]">
+                {reason.title}
+              </h3>
+              <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+                {reason.body}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="mt-10 text-center text-base text-[var(--color-muted)]">
+        Comparing options?
+        <a
+          href="/calling-app-vs-internet-calling/"
+          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+        >Calling app vs internet calling apps &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Calling without internet, answered.
+      </h2>
+
+      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
+        {
+          faqs.map((faq) => (
+            <li>
+              <details class="group py-5">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
+                  <span>{faq.q}</span>
+                  <span
+                    aria-hidden="true"
+                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
+                  {faq.a}
+                </p>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Destinations strip -->
+  <section class="bg-[var(--color-cream)] py-16 md:py-20">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <h2 class="text-2xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-3xl">
+        Popular destinations
+      </h2>
+      <p class="mt-3 text-base text-[var(--color-muted)]">
+        One per-minute rate per country, landlines and mobiles alike:
+      </p>
+      <ul class="mt-6 flex flex-wrap gap-3">
+        {
+          destinations.map((d) => (
+            <li>
+              <a
+                href={`/call/${d.slug}/`}
+                class="inline-block rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-maroon)] hover:text-[var(--color-maroon)] transition"
+              >
+                {d.name} &middot; {rateLabel(d)}/min
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        Ready to call?
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-white/85">
+        Download Kalum, add $2.99 in credit, and dial any phone in 180+
+        countries. Pay only for the minutes you use.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-no-internet" />
+        <GooglePlayBadge size="lg" utm="kalum-web-no-internet" />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</BaseLayout>

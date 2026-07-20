@@ -11,16 +11,20 @@ import { destinations } from "../lib/destinations";
 
 const SITE = "https://kalum.app";
 
-const DESTINATIONS_LAUNCHED = "2026-07-02";
+// 2026-07-20: app-keyword homepage copy, rates explainer on /call/, dialing
+// format blocks on destination pages, two new evergreen pages.
+const SEO_CONTENT_UPDATE = "2026-07-20";
 
 const pages: { path: string; lastmod: string }[] = [
-  { path: "/", lastmod: "2026-07-02" },
+  { path: "/", lastmod: SEO_CONTENT_UPDATE },
   { path: "/how-it-works/", lastmod: "2026-07-02" },
   { path: "/support/", lastmod: "2026-07-02" },
-  { path: "/call/", lastmod: DESTINATIONS_LAUNCHED },
+  { path: "/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
+  { path: "/calling-app-vs-internet-calling/", lastmod: SEO_CONTENT_UPDATE },
+  { path: "/call/", lastmod: SEO_CONTENT_UPDATE },
   ...destinations.map((d) => ({
     path: `/call/${d.slug}/`,
-    lastmod: DESTINATIONS_LAUNCHED,
+    lastmod: SEO_CONTENT_UPDATE,
   })),
 ];
 

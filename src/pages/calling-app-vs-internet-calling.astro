@@ -1,0 +1,244 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AppStoreBadge from "../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../components/GooglePlayBadge.astro";
+
+// Honest comparison page: free internet calling apps vs an international
+// calling app that dials real phone numbers. Statements about internet
+// calling apps are kept generic and factual (both sides need the same app
+// and a connection); Kalum claims stay within verified copy.
+
+const rows = [
+  {
+    label: "Who needs the app",
+    kalum: "Only you",
+    internet: "Both of you, and it must be the same app",
+  },
+  {
+    label: "Internet on their end",
+    kalum: "Not needed",
+    internet: "Required",
+  },
+  {
+    label: "Calls landlines",
+    kalum: "Yes",
+    internet: "No — a landline can't install an app",
+  },
+  {
+    label: "Works on feature phones",
+    kalum: "Yes",
+    internet: "No",
+  },
+  {
+    label: "Cost",
+    kalum: "Per-minute rate, shown before you dial",
+    internet: "Free app-to-app (data charges may apply)",
+  },
+];
+
+const faqs = [
+  {
+    q: "Is Kalum an internet calling app?",
+    a: "Only on your side. The app uses your data or Wi-Fi to start the call, then routes it through real phone networks. The person you call needs no internet and no app — their phone rings like any normal call.",
+  },
+  {
+    q: "Can internet calling apps call landlines?",
+    a: "Free app-to-app calls can't — a landline can't install an app. Kalum dials real phone numbers, so landlines and mobiles in 180+ countries ring like any other call.",
+  },
+  {
+    q: "Why not just use a free internet app?",
+    a: "If both of you have smartphones with the same app and reliable internet, a free app-to-app call is a great choice. Kalum is for everyone else: landlines, feature phones, relatives who won't install apps, and places where the internet is down, expensive, or restricted.",
+  },
+  {
+    q: "How much do calls cost with Kalum?",
+    a: "Rates are per-country, and you see the exact per-minute rate before you dial. You add prepaid credit starting from $2.99 — no subscription, and your credit never expires.",
+  },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+---
+
+<BaseLayout
+  title="International Calling App vs Internet Calling Apps | Kalum"
+  description="Internet calling apps need both people online with the same app. An international calling app like Kalum only needs you — the other side just answers their phone."
+  canonical="https://kalum.app/calling-app-vs-internet-calling/"
+>
+  <!-- Hero -->
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
+        Choosing how to call abroad
+      </p>
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        Internet calling apps vs an international calling app.
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        Free internet calls only work when both sides are online with the
+        same app. An international calling app like Kalum dials real phone
+        numbers instead — so the other side just answers their phone.
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-vs-internet" />
+        <GooglePlayBadge size="lg" utm="kalum-web-vs-internet" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison table -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        The difference at a glance
+      </h2>
+
+      <div class="mt-10 overflow-x-auto">
+        <table class="w-full min-w-[36rem] border-collapse text-left">
+          <thead>
+            <tr class="border-b-2 border-black/10">
+              <th scope="col" class="py-4 pr-4 text-sm font-semibold uppercase tracking-wider text-[var(--color-muted)]"></th>
+              <th scope="col" class="py-4 pr-4 text-lg font-extrabold text-[var(--color-maroon)]">
+                Kalum
+              </th>
+              <th scope="col" class="py-4 text-lg font-bold text-[var(--color-text)]">
+                Internet calling apps
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              rows.map((row) => (
+                <tr class="border-b border-black/10">
+                  <th scope="row" class="py-4 pr-4 align-top text-base font-semibold text-[var(--color-text)]">
+                    {row.label}
+                  </th>
+                  <td class="py-4 pr-4 align-top text-base text-[var(--color-muted)]">
+                    {row.kalum}
+                  </td>
+                  <td class="py-4 align-top text-base text-[var(--color-muted)]">
+                    {row.internet}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- When each is right -->
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        When each one is the right choice
+      </h2>
+
+      <div class="mt-8 space-y-8">
+        <div class="rounded-2xl border border-black/5 bg-white p-8 shadow-sm">
+          <h3 class="text-xl font-bold text-[var(--color-text)]">
+            Use a free internet app when&hellip;
+          </h3>
+          <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+            Both of you have smartphones, the same app installed, and reliable
+            internet. App-to-app calls are free, and that's hard to beat. If
+            that describes the person you're calling, use it.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-black/5 bg-white p-8 shadow-sm">
+          <h3 class="text-xl font-bold text-[var(--color-text)]">
+            Use Kalum when&hellip;
+          </h3>
+          <ul class="mt-2 space-y-2 text-base leading-relaxed text-[var(--color-muted)]">
+            <li>&bull; The number is a landline.</li>
+            <li>&bull; They carry a feature phone, not a smartphone.</li>
+            <li>&bull; Their internet is down, slow, or expensive.</li>
+            <li>&bull; Voice calls on internet apps are restricted where they live, as in the UAE.</li>
+            <li>&bull; They can't — or won't — install another app.</li>
+          </ul>
+          <p class="mt-4 text-base leading-relaxed text-[var(--color-muted)]">
+            In all of those cases, Kalum dials the real phone number and it
+            rings like any normal call.
+            <a
+              href="/call-without-internet/"
+              class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+            >More on calling without internet &rarr;</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Common questions
+      </h2>
+
+      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
+        {
+          faqs.map((faq) => (
+            <li>
+              <details class="group py-5">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
+                  <span>{faq.q}</span>
+                  <span
+                    aria-hidden="true"
+                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
+                  {faq.a}
+                </p>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="mt-8 text-base text-[var(--color-muted)]">
+        Curious what a call costs?
+        <a
+          href="/call/"
+          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+        >See per-minute rates by destination &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        Call any phone, not just apps.
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-white/85">
+        Download Kalum, add $2.99 in credit, and dial landlines and mobiles
+        in 180+ countries. Pay only for the minutes you use.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-vs-internet" />
+        <GooglePlayBadge size="lg" utm="kalum-web-vs-internet" />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</BaseLayout>
