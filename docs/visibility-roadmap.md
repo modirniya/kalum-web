@@ -119,29 +119,38 @@ Internal linking (shipped, uses the existing 10 destinations):
       destinations" link. Every page now links the destination pages, not
       just `/call/`.
 
-New destination pages (BLOCKED — need per-minute rates from the admin table):
+New destination pages — DONE (2026-07-20). Rates from the admin table
+(all dated March 23, 2026, matching `RATES_AS_OF`); 18 destinations total.
 
-- [ ] **Gulf:** Kuwait (+965), Qatar (+974), Oman (+968), Bahrain (+973) —
-      data rows in `src/lib/destinations.ts` (intro + dialingNote each).
-      Reuse the UAE hedged VoIP-restriction phrasing for Qatar and Oman
-      ONLY; Kuwait/Bahrain intros must not claim a VoIP block.
-- [ ] **Horn of Africa:** Sudan (+249), Somalia (+252). Model intros on the
-      Lebanon/Yemen outage framing, kept dateless. Skip either if
-      unroutable/unmarketable.
-- [ ] **Central America:** Guatemala (+502), El Salvador (+503), Honduras
-      (+504). (Full payoff after Phase 5 Spanish locale — this audience
-      searches in Spanish — but the English pages are worth having now.)
-- [ ] **Held for a later pass:** Dominican Republic (shares country code 1 —
-      breaks the `+{dialCode}` template rendering in six places; needs an
-      explicit dialing note and copy review) and Colombia.
+- [x] **Gulf:** Kuwait (17¢, no VoIP claim), Qatar (40¢, VoIP-hedged),
+      Oman (52¢, VoIP-hedged), Bahrain (26¢, no VoIP claim). Verified the
+      hedged phrasing renders on Qatar/Oman only.
+- [x] **Sudan (45¢):** outage/connectivity framing, dateless.
+- [~] **Somalia (+252): SKIPPED.** Rate is $1.10/min — fails the marketable
+      gate (the template's H1 is price-led) and exceeds the sub-dollar cents
+      display (`rateLabel` would show "110¢"). Revisit only with a
+      connectivity-led hero variant, not a plain data row.
+- [x] **Central America:** Guatemala (24¢), El Salvador (35¢), Honduras
+      (29¢). Full payoff comes after the Phase 5 Spanish locale.
+- [ ] **Held for a later pass:** Dominican Republic (+1809, 17¢ — shares
+      country code 1, breaks the `+{dialCode}` template in ~6 places; needs
+      an explicit dialing note + copy review) and Colombia (+57, **4¢** —
+      cheapest in the table, huge diaspora; strong candidate to fast-track,
+      ideally alongside Spanish).
 
-When rates arrive: add rows, add each to `featuredSlugs` if it should surface
-on the homepage, update `RATES_AS_OF`, and the sitemap picks them up
-automatically. Optionally re-feature the homepage/footer set (e.g. swap a
-MENA corridor for Mexico-adjacent Central America once Spanish ships).
+**Phase 3b candidates (not in the approved scope — need owner OK):** the full
+rate table surfaced large-diaspora, cheap, routable corridors we don't cover
+yet — India (5¢), Bangladesh (7¢), Pakistan (22¢), Philippines (28¢), Nigeria
+(20¢), Vietnam (15¢), Nepal (30¢), Ghana (49¢), Kenya (36¢), Ethiopia (47¢).
+Each is a one-row addition. Greenlight any and they ship in a batch.
 
-**Done when:** every new page shows a rate verified on a recorded date;
-sitemap includes new URLs; homepage/footer link them; build passes.
+**Note for future high-rate additions:** `rateLabel` renders `${cents}¢`, so
+any rate ≥ $1.00 displays as "NNN¢". Add a dollar-format branch before
+introducing a destination over 99¢.
+
+**Done:** 8 pages built, rates verified against the admin table, VoIP
+phrasing scoped correctly, breadcrumb/FAQ/JSON-LD intact on each, sitemap +
+`/call/` index + sibling cross-links pick them up automatically.
 
 ---
 
@@ -261,12 +270,10 @@ Lowest priority; a slow-afternoon batch after the above.
 These gate parts of the roadmap and cannot be done from the repo. Kept here,
 at the end, as the running reminder of what's on the owner's plate.
 
-**Phase 3 — to finish destination expansion (current blocker):**
-- [ ] Per-minute rates (US cents) + routability confirmation, from the admin
-      rate table, for: **Kuwait (+965), Qatar (+974), Oman (+968), Bahrain
-      (+973), Sudan (+249), Somalia (+252), Guatemala (+502), El Salvador
-      (+503), Honduras (+504)**. Flag any that are unroutable or lack a
-      marketable rate so they're skipped. (DR/Colombia deliberately held.)
+**Phase 3 — destination rates:** ✅ provided 2026-07-20; 8 pages shipped,
+Somalia skipped (unmarketable at $1.10). Optional next: greenlight any Phase
+3b corridors (India, Bangladesh, Philippines, Nigeria, Colombia, …) listed in
+Phase 3 above.
 
 **Phase 2 — measurement & engine coverage:**
 - [ ] **Apple provider token** → paste into `APPLE_PROVIDER_TOKEN` in

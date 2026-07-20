@@ -136,6 +136,94 @@ export const destinations: Destination[] = [
     dialingNote:
       "Turkish numbers are 10 digits — mobiles start with 5, landlines with a city code like 212 or 216 in Istanbul. Drop the leading 0 and dial +90, then the full 10-digit number.",
   },
+  {
+    slug: "kuwait",
+    name: "Kuwait",
+    demonym: "Kuwaiti",
+    dialCode: "965",
+    rateCents: 17,
+    intro:
+      "Kuwait City, Hawalli, Salmiya — call any Kuwaiti landline or mobile at one flat per-minute rate, with nothing to install or sign up for on their end.",
+    dialingNote:
+      "Kuwaiti numbers are 8 digits with no leading zero — mobiles start with 5, 6, or 9. Dial +965 and then the full 8-digit number.",
+  },
+  {
+    slug: "qatar",
+    name: "Qatar",
+    demonym: "Qatari",
+    dialCode: "974",
+    rateCents: 40,
+    intro:
+      "Doha, Al Rayyan, Al Wakrah — voice calls on many internet apps are restricted in Qatar, so Kalum dials regular Qatari phone numbers instead.",
+    dialingNote:
+      "Qatari numbers are 8 digits with no leading zero — mobiles start with 3, 5, 6, or 7. Dial +974 and then the full 8-digit number.",
+  },
+  {
+    slug: "oman",
+    name: "Oman",
+    demonym: "Omani",
+    dialCode: "968",
+    rateCents: 52,
+    intro:
+      "Muscat, Salalah, Sohar — voice calls on many internet apps are restricted in Oman, so Kalum dials regular Omani phone numbers instead.",
+    dialingNote:
+      "Omani numbers are 8 digits with no leading zero — mobiles start with 7 or 9. Dial +968 and then the full 8-digit number.",
+  },
+  {
+    slug: "bahrain",
+    name: "Bahrain",
+    demonym: "Bahraini",
+    dialCode: "973",
+    rateCents: 26,
+    intro:
+      "Manama, Riffa, Muharraq — reach any Bahraini landline or mobile at one flat per-minute rate; there's nothing for them to download or set up.",
+    dialingNote:
+      "Bahraini numbers are 8 digits with no leading zero — mobiles start with 3. Dial +973 and then the full 8-digit number.",
+  },
+  {
+    slug: "sudan",
+    name: "Sudan",
+    demonym: "Sudanese",
+    dialCode: "249",
+    rateCents: 45,
+    intro:
+      "Khartoum, Omdurman, Port Sudan — Kalum calls regular Sudanese phone numbers, so even when the internet over there is out, their phone still rings.",
+    dialingNote:
+      "Sudanese mobiles are nine digits starting with 9, written locally with a leading 0 (09…). Drop the leading 0 and dial +249, then the rest of the number.",
+  },
+  {
+    slug: "guatemala",
+    name: "Guatemala",
+    demonym: "Guatemalan",
+    dialCode: "502",
+    rateCents: 24,
+    intro:
+      "Guatemala City, Quetzaltenango, Escuintla — call any Guatemalan landline or mobile at one per-minute rate, no app or internet needed on their end.",
+    dialingNote:
+      "Guatemalan numbers are 8 digits with no leading zero — mobiles start with 3, 4, or 5. Dial +502 and then the full 8-digit number.",
+  },
+  {
+    slug: "el-salvador",
+    name: "El Salvador",
+    demonym: "Salvadoran",
+    dialCode: "503",
+    rateCents: 35,
+    intro:
+      "San Salvador, Santa Ana, San Miguel — reach any Salvadoran landline or mobile at one per-minute rate, with nothing to set up on their side.",
+    dialingNote:
+      "Salvadoran numbers are 8 digits with no leading zero — mobiles start with 6 or 7. Dial +503 and then the full 8-digit number.",
+  },
+  {
+    slug: "honduras",
+    name: "Honduras",
+    demonym: "Honduran",
+    dialCode: "504",
+    rateCents: 29,
+    intro:
+      "Tegucigalpa, San Pedro Sula, La Ceiba — call any Honduran landline or mobile at one per-minute rate, no app or internet needed on their end.",
+    dialingNote:
+      "Honduran numbers are 8 digits with no leading zero — mobiles usually start with 3, 8, or 9. Dial +504 and then the full 8-digit number.",
+  },
 ];
 
 /** "6¢" / "24¢" display form. */
