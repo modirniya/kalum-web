@@ -54,42 +54,51 @@ parses; breadcrumb visible text/URLs identical to JSON-LD.
 
 ---
 
-## Phase 2 — Measurement & engine coverage
+## Phase 2 — Measurement & engine coverage — REPO WORK DONE (2026-07-20); owner items pending
 
-Small code changes + owner account work. Attribution comes first because it
-tells us which later investments convert.
+Attribution comes first because it tells us which later investments convert.
 
-External inputs needed from owner:
-1. App Store Connect provider token (`pt=`) from Analytics → Campaigns.
-2. Confirmation whether the Android app integrates Firebase Analytics or
-   the Play Install Referrer API (if not, the Play referrer param is inert
-   but harmless).
-3. Bing Webmaster Tools access (verify via GSC import — check first whether
-   already verified).
+**Resolved during Phase 2:** the Android app (Flutter, `../mobile`) ships the
+native `firebase-analytics` SDK (`android/app/build.gradle.kts`). So the Play
+`referrer` param is NOT inert — Play Console Acquisition reports capture it at
+the store level, and Firebase auto-collects it as campaign attribution on
+first open. No app-side change needed.
 
-- [ ] **AppStoreBadge attribution:** current `utm_source` params reach
-      nothing on Apple. Change `src/components/AppStoreBadge.astro` link to
-      `?pt=<token>&ct=${utm}&mt=8`, keeping existing per-placement values
-      as `ct`.
-- [ ] **GooglePlayBadge attribution:** change to
+Repo work (shipped):
+
+- [x] **Centralized store links** in `src/lib/stores.ts` — one source of
+      truth for badges AND structured-data `sameAs`, so the Apple slug can't
+      drift again (it just did in Phase 1).
+- [x] **GooglePlayBadge attribution:** now
       `&referrer=utm_source%3Dkalum-web%26utm_medium%3Dweb%26utm_campaign%3D${utm}`
-      (URL-encoded), existing placement values as `utm_campaign`.
-- [ ] **(Owner, off-repo) App Store Connect:** set Marketing URL →
-      `https://kalum.app/`, Support URL → `https://kalum.app/support/`
-      (app id 6763210844; `sellerUrl` is currently null). Ships with next
-      metadata update.
-- [ ] **(Owner, off-repo) Play Console:** change developer website from
-      `www.kalum.app` to `https://kalum.app/`.
-- [ ] **(Owner, off-repo) Bing Webmaster Tools:** verify kalum.app (GSC
-      import is one click), submit `https://kalum.app/sitemap.xml`, flag
-      the stale parked-domain snapshot for `www.kalum.app` if still shown.
-- [ ] **IndexNow (after Bing verification):** commit the static key file in
-      `public/` (public by design, not a secret) and add a post-deploy
-      submit step to the deploy workflow. Modest accelerant only.
+      (URL-encoded); per-placement `utm_campaign`. Live and producing data.
+- [x] **AppStoreBadge campaign-link support:** `appleHref()` emits
+      `?pt=<token>&ct=${utm}&mt=8` — but **token-gated**. `APPLE_PROVIDER_TOKEN`
+      in `stores.ts` is empty, so links ship clean (removed the old
+      `utm_source` that reached nothing). Drop the token in → attribution
+      activates everywhere, no other change.
 
-**Done when:** store clicks appear in ASC campaign analytics / Play
-acquisition reports; Bing shows sitemap Success; IndexNow submissions
-return 200 in the Actions log.
+Owner items (off-repo, still pending):
+
+- [ ] **Apple provider token** → paste into `APPLE_PROVIDER_TOKEN` in
+      `src/lib/stores.ts` (App Store Connect > Analytics > Campaigns → the
+      numeric `pt` in a generated campaign link). One-line edit, then commit.
+- [ ] **App Store Connect:** set Marketing URL → `https://kalum.app/`,
+      Support URL → `https://kalum.app/support/` (app id 6763210844;
+      `sellerUrl` confirmed null via lookup API).
+- [ ] **Play Console:** change developer website from `www.kalum.app` to
+      `https://kalum.app/`.
+- [ ] **Bing Webmaster Tools:** verify kalum.app (GSC import is one click),
+      submit `https://kalum.app/sitemap.xml`, flag the stale parked-domain
+      snapshot for `www.kalum.app` if still shown.
+- [ ] **IndexNow (after Bing verification):** static key file in `public/`
+      (public by design) + post-deploy submit step in `deploy.yml`. Repo
+      work is ready to add the moment Bing verification exists. Modest
+      accelerant only.
+
+**Done when:** store clicks appear in ASC campaign analytics (needs token) /
+Play acquisition reports (already flowing); Bing shows sitemap Success;
+IndexNow submissions return 200 in the Actions log.
 
 ---
 

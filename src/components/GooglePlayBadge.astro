@@ -1,4 +1,6 @@
 ---
+import { playHref } from "../lib/stores";
+
 interface Props {
   size?: "lg" | "md" | "sm";
   utm?: string;
@@ -16,7 +18,7 @@ const { size = "lg", utm = "kalum-web", cta = false } = Astro.props;
 const widthClass =
   size === "lg" ? "w-[292px]" : size === "md" ? "w-[248px]" : "w-[208px]";
 
-const href = `https://play.google.com/store/apps/details?id=app.kalum.mobile&utm_source=${utm}`;
+const href = playHref(utm);
 ---
 
 <a
