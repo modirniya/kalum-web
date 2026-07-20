@@ -119,6 +119,20 @@ const structuredData = {
       </div>
 
       <p class="mt-5 max-w-2xl text-sm text-white/70">{rateNote}</p>
+
+      {
+        d.voipRestricted && (
+          <p class="mt-5 max-w-2xl text-sm text-white/80">
+            Voice calls on many internet apps are restricted in {d.name}.
+            <a
+              href="/whatsapp-calls-blocked/"
+              class="ml-1 font-semibold text-[var(--color-teal-light)] underline underline-offset-2 transition hover:text-white"
+            >
+              More on calling when internet calls are blocked &rarr;
+            </a>
+          </p>
+        )
+      }
     </div>
   </section>
 

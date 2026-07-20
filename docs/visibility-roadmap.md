@@ -167,37 +167,50 @@ sibling cross-links all update automatically. Somalia deliberately skipped
 
 ---
 
-## Phase 4 — Evergreen content & app-web integration
+## Phase 4 — Evergreen content & app-web integration — CONTENT DONE (2026-07-20); app-link files blocked
 
-Partly dependent on Phase 3 (Gulf pages) and on the mobile app team.
+- [x] **`/whatsapp-calls-blocked/` explainer page** (shipped): hedged,
+      dateless copy; framed positively (Kalum dials a real number, doesn't
+      depend on internet apps) — never as circumventing a restriction. The
+      country list is data-driven from a new `voipRestricted` flag on
+      destinations (UAE/Qatar/Oman), which also renders a cross-link callout
+      in those pages' heroes. Linked from the footer + the vs-internet page.
+      4-FAQ FAQPage schema. Sitemap now 38 URLs.
 
-External inputs needed:
-1. SHA-256 signing fingerprints from Play Console → App Signing (both app
-   signing key and upload key).
-2. App team: `autoVerify` intent filters (Android) and Associated Domains
-   entitlement (iOS) — the web files can ship first with app-home fallback.
+App-link files — both genuinely blocked (investigated the `mobile` repo):
 
-- [ ] **`/whatsapp-calls-blocked/` explainer page:** covers UAE, Qatar,
-      Oman in hedged, dateless language; no enforcement specifics that rot.
-      Pitch: dialing a regular number bypasses the issue entirely.
-      Cross-link with `/call/uae/`, `/call/qatar/`, `/call/oman/`.
-      Requires the Gulf pages from Phase 3 so links resolve at launch.
-- [ ] **Android App Links:** `public/.well-known/assetlinks.json` declaring
-      `app.kalum.mobile` with both SHA-256 fingerprints; complete Play
-      Console domain verification. Full value needs the app's `autoVerify`
-      release — retention/UX, not search visibility.
-- [ ] **iOS Universal Links (conditional):** extensionless
-      `public/.well-known/apple-app-site-association` only once the iOS app
-      adds the Associated Domains entitlement. Include `/call/*` and `/`;
-      exclude legal/support and `/call-mexico/`. After deploy, verify
-      Apple's CDN accepts GitHub Pages' generic content type — if
-      rejected, DROP the approach (no header tricks possible).
-- [ ] **Deep-link routing contract with the app team:** `/call/{slug}/` →
-      dialer pre-set to that destination; `/` and `/how-it-works/` → app
-      home; legal/support/paid-LP → stay in browser. Don't block the
-      association files on this.
+- [ ] **Android App Links (`public/.well-known/assetlinks.json`):** BLOCKED
+      on the Play App Signing SHA-256. The app is Play-signed (package
+      `app.kalum.mobile`), so the fingerprint Android verifies lives only in
+      Play Console → Test and release → App integrity → App signing. That
+      page lists BOTH the app-signing and upload SHA-256 — include both.
+      `google-services.json` only had a SHA-1 OAuth hash (not usable here).
+      Do NOT ship a partial/guessed file — a wrong fingerprint fails
+      verification and Google fetches it. Ready-to-fill template:
+      ```json
+      [{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": { "namespace": "android_app",
+          "package_name": "app.kalum.mobile",
+          "sha256_cert_fingerprints": ["<APP-SIGNING SHA256>", "<UPLOAD SHA256>"] }
+      }]
+      ```
+      Full link-handling value also needs the app to ship `autoVerify`
+      intent filters. Retention/UX, not search visibility.
+- [ ] **iOS Universal Links (`apple-app-site-association`):** BLOCKED —
+      `mobile/ios/Runner/Runner.entitlements` has NO `associated-domains`
+      entitlement, so the app doesn't claim the domain; shipping AASA now is
+      a no-op. When the app adds the entitlement + ships: Team ID
+      `485TFXLF7Q`, bundle `app.kalum.mobile` → appID `485TFXLF7Q.app.kalum.mobile`.
+      Include `/call/*` and `/`; exclude legal/support and `/call-mexico/`.
+      After deploy, confirm Apple's CDN accepts GitHub Pages' content type;
+      if rejected, DROP it (no header tricks on Pages).
+- [ ] **Deep-link routing contract (app team):** proposed — `/call/{slug}/`
+      → dialer pre-set to that destination; `/` and `/how-it-works/` → app
+      home; legal/support/`/call-mexico/` → stay in browser. Association
+      files can ship first with app-home fallback; don't block on this.
 
-**Done when:** explainer indexed and cross-linked; assetlinks passes
+**Done when:** explainer indexed + cross-linked (done); assetlinks passes
 Google's Digital Asset Links validator; AASA fetch verified from Apple CDN
 (or consciously dropped).
 
@@ -301,10 +314,14 @@ re-feature the homepage set once Phase 2 attribution data exists.
       submit `https://kalum.app/sitemap.xml`, flag the stale `www.kalum.app`
       parked-domain snapshot. Unlocks the Phase 2 IndexNow repo work.
 
-**Phase 4 — app-web integration (when those items come up):**
-- [ ] SHA-256 signing fingerprints from Play Console → App Signing (for
-      `assetlinks.json`); app-team `autoVerify` intent filters (Android) and
-      Associated Domains entitlement (iOS).
+**Phase 4 — app-web integration (explainer shipped; app-link files blocked):**
+- [ ] **Play App Signing SHA-256** (both app-signing + upload) from Play
+      Console → App integrity → App signing → paste into the assetlinks.json
+      template in Phase 4 above; I'll then ship `public/.well-known/assetlinks.json`.
+- [ ] **iOS `associated-domains` entitlement** added to the app + a release
+      (`applinks:kalum.app`). Only then does the AASA file do anything — Team
+      ID `485TFXLF7Q` and bundle already captured.
+- [ ] App-team `autoVerify` intent filters (Android) for full link handling.
 
 **Phase 5 — i18n (when it starts):**
 - [ ] Human-written / native-reviewed Spanish translations (then Arabic,

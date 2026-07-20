@@ -21,6 +21,7 @@ const pages: { path: string; lastmod: string }[] = [
   { path: "/support/", lastmod: "2026-07-02" },
   { path: "/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
   { path: "/calling-app-vs-internet-calling/", lastmod: SEO_CONTENT_UPDATE },
+  { path: "/whatsapp-calls-blocked/", lastmod: SEO_CONTENT_UPDATE },
   { path: "/call/", lastmod: SEO_CONTENT_UPDATE },
   ...destinations.map((d) => ({
     path: `/call/${d.slug}/`,

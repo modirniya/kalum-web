@@ -18,6 +18,13 @@ export interface Destination {
    * the FAQ schema.
    */
   dialingNote: string;
+  /**
+   * True where voice calls on many internet apps are commonly restricted
+   * (the Gulf). Drives the /whatsapp-calls-blocked/ explainer's country list
+   * and a cross-link callout on the destination page. Kept to the countries
+   * whose intro copy already states the restriction.
+   */
+  voipRestricted?: boolean;
 }
 
 /**
@@ -123,6 +130,7 @@ export const destinations: Destination[] = [
       "Dubai, Abu Dhabi, Sharjah — voice calls on many internet apps are restricted in the UAE, so Kalum dials regular UAE phone numbers instead.",
     dialingNote:
       "UAE mobiles are 9 digits starting with 5 (written locally as 050, 052, 054, 055, 056, or 058). Drop the leading 0 and dial +971, then the rest of the number.",
+    voipRestricted: true,
   },
   {
     slug: "yemen",
@@ -171,6 +179,7 @@ export const destinations: Destination[] = [
       "Doha, Al Rayyan, Al Wakrah — voice calls on many internet apps are restricted in Qatar, so Kalum dials regular Qatari phone numbers instead.",
     dialingNote:
       "Qatari numbers are 8 digits with no leading zero — mobiles start with 3, 5, 6, or 7. Dial +974 and then the full 8-digit number.",
+    voipRestricted: true,
   },
   {
     slug: "oman",
@@ -183,6 +192,7 @@ export const destinations: Destination[] = [
       "Muscat, Salalah, Sohar — voice calls on many internet apps are restricted in Oman, so Kalum dials regular Omani phone numbers instead.",
     dialingNote:
       "Omani numbers are 8 digits with no leading zero — mobiles start with 7 or 9. Dial +968 and then the full 8-digit number.",
+    voipRestricted: true,
   },
   {
     slug: "bahrain",
@@ -434,4 +444,9 @@ export function featuredDestinations(): Destination[] {
   return featuredSlugs
     .map((slug) => destinations.find((d) => d.slug === slug))
     .filter((d): d is Destination => Boolean(d));
+}
+
+/** Destinations flagged where internet-app voice calls are commonly restricted. */
+export function voipRestrictedDestinations(): Destination[] {
+  return destinations.filter((d) => d.voipRestricted);
 }
