@@ -147,3 +147,24 @@ export function rateLabel(d: Destination): string {
 export function nameAtSentenceStart(d: Destination): string {
   return d.name.charAt(0).toUpperCase() + d.name.slice(1);
 }
+
+/**
+ * Corridors surfaced in the homepage "Popular destinations" strip and the
+ * footer, in display order. Data-driven: edit this list to change what's
+ * featured, and newly added destinations flow in the moment they appear here.
+ */
+export const featuredSlugs = [
+  "mexico",
+  "egypt",
+  "lebanon",
+  "turkey",
+  "saudi-arabia",
+  "uae",
+];
+
+/** Featured destinations in `featuredSlugs` order, skipping any unknown slug. */
+export function featuredDestinations(): Destination[] {
+  return featuredSlugs
+    .map((slug) => destinations.find((d) => d.slug === slug))
+    .filter((d): d is Destination => Boolean(d));
+}

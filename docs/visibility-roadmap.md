@@ -102,20 +102,29 @@ IndexNow submissions return 200 in the Actions log.
 
 ---
 
-## Phase 3 — Destination expansion + internal linking
+## Phase 3 — Destination expansion + internal linking — LINKING DONE (2026-07-20); new pages blocked on rates
 
 Every new country is **rate-gated**: before adding a row, confirm in the
 admin rate table that the destination is routable with a marketable rate,
 and record the check date. Update `RATES_AS_OF` when rates are re-copied.
 
-External input needed from owner: current per-minute rates for the
-candidate countries below.
+Internal linking (shipped, uses the existing 10 destinations):
+
+- [x] **Homepage "Popular destinations" strip:**
+      `src/components/home/PopularDestinations.astro` (between HowItWorks and
+      TrustStrip), 6 featured corridor cards, rates imported from
+      `destinations.ts`. Featured set is data-driven via `featuredSlugs`.
+- [x] **Footer destination links:** sitewide "Popular destinations" row in
+      `Footer.astro` (same `featuredDestinations()` source) + "All
+      destinations" link. Every page now links the destination pages, not
+      just `/call/`.
+
+New destination pages (BLOCKED — need per-minute rates from the admin table):
 
 - [ ] **Gulf:** Kuwait (+965), Qatar (+974), Oman (+968), Bahrain (+973) —
       data rows in `src/lib/destinations.ts` (intro + dialingNote each).
       Reuse the UAE hedged VoIP-restriction phrasing for Qatar and Oman
-      ONLY; Kuwait/Bahrain intros must not claim a VoIP block. Fits the
-      "Middle East Calling" store identity.
+      ONLY; Kuwait/Bahrain intros must not claim a VoIP block.
 - [ ] **Horn of Africa:** Sudan (+249), Somalia (+252). Model intros on the
       Lebanon/Yemen outage framing, kept dateless. Skip either if
       unroutable/unmarketable.
@@ -125,12 +134,11 @@ candidate countries below.
 - [ ] **Held for a later pass:** Dominican Republic (shares country code 1 —
       breaks the `+{dialCode}` template rendering in six places; needs an
       explicit dialing note and copy review) and Colombia.
-- [ ] **Homepage "Popular destinations" strip:** top 5–6 corridors on
-      `src/pages/index.astro`, rates imported from `destinations.ts` so
-      they never drift.
-- [ ] **Footer destination links:** 4–5 top corridors in `Footer.astro`.
-      Ship the linking together with the new pages so they launch with
-      internal links (today only `/call/` is linked sitewide).
+
+When rates arrive: add rows, add each to `featuredSlugs` if it should surface
+on the homepage, update `RATES_AS_OF`, and the sitemap picks them up
+automatically. Optionally re-feature the homepage/footer set (e.g. swap a
+MENA corridor for Mexico-adjacent Central America once Spanish ships).
 
 **Done when:** every new page shows a rate verified on a recorded date;
 sitemap includes new URLs; homepage/footer link them; build passes.
@@ -245,3 +253,38 @@ Lowest priority; a slow-afternoon batch after the above.
 - `llms.txt` — no major AI engine documents consuming it; robots.txt
   already allows all crawlers.
 - Any geo/UA/device-based content switching — permanently off the table.
+
+---
+
+## Owner action items (consolidated) — off-repo, needed from the site owner
+
+These gate parts of the roadmap and cannot be done from the repo. Kept here,
+at the end, as the running reminder of what's on the owner's plate.
+
+**Phase 3 — to finish destination expansion (current blocker):**
+- [ ] Per-minute rates (US cents) + routability confirmation, from the admin
+      rate table, for: **Kuwait (+965), Qatar (+974), Oman (+968), Bahrain
+      (+973), Sudan (+249), Somalia (+252), Guatemala (+502), El Salvador
+      (+503), Honduras (+504)**. Flag any that are unroutable or lack a
+      marketable rate so they're skipped. (DR/Colombia deliberately held.)
+
+**Phase 2 — measurement & engine coverage:**
+- [ ] **Apple provider token** → paste into `APPLE_PROVIDER_TOKEN` in
+      `src/lib/stores.ts` (App Store Connect > Analytics > Campaigns → the
+      numeric `pt` in a generated campaign link). Activates App Store install
+      attribution everywhere in one commit.
+- [ ] **App Store Connect:** set Marketing URL `https://kalum.app/`, Support
+      URL `https://kalum.app/support/` (app id 6763210844).
+- [ ] **Play Console:** developer website `www.kalum.app` → `https://kalum.app/`.
+- [ ] **Bing Webmaster Tools:** verify kalum.app (GSC import is one click),
+      submit `https://kalum.app/sitemap.xml`, flag the stale `www.kalum.app`
+      parked-domain snapshot. Unlocks the Phase 2 IndexNow repo work.
+
+**Phase 4 — app-web integration (when those items come up):**
+- [ ] SHA-256 signing fingerprints from Play Console → App Signing (for
+      `assetlinks.json`); app-team `autoVerify` intent filters (Android) and
+      Associated Domains entitlement (iOS).
+
+**Phase 5 — i18n (when it starts):**
+- [ ] Human-written / native-reviewed Spanish translations (then Arabic,
+      with a native Arabic reviewer), per the no-machine-translation gate.

@@ -1,0 +1,53 @@
+---
+import { featuredDestinations, rateLabel } from "../../lib/destinations";
+
+// Links the top destination pages from the homepage — internal links that
+// help those pages rank. Cards mirror the /call/ index style; rates are
+// imported from destinations.ts so they never drift.
+const featured = featuredDestinations();
+---
+
+<section class="bg-[var(--color-cream)] py-20 md:py-28">
+  <div class="mx-auto max-w-5xl px-5 md:px-8">
+    <div class="max-w-2xl">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Popular destinations
+      </h2>
+      <p class="mt-4 text-lg leading-relaxed text-[var(--color-muted)]">
+        One per-minute rate per country — landlines and mobiles alike, and no
+        app or internet needed on their end.
+      </p>
+    </div>
+
+    <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        featured.map((d) => (
+          <li>
+            <a
+              href={`/call/${d.slug}/`}
+              class="flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white p-5 shadow-sm transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
+            >
+              <span class="text-lg font-bold text-[var(--color-text)]">
+                Call {d.name}
+              </span>
+              <span class="shrink-0 text-xl font-extrabold text-[var(--color-maroon)]">
+                {rateLabel(d)}
+                <span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-10">
+      <a
+        href="/call/"
+        class="inline-flex items-center gap-2 text-base font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+      >
+        See all destinations and rates
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>
