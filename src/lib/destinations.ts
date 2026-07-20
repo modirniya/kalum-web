@@ -1,6 +1,8 @@
 export interface Destination {
   /** URL segment under /call/ — e.g. "egypt" → /call/egypt/ */
   slug: string;
+  /** Region bucket for grouping on the /call/ index. */
+  region: "Americas" | "Middle East" | "Africa" | "Asia";
   name: string;
   /** Adjective used in copy: "any Egyptian number". */
   demonym: string;
@@ -28,6 +30,7 @@ export const RATES_AS_OF = "March 23, 2026";
 export const destinations: Destination[] = [
   {
     slug: "mexico",
+    region: "Americas",
     name: "Mexico",
     demonym: "Mexican",
     dialCode: "52",
@@ -39,6 +42,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "egypt",
+    region: "Middle East",
     name: "Egypt",
     demonym: "Egyptian",
     dialCode: "20",
@@ -50,6 +54,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "lebanon",
+    region: "Middle East",
     name: "Lebanon",
     demonym: "Lebanese",
     dialCode: "961",
@@ -61,6 +66,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "jordan",
+    region: "Middle East",
     name: "Jordan",
     demonym: "Jordanian",
     dialCode: "962",
@@ -72,6 +78,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "palestine",
+    region: "Middle East",
     name: "Palestine",
     demonym: "Palestinian",
     dialCode: "970",
@@ -83,6 +90,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "iraq",
+    region: "Middle East",
     name: "Iraq",
     demonym: "Iraqi",
     dialCode: "964",
@@ -94,6 +102,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "saudi-arabia",
+    region: "Middle East",
     name: "Saudi Arabia",
     demonym: "Saudi",
     dialCode: "966",
@@ -105,6 +114,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "uae",
+    region: "Middle East",
     name: "the UAE",
     demonym: "UAE",
     dialCode: "971",
@@ -116,6 +126,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "yemen",
+    region: "Middle East",
     name: "Yemen",
     demonym: "Yemeni",
     dialCode: "967",
@@ -127,6 +138,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "turkey",
+    region: "Middle East",
     name: "Turkey",
     demonym: "Turkish",
     dialCode: "90",
@@ -138,6 +150,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "kuwait",
+    region: "Middle East",
     name: "Kuwait",
     demonym: "Kuwaiti",
     dialCode: "965",
@@ -149,6 +162,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "qatar",
+    region: "Middle East",
     name: "Qatar",
     demonym: "Qatari",
     dialCode: "974",
@@ -160,6 +174,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "oman",
+    region: "Middle East",
     name: "Oman",
     demonym: "Omani",
     dialCode: "968",
@@ -171,6 +186,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "bahrain",
+    region: "Middle East",
     name: "Bahrain",
     demonym: "Bahraini",
     dialCode: "973",
@@ -182,6 +198,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "sudan",
+    region: "Africa",
     name: "Sudan",
     demonym: "Sudanese",
     dialCode: "249",
@@ -193,6 +210,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "guatemala",
+    region: "Americas",
     name: "Guatemala",
     demonym: "Guatemalan",
     dialCode: "502",
@@ -204,6 +222,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "el-salvador",
+    region: "Americas",
     name: "El Salvador",
     demonym: "Salvadoran",
     dialCode: "503",
@@ -215,6 +234,7 @@ export const destinations: Destination[] = [
   },
   {
     slug: "honduras",
+    region: "Americas",
     name: "Honduras",
     demonym: "Honduran",
     dialCode: "504",
@@ -224,10 +244,169 @@ export const destinations: Destination[] = [
     dialingNote:
       "Honduran numbers are 8 digits with no leading zero — mobiles usually start with 3, 8, or 9. Dial +504 and then the full 8-digit number.",
   },
+  {
+    slug: "colombia",
+    region: "Americas",
+    name: "Colombia",
+    demonym: "Colombian",
+    dialCode: "57",
+    rateCents: 4,
+    intro:
+      "Bogotá, Medellín, Cali — call any Colombian landline or mobile at one per-minute rate, no app or internet needed on their end.",
+    dialingNote:
+      "Colombian mobiles are 10 digits starting with 3. Dial +57 and then the full 10-digit number; landlines add a city code like 1 for Bogotá.",
+  },
+  {
+    slug: "india",
+    region: "Asia",
+    name: "India",
+    demonym: "Indian",
+    dialCode: "91",
+    rateCents: 5,
+    intro:
+      "Delhi, Mumbai, Chennai, or a village landline — reach any Indian number at one per-minute rate, with nothing to install on their end.",
+    dialingNote:
+      "Indian mobiles are 10 digits starting with 6, 7, 8, or 9. Drop any leading 0 and dial +91, then the full 10-digit number.",
+  },
+  {
+    slug: "pakistan",
+    region: "Asia",
+    name: "Pakistan",
+    demonym: "Pakistani",
+    dialCode: "92",
+    rateCents: 22,
+    intro:
+      "Karachi, Lahore, Islamabad — call any Pakistani landline or mobile at one per-minute rate; there's nothing for them to download.",
+    dialingNote:
+      "Pakistani mobiles are 10 digits starting with 3 (written locally as 03…). Drop the leading 0 and dial +92, then the rest of the number.",
+  },
+  {
+    slug: "bangladesh",
+    region: "Asia",
+    name: "Bangladesh",
+    demonym: "Bangladeshi",
+    dialCode: "880",
+    rateCents: 7,
+    intro:
+      "Dhaka, Chattogram, Sylhet — reach any Bangladeshi landline or mobile at one per-minute rate, no app or internet needed on their end.",
+    dialingNote:
+      "Bangladeshi mobiles are 10 digits starting with 1 (written locally as 01…). Drop the leading 0 and dial +880, then the rest of the number.",
+  },
+  {
+    slug: "nepal",
+    region: "Asia",
+    name: "Nepal",
+    demonym: "Nepali",
+    dialCode: "977",
+    rateCents: 30,
+    intro:
+      "Kathmandu, Pokhara, or a hillside village — call any Nepali landline or mobile at one per-minute rate, with nothing to set up on their side.",
+    dialingNote:
+      "Nepali mobiles are 10 digits starting with 98 or 97. Dial +977 and then the full 10-digit number.",
+  },
+  {
+    slug: "sri-lanka",
+    region: "Asia",
+    name: "Sri Lanka",
+    demonym: "Sri Lankan",
+    dialCode: "94",
+    rateCents: 28,
+    intro:
+      "Colombo, Kandy, Jaffna — reach any Sri Lankan landline or mobile at one per-minute rate, no app or internet needed on their end.",
+    dialingNote:
+      "Sri Lankan mobiles are 9 digits starting with 7 (written locally as 07…). Drop the leading 0 and dial +94, then the rest of the number.",
+  },
+  {
+    slug: "philippines",
+    region: "Asia",
+    name: "the Philippines",
+    demonym: "Philippine",
+    dialCode: "63",
+    rateCents: 28,
+    intro:
+      "Manila, Cebu, Davao — call any Philippine landline or mobile at one per-minute rate; they just answer their phone, no app needed.",
+    dialingNote:
+      "Philippine mobiles are 10 digits starting with 9 (written locally as 09…). Drop the leading 0 and dial +63, then the rest of the number.",
+  },
+  {
+    slug: "vietnam",
+    region: "Asia",
+    name: "Vietnam",
+    demonym: "Vietnamese",
+    dialCode: "84",
+    rateCents: 15,
+    intro:
+      "Hanoi, Ho Chi Minh City, Da Nang — reach any Vietnamese landline or mobile at one per-minute rate, no app or internet needed on their end.",
+    dialingNote:
+      "Vietnamese mobiles are 9 digits starting with 3, 5, 7, 8, or 9 (written locally with a leading 0). Drop the leading 0 and dial +84, then the rest of the number.",
+  },
+  {
+    slug: "afghanistan",
+    region: "Asia",
+    name: "Afghanistan",
+    demonym: "Afghan",
+    dialCode: "93",
+    rateCents: 49,
+    intro:
+      "Kabul, Herat, Mazar-i-Sharif — Kalum calls regular Afghan phone numbers, so even when the internet over there is down, their phone still rings.",
+    dialingNote:
+      "Afghan mobiles are 9 digits starting with 7 (written locally as 07…). Drop the leading 0 and dial +93, then the rest of the number.",
+  },
+  {
+    slug: "nigeria",
+    region: "Africa",
+    name: "Nigeria",
+    demonym: "Nigerian",
+    dialCode: "234",
+    rateCents: 20,
+    intro:
+      "Lagos, Abuja, Kano — call any Nigerian landline or mobile at one per-minute rate, with nothing to install or sign up for on their end.",
+    dialingNote:
+      "Nigerian mobiles are 10 digits starting with 7, 8, or 9 (written locally with a leading 0). Drop the leading 0 and dial +234, then the rest of the number.",
+  },
+  {
+    slug: "ghana",
+    region: "Africa",
+    name: "Ghana",
+    demonym: "Ghanaian",
+    dialCode: "233",
+    rateCents: 49,
+    intro:
+      "Accra, Kumasi, Tamale — reach any Ghanaian landline or mobile at one per-minute rate; there's nothing for them to download or set up.",
+    dialingNote:
+      "Ghanaian mobiles are 9 digits starting with 2 or 5 (written locally with a leading 0). Drop the leading 0 and dial +233, then the rest of the number.",
+  },
+  {
+    slug: "kenya",
+    region: "Africa",
+    name: "Kenya",
+    demonym: "Kenyan",
+    dialCode: "254",
+    rateCents: 36,
+    intro:
+      "Nairobi, Mombasa, Kisumu — call any Kenyan landline or mobile at one per-minute rate, no app or internet needed on their end.",
+    dialingNote:
+      "Kenyan mobiles are 9 digits starting with 7 or 1 (written locally as 07… or 01…). Drop the leading 0 and dial +254, then the rest of the number.",
+  },
+  {
+    slug: "ethiopia",
+    region: "Africa",
+    name: "Ethiopia",
+    demonym: "Ethiopian",
+    dialCode: "251",
+    rateCents: 47,
+    intro:
+      "Addis Ababa, Dire Dawa, Bahir Dar — Kalum calls regular Ethiopian phone numbers, so even when the internet over there is out, their phone still rings.",
+    dialingNote:
+      "Ethiopian mobiles are 9 digits starting with 9 (written locally as 09…). Drop the leading 0 and dial +251, then the rest of the number.",
+  },
 ];
 
-/** "6¢" / "24¢" display form. */
+/** Display form: "6¢" / "24¢" under a dollar, "$1.10" at or above it. */
 export function rateLabel(d: Destination): string {
+  if (d.rateCents >= 100) {
+    return `$${(d.rateCents / 100).toFixed(2)}`;
+  }
   return `${d.rateCents}¢`;
 }
 

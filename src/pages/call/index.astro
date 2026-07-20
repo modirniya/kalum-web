@@ -7,11 +7,21 @@ import { destinations, rateLabel, RATES_AS_OF } from "../../lib/destinations";
 // Lead the title with the cheapest listed rate so the hook self-updates
 // when destinations.ts changes — no hardcoded figure to drift.
 const minRate = Math.min(...destinations.map((d) => d.rateCents));
+
+// Group destinations by region for a scannable index. Fixed display order;
+// empty regions are dropped so adding/removing destinations just works.
+const regionOrder = ["Americas", "Middle East", "Asia", "Africa"] as const;
+const grouped = regionOrder
+  .map((region) => ({
+    region,
+    items: destinations.filter((d) => d.region === region),
+  }))
+  .filter((g) => g.items.length > 0);
 ---
 
 <BaseLayout
   title={`International Calling Rates by Country — from ${minRate}¢/min | Kalum`}
-  description="Per-minute rates for cheap international calls with Kalum — Mexico, Egypt, Lebanon, Jordan, and more. Landlines and mobiles, no app needed on their end."
+  description="Per-minute rates for cheap international calls with Kalum — Mexico, India, the Philippines, Egypt, Nigeria, and more. Landlines and mobiles, no app needed on their end."
   canonical="https://kalum.app/call/"
 >
   <section class="bg-[var(--color-cream)] py-16 md:py-24">
@@ -24,35 +34,44 @@ const minRate = Math.min(...destinations.map((d) => d.rateCents));
       </h1>
       <p class="mt-5 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
         One per-minute rate per country, landlines and mobiles alike — and the
-        person you call never needs an app or internet. These are some of our
-        most-called destinations; the app shows live rates for 180+ countries
-        before you dial.
+        person you call never needs an app or internet. Here are per-minute
+        rates for some of the most-called destinations, grouped by region; the
+        app shows live rates for 180+ countries before you dial.
       </p>
 
-      <ul class="mt-12 grid gap-4 sm:grid-cols-2">
+      <div class="mt-12 space-y-12">
         {
-          destinations.map((d) => (
-            <li>
-              <a
-                href={`/call/${d.slug}/`}
-                class="flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white p-6 shadow-sm transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
-              >
-                <span>
-                  <span class="block text-lg font-bold text-[var(--color-text)]">
-                    Call {d.name}
-                  </span>
-                  <span class="mt-1 block text-sm text-[var(--color-muted)]">
-                    +{d.dialCode} &middot; landlines &amp; mobiles
-                  </span>
-                </span>
-                <span class="shrink-0 text-2xl font-extrabold text-[var(--color-maroon)]">
-                  {rateLabel(d)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
-                </span>
-              </a>
-            </li>
+          grouped.map((group) => (
+            <div>
+              <h2 class="text-2xl font-extrabold tracking-tight text-[var(--color-text)]">
+                {group.region}
+              </h2>
+              <ul class="mt-5 grid gap-4 sm:grid-cols-2">
+                {group.items.map((d) => (
+                  <li>
+                    <a
+                      href={`/call/${d.slug}/`}
+                      class="flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white p-6 shadow-sm transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
+                    >
+                      <span>
+                        <span class="block text-lg font-bold text-[var(--color-text)]">
+                          Call {d.name}
+                        </span>
+                        <span class="mt-1 block text-sm text-[var(--color-muted)]">
+                          +{d.dialCode} &middot; landlines &amp; mobiles
+                        </span>
+                      </span>
+                      <span class="shrink-0 text-2xl font-extrabold text-[var(--color-maroon)]">
+                        {rateLabel(d)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))
         }
-      </ul>
+      </div>
 
       <p class="mt-8 text-sm text-[var(--color-muted)]">
         Rates as of {RATES_AS_OF}. Calls billed by the minute, 60-second

@@ -102,7 +102,7 @@ IndexNow submissions return 200 in the Actions log.
 
 ---
 
-## Phase 3 — Destination expansion + internal linking — LINKING DONE (2026-07-20); new pages blocked on rates
+## Phase 3 — Destination expansion + internal linking — DONE (2026-07-20); 31 destinations live
 
 Every new country is **rate-gated**: before adding a row, confirm in the
 admin rate table that the destination is routable with a marketable rate,
@@ -132,25 +132,38 @@ New destination pages — DONE (2026-07-20). Rates from the admin table
       connectivity-led hero variant, not a plain data row.
 - [x] **Central America:** Guatemala (24¢), El Salvador (35¢), Honduras
       (29¢). Full payoff comes after the Phase 5 Spanish locale.
-- [ ] **Held for a later pass:** Dominican Republic (+1809, 17¢ — shares
-      country code 1, breaks the `+{dialCode}` template in ~6 places; needs
-      an explicit dialing note + copy review) and Colombia (+57, **4¢** —
-      cheapest in the table, huge diaspora; strong candidate to fast-track,
-      ideally alongside Spanish).
 
-**Phase 3b candidates (not in the approved scope — need owner OK):** the full
-rate table surfaced large-diaspora, cheap, routable corridors we don't cover
-yet — India (5¢), Bangladesh (7¢), Pakistan (22¢), Philippines (28¢), Nigeria
-(20¢), Vietnam (15¢), Nepal (30¢), Ghana (49¢), Kenya (36¢), Ethiopia (47¢).
-Each is a one-row addition. Greenlight any and they ship in a batch.
+Second expansion wave (2026-07-20, "plans are dynamic" — folded the Phase 3b
+corridors straight into the active plan):
 
-**Note for future high-rate additions:** `rateLabel` renders `${cents}¢`, so
-any rate ≥ $1.00 displays as "NNN¢". Add a dollar-format branch before
-introducing a destination over 99¢.
+- [x] **Latin America:** Colombia (4¢ — cheapest in the table, huge diaspora).
+- [x] **South Asia:** India (5¢), Bangladesh (7¢), Pakistan (22¢),
+      Sri Lanka (28¢), Nepal (30¢).
+- [x] **Southeast Asia:** Vietnam (15¢), the Philippines (28¢).
+- [x] **Sub-Saharan Africa:** Nigeria (20¢), Kenya (36¢), Ethiopia (47¢),
+      Ghana (49¢). Afghanistan (49¢, outage framing) added alongside.
+      → **31 destinations total.**
+- [x] **`rateLabel` dollar format:** now renders ≥ $1.00 as "$1.10" (was
+      "110¢"); unblocks any future high-rate country (e.g. a reconsidered
+      Somalia).
+- [x] **`/call/` index grouped by region** (`region` field + Americas /
+      Middle East / Asia / Africa headings) so the 31-item list stays
+      scannable and gains semantic H2 structure.
+- [ ] **Still held — Dominican Republic** (+1809, 17¢): shares country code 1,
+      so the `+{dialCode}` template renders "+1809" and the "drop the leading
+      0" dialing logic doesn't apply. Needs a NANP-aware dialing note + a
+      small template branch before it ships. Only remaining held corridor.
 
-**Done:** 8 pages built, rates verified against the admin table, VoIP
-phrasing scoped correctly, breadcrumb/FAQ/JSON-LD intact on each, sitemap +
-`/call/` index + sibling cross-links pick them up automatically.
+**Remaining corridor opportunities (optional, owner's call):** Brazil (8¢),
+Peru (9¢), Indonesia (12¢), Thailand (12¢), Morocco is Maghreb-excluded.
+`featuredSlugs` still the original 6 (Mexico + MENA) — revisit once Phase 2
+attribution shows which corridors actually convert, rather than guessing.
+
+**Done:** 21 destination pages added across two waves, every rate verified
+against the admin table; VoIP phrasing scoped to the Gulf; each page keeps
+breadcrumb / 6-FAQ / JSON-LD; index regional grouping, sitemap (37 URLs), and
+sibling cross-links all update automatically. Somalia deliberately skipped
+(unmarketable at $1.10).
 
 ---
 
@@ -270,10 +283,11 @@ Lowest priority; a slow-afternoon batch after the above.
 These gate parts of the roadmap and cannot be done from the repo. Kept here,
 at the end, as the running reminder of what's on the owner's plate.
 
-**Phase 3 — destination rates:** ✅ provided 2026-07-20; 8 pages shipped,
-Somalia skipped (unmarketable at $1.10). Optional next: greenlight any Phase
-3b corridors (India, Bangladesh, Philippines, Nigeria, Colombia, …) listed in
-Phase 3 above.
+**Phase 3 — destination rates:** ✅ provided 2026-07-20; **21 pages shipped
+across two waves → 31 destinations.** Somalia skipped (unmarketable at $1.10);
+Dominican Republic still held (needs the +1 template branch). Optional: OK any
+remaining corridors (Brazil, Peru, Indonesia, Thailand), and decide whether to
+re-feature the homepage set once Phase 2 attribution data exists.
 
 **Phase 2 — measurement & engine coverage:**
 - [ ] **Apple provider token** → paste into `APPLE_PROVIDER_TOKEN` in
