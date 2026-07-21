@@ -14,7 +14,7 @@ export const ANDROID_PACKAGE = "app.kalum.mobile";
 // clean: Apple ignores utm_source, so there is no attribution to add and a
 // bare listing URL is the honest form. Set this and every badge instantly
 // carries per-placement campaign attribution — no other change needed.
-export const APPLE_PROVIDER_TOKEN = "";
+export const APPLE_PROVIDER_TOKEN = "128816974";
 
 const APPLE_BASE = `https://apps.apple.com/us/app/${APPLE_APP_SLUG}/id${APPLE_APP_ID}`;
 const PLAY_BASE = `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE}`;

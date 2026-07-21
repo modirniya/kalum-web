@@ -23,14 +23,12 @@ Ordered by impact-for-effort. Check them off as you go.
   index), and the **IndexNow** auto-submit step I'm holding.
 - **Then I:** add IndexNow (key file + post-deploy ping in `deploy.yml`).
 
-### 2. Apple provider token — activate App Store install attribution
-- App Store Connect → **App Analytics** (analytics.appstoreconnect.apple.com)
-  → **Acquisition → Campaigns** → create/view a campaign link. The generated
-  URL contains `pt=NNNNNNN` — that number is the provider token.
-- **Paste it to me** (or into `APPLE_PROVIDER_TOKEN` in `src/lib/stores.ts`).
-- **Unlocks:** per-placement App Store install attribution (which page drives
-  installs). Google Play attribution is already live.
-- **Then I:** commit — every App Store badge instantly carries `?pt=&ct=&mt=8`.
+### 2. Apple provider token — activate App Store install attribution ✅ DONE (2026-07-20)
+- Provider token `128816974` is set in `APPLE_PROVIDER_TOKEN`
+  (`src/lib/stores.ts`). Every App Store badge now links with
+  `?pt=128816974&ct=<placement>&mt=8`; each placement (hero, footer, per
+  destination, /es/…) reports as its own campaign in App Analytics.
+- Google Play attribution was already live. Both stores now attributed.
 
 ### 3. App Store Connect — set Marketing + Support URLs
 - App Store Connect → **Apps → Kalum → App Information**.

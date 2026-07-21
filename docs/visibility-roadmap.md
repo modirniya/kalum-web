@@ -314,10 +314,9 @@ remaining corridors (Brazil, Peru, Indonesia, Thailand), and decide whether to
 re-feature the homepage set once Phase 2 attribution data exists.
 
 **Phase 2 — measurement & engine coverage:**
-- [ ] **Apple provider token** → paste into `APPLE_PROVIDER_TOKEN` in
-      `src/lib/stores.ts` (App Store Connect > Analytics > Campaigns → the
-      numeric `pt` in a generated campaign link). Activates App Store install
-      attribution everywhere in one commit.
+- [x] **Apple provider token** — `128816974` set in `APPLE_PROVIDER_TOKEN`
+      (2026-07-20). App Store badges now emit `?pt=128816974&ct=<placement>&mt=8`;
+      both stores attributed.
 - [ ] **App Store Connect:** set Marketing URL `https://kalum.app/`, Support
       URL `https://kalum.app/support/` (app id 6763210844).
 - [ ] **Play Console:** developer website `www.kalum.app` → `https://kalum.app/`.
