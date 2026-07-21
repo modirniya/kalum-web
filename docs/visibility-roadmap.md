@@ -83,9 +83,9 @@ Owner items (off-repo, still pending):
 - [ ] **Apple provider token** → paste into `APPLE_PROVIDER_TOKEN` in
       `src/lib/stores.ts` (App Store Connect > Analytics > Campaigns → the
       numeric `pt` in a generated campaign link). One-line edit, then commit.
-- [ ] **App Store Connect:** set Marketing URL → `https://kalum.app/`,
-      Support URL → `https://kalum.app/support/` (app id 6763210844;
-      `sellerUrl` confirmed null via lookup API).
+- [x] **App Store Connect (SET 2026-07-20):** Marketing `https://kalum.app/`,
+      Support `https://kalum.app/support/`. Lookup API `sellerUrl` still
+      caching — re-verify in ~a day.
 - [ ] **Play Console:** change developer website from `www.kalum.app` to
       `https://kalum.app/`.
 - [ ] **Bing Webmaster Tools:** verify kalum.app (GSC import is one click),

@@ -26,13 +26,12 @@ Ordered by impact-for-effort. Check them off as you go.
   destination, /es/…) reports as its own campaign in App Analytics.
 - Google Play attribution was already live. Both stores now attributed.
 
-### 3. App Store Connect — set Marketing + Support URLs
-- App Store Connect → **Apps → Kalum → App Information**.
-- Marketing URL: `https://kalum.app/`
-- Support URL: `https://kalum.app/support/`
-- (Fixes the null `sellerUrl` we confirmed via the lookup API. Ships with the
-  next metadata update.)
-- **Then I:** nothing — this is fully on the ASC side.
+### 3. App Store Connect — set Marketing + Support URLs ✅ SET (2026-07-20)
+- Owner set Marketing URL `https://kalum.app/` and Support URL
+  `https://kalum.app/support/` on the version page.
+- Apple's public lookup API still showed `sellerUrl: null` right after — that
+  API caches/lags by ~a day, or the field publishes with the next version.
+  Re-check later: `curl -s "https://itunes.apple.com/lookup?id=6763210844"`.
 
 ### 4. Google Play Console — fix developer website
 - Play Console → Kalum → **Store presence → Store listing → Contact details**.
