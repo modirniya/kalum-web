@@ -42,15 +42,13 @@ Ordered by impact-for-effort. Check them off as you go.
 
 ## Needs the mobile app team
 
-### 5. Play App Signing SHA-256 — unlocks Android App Links
-- Play Console → Kalum → **Test and release → App integrity → App signing**.
-- Copy **both** SHA-256 fingerprints shown there: the **App signing key
-  certificate** and the **Upload key certificate**.
-- **Paste both to me.**
-- **Unlocks:** `assetlinks.json` (Digital Asset Links).
-- **Then I:** create `public/.well-known/assetlinks.json` for package
-  `app.kalum.mobile` with both fingerprints. Full link-handling also needs the
-  app to ship `autoVerify` intent filters (app-team change).
+### 5. Play App Signing SHA-256 — Android App Links ✅ WEB FILE SHIPPED (2026-07-20)
+- Owner provided both SHA-256 fingerprints (from the new "Protected with Play"
+  → Play app signing page). Shipped `public/.well-known/assetlinks.json` for
+  `app.kalum.mobile` with both; added `public/.nojekyll` so the dot-directory
+  serves on GitHub Pages. Validated via Google's Digital Asset Links API.
+- **Still needs (app team):** `autoVerify` intent filters in the Android
+  manifest for links to open the app automatically. The web half is done.
 
 ### 6. iOS Associated Domains entitlement — unlocks Universal Links
 - App team adds the **`associated-domains`** entitlement in Xcode with

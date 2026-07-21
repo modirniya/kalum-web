@@ -178,7 +178,7 @@ sibling cross-links all update automatically. Somalia deliberately skipped
 
 App-link files — both genuinely blocked (investigated the `mobile` repo):
 
-- [ ] **Android App Links (`public/.well-known/assetlinks.json`):** BLOCKED
+- [x] **Android App Links (`public/.well-known/assetlinks.json`): SHIPPED 2026-07-20.** Both Play SHA-256 fingerprints in place; `.nojekyll` added; validated via Google's Digital Asset Links API. App `autoVerify` intent filters still needed (app team). [orig notes:] BLOCKED
       on the Play App Signing SHA-256. The app is Play-signed (package
       `app.kalum.mobile`), so the fingerprint Android verifies lives only in
       Play Console → Test and release → App integrity → App signing. That
@@ -323,9 +323,9 @@ re-feature the homepage set once Phase 2 attribution data exists.
       IndexNow wired in.
 
 **Phase 4 — app-web integration (explainer shipped; app-link files blocked):**
-- [ ] **Play App Signing SHA-256** (both app-signing + upload) from Play
-      Console → App integrity → App signing → paste into the assetlinks.json
-      template in Phase 4 above; I'll then ship `public/.well-known/assetlinks.json`.
+- [x] **Play App Signing SHA-256:** ✅ provided; `assetlinks.json` shipped +
+      validated. App-team `autoVerify` intent filters still needed for
+      auto-open.
 - [ ] **iOS `associated-domains` entitlement** added to the app + a release
       (`applinks:kalum.app`). Only then does the AASA file do anything — Team
       ID `485TFXLF7Q` and bundle already captured.

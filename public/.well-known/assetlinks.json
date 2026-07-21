@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.kalum.mobile",
+      "sha256_cert_fingerprints": [
+        "B5:94:97:DD:8B:00:D5:0C:2F:C4:74:34:8A:65:80:32:BC:3D:12:D8:02:02:DB:6C:29:13:F8:6E:0D:65:A6:C4",
+        "AF:6D:7D:2A:BE:B2:B5:E7:9D:9A:45:5C:E5:E0:B4:E7:5D:36:E3:C3:2D:D1:8C:48:2C:D7:D3:7C:D0:0E:FC:43"
+      ]
+    }
+  }
+]
