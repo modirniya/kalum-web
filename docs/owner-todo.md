@@ -11,17 +11,13 @@ Ordered by impact-for-effort. Check them off as you go.
 
 ## Quick wins (consoles you already control)
 
-### 1. Bing Webmaster Tools — verify + submit sitemap  ⭐ highest leverage
-- Go to **bing.com/webmasters** → sign in.
-- Use **"Import from Google Search Console"** (one click — GSC is already
-  verified, so no new file needed). If you'd rather verify manually, tell me
-  and I'll drop a `BingSiteAuth.xml` in `public/`.
-- Submit the sitemap: `https://kalum.app/sitemap.xml`
-- While there, check for a stale **`www.kalum.app`** parked-domain snapshot
-  and remove/disavow it if present.
-- **Unlocks:** Bing + DuckDuckGo + ChatGPT Search indexing (they share Bing's
-  index), and the **IndexNow** auto-submit step I'm holding.
-- **Then I:** add IndexNow (key file + post-deploy ping in `deploy.yml`).
+### 1. Bing Webmaster Tools + IndexNow ✅ DONE (2026-07-20)
+- Bing verified via GSC import; sitemap submitted, **41 URLs discovered**.
+- **IndexNow** now wired in: public key file at
+  `https://kalum.app/f9ae384da454e9d1a2aed641e586c16c.txt` + a post-deploy
+  step in `deploy.yml` that pings IndexNow (Bing/Yandex/Seznam) with the
+  current URL set on every content deploy (skips the weekly cron). Bing +
+  DuckDuckGo + ChatGPT Search now covered.
 
 ### 2. Apple provider token — activate App Store install attribution ✅ DONE (2026-07-20)
 - Provider token `128816974` is set in `APPLE_PROVIDER_TOKEN`

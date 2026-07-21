@@ -40,3 +40,36 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # Notify IndexNow (Bing, Yandex, Seznam, …) of the current URL set so
+      # changed pages get re-crawled quickly. The key is PUBLIC by design —
+      # it is served at https://kalum.app/<key>.txt. Runs on content pushes
+      # and manual runs, not the weekly cron (nothing changes there).
+      # Never fails the deploy.
+      - name: Notify IndexNow
+        if: github.event_name != 'schedule'
+        continue-on-error: true
+        run: |
+          python3 - <<'PY'
+          import urllib.request, json, re
+          KEY, HOST = "f9ae384da454e9d1a2aed641e586c16c", "kalum.app"
+          sm = urllib.request.urlopen(f"https://{HOST}/sitemap.xml", timeout=30).read().decode()
+          urls = re.findall(r"<loc>([^<]+)</loc>", sm)
+          payload = {
+              "host": HOST,
+              "key": KEY,
+              "keyLocation": f"https://{HOST}/{KEY}.txt",
+              "urlList": urls,
+          }
+          req = urllib.request.Request(
+              "https://api.indexnow.org/indexnow",
+              data=json.dumps(payload).encode(),
+              headers={"Content-Type": "application/json; charset=utf-8"},
+              method="POST",
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  print(f"IndexNow {r.status} — submitted {len(urls)} URLs")
+          except urllib.error.HTTPError as e:
+              print("IndexNow HTTPError:", e.code, e.read().decode()[:300])
+          PY

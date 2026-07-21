@@ -91,10 +91,9 @@ Owner items (off-repo, still pending):
 - [ ] **Bing Webmaster Tools:** verify kalum.app (GSC import is one click),
       submit `https://kalum.app/sitemap.xml`, flag the stale parked-domain
       snapshot for `www.kalum.app` if still shown.
-- [ ] **IndexNow (after Bing verification):** static key file in `public/`
-      (public by design) + post-deploy submit step in `deploy.yml`. Repo
-      work is ready to add the moment Bing verification exists. Modest
-      accelerant only.
+- [x] **IndexNow (DONE 2026-07-20):** public key file at
+      `/f9ae384da454e9d1a2aed641e586c16c.txt` + post-deploy ping in
+      `deploy.yml` (Bing/Yandex/Seznam), on content deploys only.
 
 **Done when:** store clicks appear in ASC campaign analytics (needs token) /
 Play acquisition reports (already flowing); Bing shows sitemap Success;
@@ -320,9 +319,8 @@ re-feature the homepage set once Phase 2 attribution data exists.
 - [ ] **App Store Connect:** set Marketing URL `https://kalum.app/`, Support
       URL `https://kalum.app/support/` (app id 6763210844).
 - [ ] **Play Console:** developer website `www.kalum.app` → `https://kalum.app/`.
-- [ ] **Bing Webmaster Tools:** verify kalum.app (GSC import is one click),
-      submit `https://kalum.app/sitemap.xml`, flag the stale `www.kalum.app`
-      parked-domain snapshot. Unlocks the Phase 2 IndexNow repo work.
+- [x] **Bing Webmaster Tools:** ✅ done — verified, sitemap submitted,
+      IndexNow wired in.
 
 **Phase 4 — app-web integration (explainer shipped; app-link files blocked):**
 - [ ] **Play App Signing SHA-256** (both app-signing + upload) from Play
