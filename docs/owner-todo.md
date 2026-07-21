@@ -33,10 +33,10 @@ Ordered by impact-for-effort. Check them off as you go.
   API caches/lags by ~a day, or the field publishes with the next version.
   Re-check later: `curl -s "https://itunes.apple.com/lookup?id=6763210844"`.
 
-### 4. Google Play Console — fix developer website
-- Play Console → Kalum → **Store presence → Store listing → Contact details**.
-- Change website from `www.kalum.app` to `https://kalum.app/`.
-- **Then I:** nothing — Play-side only.
+### 4. Google Play Console — developer website ✅ DONE (2026-07-20)
+- Main store listing → Contact details → Website already shows
+  `https://kalum.app/` (apex, correct). The public listing website is the one
+  that matters; the optional account-level field wasn't present/needed.
 
 ---
 

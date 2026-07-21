@@ -86,8 +86,8 @@ Owner items (off-repo, still pending):
 - [x] **App Store Connect (SET 2026-07-20):** Marketing `https://kalum.app/`,
       Support `https://kalum.app/support/`. Lookup API `sellerUrl` still
       caching — re-verify in ~a day.
-- [ ] **Play Console:** change developer website from `www.kalum.app` to
-      `https://kalum.app/`.
+- [x] **Play Console (DONE 2026-07-20):** main store listing website is
+      `https://kalum.app/` (apex).
 - [ ] **Bing Webmaster Tools:** verify kalum.app (GSC import is one click),
       submit `https://kalum.app/sitemap.xml`, flag the stale parked-domain
       snapshot for `www.kalum.app` if still shown.
