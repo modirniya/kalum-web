@@ -1,0 +1,46 @@
+---
+// Breadcrumb for use inside a brand-gradient hero. Renders the visible nav
+// AND the matching BreadcrumbList JSON-LD from ONE items array, so markup and
+// structured data can never disagree (matters given the prior cloaking flag).
+// The last item is the current page: pass it without an href.
+interface Item {
+  name: string;
+  href?: string;
+}
+interface Props {
+  items: Item[];
+}
+const { items } = Astro.props;
+
+const SITE = "https://kalum.app";
+const jsonld = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((it, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: it.name,
+    ...(it.href ? { item: `${SITE}${it.href}` } : {}),
+  })),
+};
+---
+
+<nav aria-label="Breadcrumb" class="mb-6 text-sm text-white/70">
+  <ol class="flex flex-wrap items-center gap-x-2">
+    {
+      items.map((it, i) => (
+        <>
+          {i > 0 && <li aria-hidden="true" class="text-white/40">/</li>}
+          <li>
+            {it.href ? (
+              <a href={it.href} class="hover:text-white transition">{it.name}</a>
+            ) : (
+              <span aria-current="page" class="text-white/90">{it.name}</span>
+            )}
+          </li>
+        </>
+      ))
+    }
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(jsonld)} />

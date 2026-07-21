@@ -6,9 +6,11 @@ interface Props {
   utm?: string;
   /** Tag this link as a conversion CTA (adds data-aw-cta for gtag tracking). */
   cta?: boolean;
+  /** "eager" above the fold (hero); "lazy" below (footer). */
+  loading?: "eager" | "lazy";
 }
 
-const { size = "lg", utm = "kalum-web", cta = false } = Astro.props;
+const { size = "lg", utm = "kalum-web", cta = false, loading = "eager" } = Astro.props;
 
 // Sized to match AppStoreBadge heights. Google Play asset is the trimmed
 // 564x168 PNG (aspect 3.357) with the official 41px transparent padding
@@ -34,7 +36,7 @@ const href = playHref(utm);
     width="564"
     height="168"
     class={`h-auto ${widthClass}`}
-    loading="eager"
+    loading={loading}
     decoding="async"
   />
 </a>

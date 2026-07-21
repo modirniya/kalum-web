@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import AppStoreBadge from "../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../components/GooglePlayBadge.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
 import { voipRestrictedDestinations, rateLabel } from "../lib/destinations";
 
 // Evergreen explainer for the "WhatsApp calls blocked in the Gulf" query.
@@ -56,6 +57,7 @@ const structuredData = {
     </div>
 
     <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <Breadcrumb items={[{ name: "Home", href: "/" }, { name: "WhatsApp calls blocked" }]} />
       <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
         When internet calls won't connect
       </p>

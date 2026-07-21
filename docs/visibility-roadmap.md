@@ -268,18 +268,23 @@ this file; Step 4 same bar as Step 2 plus RTL visual review.
 
 ---
 
-## Phase 6 — Performance & structured-data polish
+## Phase 6 — Performance & structured-data polish — DONE (2026-07-20)
 
-Lowest priority; a slow-afternoon batch after the above.
-
-- [ ] `fetchpriority="high"` on the hero image; `loading` prop on the two
-      badge components (lazy in the footer only).
-- [ ] Font preloads via `?url` imports for the Inter 400/800 subsets; drop
-      the near-unused 500 weight.
-- [ ] BreadcrumbList prop in `BaseLayout.astro` for the evergreen pages
-      that lack it (how-it-works, support, call-without-internet,
-      calling-app-vs-internet-calling) — without double-emitting on
-      destination pages and skipping the noindex LP.
+- [x] `fetchpriority="high"` on the hero image (LCP). `loading` prop added to
+      both badge components (default eager); footer badges pass `loading="lazy"`,
+      hero/CTA badges stay eager.
+- [x] Font preloads: latin 400 + 800 woff2 preloaded (`?url` imports +
+      `<link rel=preload ... crossorigin>`). **Kept the 500 weight** — it's
+      used in the sticky header nav and trust strip, so dropping it would
+      visibly lighten the nav; the roadmap's "near-unused" was inaccurate.
+- [x] Breadcrumbs on evergreen content pages via a new `Breadcrumb.astro`
+      that renders the visible nav AND the matching BreadcrumbList JSON-LD
+      from one array (can't mismatch — cloaking-safe). Added to
+      `/call-without-internet/`, `/calling-app-vs-internet-calling/`,
+      `/whatsapp-calls-blocked/`, and `/es/call-without-internet/`.
+      Destination pages keep their existing single BreadcrumbList (verified
+      not doubled). Skipped `/how-it-works/` and `/support/` — utility pages
+      one level deep where a Home→Page crumb is noise, not the paid noindex LP.
 
 ---
 

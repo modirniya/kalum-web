@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AppStoreBadge from "../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
 import { alternatesFor } from "../../lib/i18n";
 
 // Spanish version of /call-without-internet/ — the core differentiator for
@@ -66,6 +67,7 @@ const structuredData = {
     </div>
 
     <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <Breadcrumb items={[{ name: "Inicio", href: "/es/" }, { name: "Llamar sin internet" }]} />
       <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
         Sin internet de su lado
       </p>
