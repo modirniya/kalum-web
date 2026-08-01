@@ -1,4 +1,5 @@
 ---
+import RateDisclosure from "../RateDisclosure.astro";
 import {
   featuredPricedDestinations,
   formatRate,
@@ -51,6 +52,8 @@ const from = fromPrefix(card.basis);
         ))
       }
     </ul>
+
+    <RateDisclosure card={card} class="mt-8 max-w-3xl" />
 
     <div class="mt-10">
       <a

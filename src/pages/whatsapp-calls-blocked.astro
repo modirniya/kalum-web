@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import AppStoreBadge from "../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
+import RateDisclosure from "../components/RateDisclosure.astro";
 import {
   voipRestrictedPricedDestinations,
   formatRate,
@@ -160,6 +161,8 @@ const structuredData = {
           ))
         }
       </ul>
+
+      <RateDisclosure card={card} class="mt-6" />
 
       <p class="mt-8 text-base text-[var(--color-muted)]">
         Comparing your options?
