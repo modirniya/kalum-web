@@ -2,43 +2,63 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AppStoreBadge from "../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
+import RateDisclosure from "../../components/RateDisclosure.astro";
+import { nameAtSentenceStart } from "../../lib/destinations";
 import {
-  destinations,
-  rateLabel,
-  RATES_AS_OF,
-  type Destination,
-} from "../../lib/destinations";
+  pricedDestinations,
+  formatRate,
+  fromPrefix,
+  formatRatesAsOf,
+  type PricedDestination,
+  type RateCard,
+} from "../../lib/rates";
 import { alternatesFor } from "../../lib/i18n";
 
 // Organic destination pages — indexable, unlike the /call-mexico paid LP.
-// Every rate figure comes from src/lib/destinations.ts (synced from the live
-// rate table); copy stays within verified claims.
+// Rates are fetched from the live rate card while the site builds and baked
+// into this HTML (src/lib/rates.ts); copy stays within verified claims.
+//
+// Under prefix pricing the card gives a country's CHEAPEST prefix, so every
+// figure here is a floor, not a flat price: the phrasing switches to "from
+// X/min" and nothing claims one rate covers the country's mobiles and
+// landlines. Rendering a "from" figure as flat would let this page contradict
+// the quote the app gives before the call — the one number that gets billed.
 
-export function getStaticPaths() {
-  return destinations.map((destination) => ({
+export async function getStaticPaths() {
+  const { card, priced } = await pricedDestinations();
+  return priced.map((destination) => ({
     params: { slug: destination.slug },
-    props: { destination },
+    props: { destination, card, others: priced.filter((o) => o.slug !== destination.slug) },
   }));
 }
 
 interface Props {
-  destination: Destination;
+  destination: PricedDestination;
+  card: RateCard;
+  others: PricedDestination[];
 }
 
-const { destination: d } = Astro.props;
-const rate = rateLabel(d);
-const others = destinations.filter((o) => o.slug !== d.slug);
+const { destination: d, card, others } = Astro.props;
+const rate = formatRate(d.rateCents);
+const from = fromPrefix(card.basis);
+const asOf = formatRatesAsOf(card.fetchedAt);
+// "Call Mexico from 6¢ a minute" vs "…for 6¢ a minute" — a floor takes "from",
+// a fixed price takes "for".
+const preposition = card.basis === "from" ? "from" : "for";
 
-const title = `Call ${d.name} — ${rate}/min to Any Phone | Kalum`;
-const description = `Call ${d.name} for ${rate} a minute with Kalum — landlines and mobiles, one rate. No app, smartphone, or internet needed on their end. Prepaid credit that never expires.`;
+const title = `Call ${d.name} — ${from}${rate}/min to Any Phone | Kalum`;
+const description = `Call ${d.name} ${preposition} ${rate} a minute with Kalum — landlines and mobiles, no app, smartphone, or internet needed on their end. Prepaid credit that never expires.`;
 const canonical = `https://kalum.app/call/${d.slug}/`;
-
-const rateNote = `Rate as of ${RATES_AS_OF}. Calls billed by the minute, 60-second minimum. The app always shows the current rate before you dial.`;
+/** Dollars-per-minute, the form schema.org wants. */
+const priceUsd = (d.rateCents / 100).toFixed(2);
 
 const faqs = [
   {
     q: `How much does it cost to call ${d.name} with Kalum?`,
-    a: `${rate} per minute to any ${d.demonym} number — landlines and mobiles, one rate (as of ${RATES_AS_OF}). Calls are billed per minute with a 60-second minimum, and you always see the current rate in the app before you dial.`,
+    a:
+      card.basis === "from"
+        ? `From ${rate} per minute to any ${d.demonym} number, as of ${asOf}. Mobile and landline numbers there can price differently, so the app shows the exact rate for the number you type before you dial — that is the rate you are charged. Calls are billed per minute, rounded up, with a one-minute minimum.`
+        : `${rate} per minute to any ${d.demonym} number, as of ${asOf}. Calls are billed per minute, rounded up, with a one-minute minimum, and you always see the current rate in the app before you dial.`,
   },
   {
     q: `Does the person in ${d.name} need the app or internet?`,
@@ -46,7 +66,10 @@ const faqs = [
   },
   {
     q: `Can I call landlines in ${d.name}?`,
-    a: `Yes. Landlines and mobiles in ${d.name} cost the same ${rate} per minute. Whoever you call answers on whatever phone they already have.`,
+    a:
+      card.basis === "from"
+        ? `Yes. Kalum reaches landlines and mobiles in ${d.name} alike, and whoever you call answers on whatever phone they already have. Per-minute rates can differ between the two, so the app shows the exact rate for the number you type before the call starts.`
+        : `Yes. Landlines and mobiles in ${d.name} cost the same ${rate} per minute. Whoever you call answers on whatever phone they already have.`,
   },
   {
     q: `How do I call ${d.name}?`,
@@ -81,6 +104,40 @@ const structuredData = {
         acceptedAnswer: { "@type": "Answer", text: faq.a },
       })),
     },
+    // Semantic hygiene for answer engines, not a rich result: Google restricted
+    // FAQ rich results to gov/health domains in 2023, and price snippets are a
+    // Product/shopping feature, not something a per-minute service rate earns.
+    // This just states the price machine-readably, in the same terms the page
+    // does. Kept a Service with its own @id so it can never be conflated with
+    // the site-wide MobileApplication offer in BaseLayout, which is the app's
+    // own price (free) and not a call rate. Under prefix pricing the figure is
+    // a floor, so it goes in minPrice — never `price`, which would assert a
+    // single fixed rate.
+    {
+      "@type": "Service",
+      "@id": `${canonical}#service`,
+      name: `International calls to ${nameAtSentenceStart(d)}`,
+      serviceType: "International calling",
+      provider: { "@id": "https://kalum.app/#organization" },
+      areaServed: { "@type": "Country", name: nameAtSentenceStart(d) },
+      offers: {
+        "@type": "Offer",
+        priceCurrency: "USD",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          priceCurrency: "USD",
+          ...(card.basis === "from"
+            ? { minPrice: priceUsd }
+            : { price: priceUsd }),
+          referenceQuantity: {
+            "@type": "QuantitativeValue",
+            value: 1,
+            unitCode: "MIN",
+          },
+          validFrom: card.fetchedAt,
+        },
+      },
+    },
   ],
 };
 ---
@@ -112,7 +169,7 @@ const structuredData = {
         Calling {d.name} &middot; +{d.dialCode}
       </p>
       <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-        Call {d.name} for {rate} a minute.
+        Call {d.name} {preposition} {rate} a minute.
         <span class="block text-white/85">Landlines and mobiles. They just pick up.</span>
       </h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
@@ -124,7 +181,7 @@ const structuredData = {
         <GooglePlayBadge size="lg" utm={`kalum-web-call-${d.slug}`} />
       </div>
 
-      <p class="mt-5 max-w-2xl text-sm text-white/70">{rateNote}</p>
+      <RateDisclosure card={card} tone="dark" class="mt-5 max-w-2xl" />
 
       {
         d.voipRestricted && (
@@ -247,7 +304,7 @@ const structuredData = {
                 href={`/call/${o.slug}/`}
                 class="inline-block rounded-full border border-black/10 bg-[var(--color-cream)] px-4 py-2 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-maroon)] hover:text-[var(--color-maroon)] transition"
               >
-                {o.name} &middot; {rateLabel(o)}/min
+                {o.name} &middot; {from}{formatRate(o.rateCents)}/min
               </a>
             </li>
           ))
@@ -270,7 +327,7 @@ const structuredData = {
         <AppStoreBadge size="lg" utm={`kalum-web-call-${d.slug}`} />
         <GooglePlayBadge size="lg" utm={`kalum-web-call-${d.slug}`} />
       </div>
-      <p class="mt-5 text-sm text-white/70">{rateNote}</p>
+      <RateDisclosure card={card} tone="dark" class="mx-auto mt-5 max-w-xl" />
     </div>
   </section>
 

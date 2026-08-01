@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
-import { destinations } from "../lib/destinations";
+import { pricedDestinations } from "../lib/rates";
+import rateChanges from "../data/rate-changes.json";
 import { alternatesFor } from "../lib/i18n";
 
 // Generated sitemap — canonical, indexable URLs only:
@@ -18,25 +19,56 @@ const SITE = "https://kalum.app";
 // format blocks on destination pages, evergreen pages, and the /es/ locale.
 const SEO_CONTENT_UPDATE = "2026-07-20";
 
-const pages: { path: string; lastmod: string }[] = [
-  { path: "/", lastmod: SEO_CONTENT_UPDATE },
-  { path: "/how-it-works/", lastmod: "2026-07-02" },
-  { path: "/support/", lastmod: "2026-07-02" },
-  { path: "/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
-  { path: "/calling-app-vs-internet-calling/", lastmod: SEO_CONTENT_UPDATE },
-  { path: "/whatsapp-calls-blocked/", lastmod: SEO_CONTENT_UPDATE },
-  { path: "/call/", lastmod: SEO_CONTENT_UPDATE },
-  ...destinations.map((d) => ({
-    path: `/call/${d.slug}/`,
-    lastmod: SEO_CONTENT_UPDATE,
-  })),
-  // Spanish locale
-  { path: "/es/", lastmod: SEO_CONTENT_UPDATE },
-  { path: "/es/call/mexico/", lastmod: SEO_CONTENT_UPDATE },
-  { path: "/es/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
-];
+/**
+ * Rate pages get a later lastmod than SEO_CONTENT_UPDATE only when their own
+ * rate actually moved — the dates come from src/data/rate-changes.json, which
+ * the refresh workflow updates when it commits a new card.
+ *
+ * Only pages ABOUT a rate move: /call/{slug}/, the hub, and the Spanish Mexico
+ * page. The homepage and the evergreen explainers carry a rate strip too, but
+ * a repriced corridor is not a meaningful update to those pages, and bumping
+ * every URL on every rate change is the same cry-wolf this file exists to
+ * avoid.
+ */
+const changeDates = rateChanges as Record<string, string>;
 
-export const GET: APIRoute = () => {
+function rateLastmod(dialCode: string): string {
+  const changed = changeDates[dialCode];
+  return changed && changed > SEO_CONTENT_UPDATE ? changed : SEO_CONTENT_UPDATE;
+}
+
+export const GET: APIRoute = async () => {
+  // Same source the pages build from, so the sitemap can never list a
+  // destination page that was not emitted (a destination with no rate in the
+  // card or the snapshot is dropped from both).
+  const { priced } = await pricedDestinations();
+
+  const mexico = priced.find((d) => d.slug === "mexico");
+  const hubLastmod = priced
+    .map((d) => rateLastmod(d.dialCode))
+    .reduce((latest, date) => (date > latest ? date : latest), SEO_CONTENT_UPDATE);
+
+  const pages: { path: string; lastmod: string }[] = [
+    { path: "/", lastmod: SEO_CONTENT_UPDATE },
+    { path: "/how-it-works/", lastmod: "2026-07-02" },
+    { path: "/support/", lastmod: "2026-07-02" },
+    { path: "/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
+    { path: "/calling-app-vs-internet-calling/", lastmod: SEO_CONTENT_UPDATE },
+    { path: "/whatsapp-calls-blocked/", lastmod: SEO_CONTENT_UPDATE },
+    { path: "/call/", lastmod: hubLastmod },
+    ...priced.map((d) => ({
+      path: `/call/${d.slug}/`,
+      lastmod: rateLastmod(d.dialCode),
+    })),
+    // Spanish locale
+    { path: "/es/", lastmod: SEO_CONTENT_UPDATE },
+    {
+      path: "/es/call/mexico/",
+      lastmod: mexico ? rateLastmod(mexico.dialCode) : SEO_CONTENT_UPDATE,
+    },
+    { path: "/es/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
+  ];
+
   const urls = pages
     .map((p) => {
       const alternates = alternatesFor(p.path);

@@ -61,9 +61,33 @@ Ordered by impact-for-effort. Check them off as you go.
 
 ---
 
+### 7. Serve the rate card without App Check — unblocks live rates on the site
+
+The site now prices every destination page from the backend's rate card at
+build time instead of hand-copied cents (Phase 7 in `visibility-roadmap.md`).
+The last piece is a backend route a CI runner can actually reach:
+`GET /api/voice/rates` returns **403 `app_check_required`**, and a GitHub
+Actions build is not a genuine app instance, so App Check is meant to reject
+it. There is no bypass token in prod, by design.
+
+**What's needed:** a ~10-line `router.ex` change adding a second, deliberately
+public path to the same `VoiceController.rates/2` action — the exact diff is in
+`rates-page-seo-brief.md` §5.4 — then a Fly deploy. It leaves the app's own
+`/api/voice/rates` and its App Check gate untouched, and `/voice/quote` stays
+gated. **This needs your explicit sign-off** because it puts an unauthenticated
+route on the API; the same per-IP flood limit (120/min) still applies, and the
+payload is fixed public marketing data, identical for every caller.
+
+**Until then** nothing breaks: every build falls back to the committed snapshot
+in `src/data/rates.json` and ships the same prices the site had before. Once
+the route is live, the next build picks up real rates with no web change — or
+set the `KALUM_RATES_URL` repo variable if you pick a different path.
+
+---
+
 ## Optional
 
-### 7. Native-Spanish review of the `/es/` pages
+### 8. Native-Spanish review of the `/es/` pages
 - The three Spanish pages are LLM-authored (native-quality, claims-checked):
   `/es/`, `/es/call/mexico/`, `/es/call-without-internet/`.
 - Have a native Spanish speaker skim them and send me any wording tweaks.

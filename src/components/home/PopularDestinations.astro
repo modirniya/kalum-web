@@ -1,10 +1,15 @@
 ---
-import { featuredDestinations, rateLabel } from "../../lib/destinations";
+import {
+  featuredPricedDestinations,
+  formatRate,
+  fromPrefix,
+} from "../../lib/rates";
 
 // Links the top destination pages from the homepage — internal links that
-// help those pages rank. Cards mirror the /call/ index style; rates are
-// imported from destinations.ts so they never drift.
-const featured = featuredDestinations();
+// help those pages rank. Cards mirror the /call/ index style; rates come from
+// the live rate card at build time so they never drift.
+const { card, priced: featured } = await featuredPricedDestinations();
+const from = fromPrefix(card.basis);
 ---
 
 <section class="bg-[var(--color-cream)] py-20 md:py-28">
@@ -14,8 +19,8 @@ const featured = featuredDestinations();
         Popular destinations
       </h2>
       <p class="mt-4 text-lg leading-relaxed text-[var(--color-muted)]">
-        One per-minute rate per country — landlines and mobiles alike, and no
-        app or internet needed on their end.
+        Per-minute rates to landlines and mobiles — and no app or internet
+        needed on their end.
       </p>
     </div>
 
@@ -30,9 +35,16 @@ const featured = featuredDestinations();
               <span class="text-lg font-bold text-[var(--color-text)]">
                 Call {d.name}
               </span>
-              <span class="shrink-0 text-xl font-extrabold text-[var(--color-maroon)]">
-                {rateLabel(d)}
-                <span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+              <span class="shrink-0 text-right">
+                {from && (
+                  <span class="block text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                    from
+                  </span>
+                )}
+                <span class="text-xl font-extrabold text-[var(--color-maroon)]">
+                  {formatRate(d.rateCents)}
+                  <span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+                </span>
               </span>
             </a>
           </li>

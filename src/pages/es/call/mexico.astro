@@ -2,24 +2,39 @@
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import AppStoreBadge from "../../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../../components/GooglePlayBadge.astro";
-import { destinations, rateLabel, RATES_AS_OF_ES } from "../../../lib/destinations";
+import RateDisclosure from "../../../components/RateDisclosure.astro";
+import { pricedDestination, formatRate, formatRatesAsOf } from "../../../lib/rates";
 import { alternatesFor } from "../../../lib/i18n";
 
 // Spanish Mexico destination page — the primary Spanish corridor. The rate is
-// single-sourced from destinations.ts so it never drifts from the English
-// page; the prose is purpose-written Mexican Spanish. Scaling Spanish to more
-// countries later should move these strings into a per-locale table rather
-// than copy this file.
-const d = destinations.find((x) => x.slug === "mexico")!;
-const rate = rateLabel(d);
+// single-sourced from the live rate card at build time, same as the English
+// page, so the two can never quote different prices; the prose is
+// purpose-written Mexican Spanish. Scaling Spanish to more countries later
+// should move these strings into a per-locale table rather than copy this file.
+const { card, destination: d } = await pricedDestination("mexico");
+if (!d) {
+  // Unlike the English pages, this route is fixed: it is in the sitemap and is
+  // half of an hreflang pair, so quietly skipping it would strand
+  // /call/mexico/'s alternate. A Mexico row missing from BOTH the live card
+  // and the committed snapshot is a data fault, not a bad minute on the API.
+  throw new Error(
+    "es/call/mexico: no rate for +52 in the live card or src/data/rates.json"
+  );
+}
+const rate = formatRate(d.rateCents);
+const asOf = formatRatesAsOf(card.fetchedAt, "es");
+// "desde 6¢" for a cheapest-prefix floor, "por 6¢" for a fixed price.
+const preposition = card.basis === "from" ? "desde" : "por";
+const fromEs = card.basis === "from" ? "desde " : "";
 const canonical = "https://kalum.app/es/call/mexico/";
-
-const rateNote = `Tarifa vigente al ${RATES_AS_OF_ES}. Las llamadas se cobran por minuto, con un mínimo de 60 segundos. La app siempre muestra la tarifa actual antes de marcar.`;
 
 const faqs = [
   {
     q: "¿Cuánto cuesta llamar a México con Kalum?",
-    a: `${rate} por minuto a cualquier número mexicano — fijos y celulares, una sola tarifa (vigente al ${RATES_AS_OF_ES}). Las llamadas se cobran por minuto con un mínimo de 60 segundos, y siempre ves la tarifa actual en la app antes de marcar.`,
+    a:
+      card.basis === "from"
+        ? `Desde ${rate} por minuto a cualquier número mexicano (vigente al ${asOf}). Un celular y un fijo pueden costar distinto, así que la app te muestra la tarifa exacta del número que marcas antes de llamar — esa es la que se cobra. Las llamadas se cobran por minuto, redondeando hacia arriba, con un mínimo de un minuto.`
+        : `${rate} por minuto a cualquier número mexicano (vigente al ${asOf}). Las llamadas se cobran por minuto, redondeando hacia arriba, con un mínimo de un minuto, y siempre ves la tarifa actual en la app antes de marcar.`,
   },
   {
     q: "¿La persona en México necesita la app o internet?",
@@ -27,7 +42,10 @@ const faqs = [
   },
   {
     q: "¿Puedo llamar a teléfonos fijos en México?",
-    a: `Sí. Los fijos y los celulares en México cuestan lo mismo, ${rate} por minuto. A quien llames contesta en el teléfono que ya tiene.`,
+    a:
+      card.basis === "from"
+        ? "Sí. Kalum llama igual a fijos y a celulares en México, y quien contesta lo hace en el teléfono que ya tiene. La tarifa por minuto puede variar entre uno y otro, así que la app te muestra la tarifa exacta del número que marcas antes de que empiece la llamada."
+        : `Sí. Los fijos y los celulares en México cuestan lo mismo, ${rate} por minuto. A quien llames contesta en el teléfono que ya tiene.`,
   },
   {
     q: "¿Cómo llamo a México desde Estados Unidos?",
@@ -66,8 +84,8 @@ const structuredData = {
 ---
 
 <BaseLayout
-  title={`Llamar a México — ${rate}/min a Cualquier Teléfono | Kalum`}
-  description={`Llama a México desde ${rate} por minuto con Kalum — fijos y celulares, una sola tarifa. Sin app ni internet del lado de quien recibe. Saldo de prepago que nunca vence.`}
+  title={`Llamar a México — ${fromEs}${rate}/min a Cualquier Teléfono | Kalum`}
+  description={`Llama a México ${preposition} ${rate} por minuto con Kalum — fijos y celulares. Sin app ni internet del lado de quien recibe. Saldo de prepago que nunca vence.`}
   canonical={canonical}
   lang="es"
   alternates={alternatesFor("/es/call/mexico/")}
@@ -91,13 +109,13 @@ const structuredData = {
         Llamando a México &middot; +{d.dialCode}
       </p>
       <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-        Llama a México por {rate} el minuto.
+        Llama a México {preposition} {rate} el minuto.
         <span class="block text-white/85">Fijos y celulares. Solo contestan.</span>
       </h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
-        Una sola tarifa para cualquier número mexicano — un fijo en Guadalajara
-        o un celular en la Ciudad de México, los mismos seis centavos por
-        minuto.
+        Un fijo en Guadalajara o un celular en la Ciudad de México — Kalum marca
+        números mexicanos de verdad, así que quien contesta solo levanta su
+        teléfono.
       </p>
 
       <div class="mt-9 flex flex-wrap items-center gap-4">
@@ -105,7 +123,7 @@ const structuredData = {
         <GooglePlayBadge size="lg" utm="kalum-web-es-call-mexico" />
       </div>
 
-      <p class="mt-5 max-w-2xl text-sm text-white/70">{rateNote}</p>
+      <RateDisclosure card={card} locale="es" tone="dark" class="mt-5 max-w-2xl" />
     </div>
   </section>
 
@@ -202,7 +220,7 @@ const structuredData = {
         <AppStoreBadge size="lg" utm="kalum-web-es-call-mexico" />
         <GooglePlayBadge size="lg" utm="kalum-web-es-call-mexico" />
       </div>
-      <p class="mt-5 text-sm text-white/70">{rateNote}</p>
+      <RateDisclosure card={card} locale="es" tone="dark" class="mx-auto mt-5 max-w-xl" />
     </div>
   </section>
 

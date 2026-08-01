@@ -5,6 +5,8 @@ import AppStoreBadge from "../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import brandIcon from "../assets/kalum-icon.jpg";
 import heroScreen from "../assets/screenshots/home.png";
+import RateDisclosure from "../components/RateDisclosure.astro";
+import { pricedDestination, formatRate, fromPrefix } from "../lib/rates";
 
 // ────────────────────────────────────────────────────────────────────────────
 // Standalone paid-traffic landing page for the "Call Mexico" Google Ads test.
@@ -25,12 +27,32 @@ const AW_CONVERSION_LABEL = "M_8pCN-Q48EcEIrNh-FB";
 
 const utm = "us-call-mexico";
 
-const finePrint = "Calls billed by the minute, 60-second minimum.";
+// Priced from the live rate card at build time, exactly like the organic
+// pages. This is an ad landing page, so the figure it advertises has to be
+// the one the app actually quotes — a stale hardcoded price here is an ad
+// policy problem, not just a stale page.
+const { card, destination: mexico } = await pricedDestination("mexico");
+if (!mexico) {
+  throw new Error(
+    "call-mexico: no rate for +52 in the live card or src/data/rates.json"
+  );
+}
+const rate = formatRate(mexico.rateCents);
+const from = fromPrefix(card.basis);
+const preposition = card.basis === "from" ? "from" : "for";
+
+const finePrint = "Calls billed per minute, rounded up, one-minute minimum.";
 ---
 
 <BaseLayout
-  title="Call Mexico from the US — 6¢/min to Any Phone | Kalum"
-  description="Call any phone in Mexico — landlines and cell phones — for 6¢ a minute. No app, smartphone, or internet needed on their end. No contract, no subscription, no hidden fees."
+  title={
+    // "Call Mexico from the US — from 6¢/min" reads badly; this page's title
+    // already spends its "from" on the origin country.
+    card.basis === "from"
+      ? `Call Mexico from the US — Rates from ${rate}/min | Kalum`
+      : `Call Mexico from the US — ${rate}/min to Any Phone | Kalum`
+  }
+  description={`Call any phone in Mexico — landlines and cell phones — ${preposition} ${rate} a minute. No app, smartphone, or internet needed on their end. No contract, no subscription, no hidden fees.`}
   canonical="https://kalum.app/call-mexico/"
   ogImage="/og-default.png"
   noindex={true}
@@ -81,12 +103,12 @@ const finePrint = "Calls billed by the minute, 60-second minimum.";
           Calling Mexico from the United States
         </p>
         <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-          Call Mexico for 6¢ a minute.
+          Call Mexico {preposition} {rate} a minute.
           <span class="block text-white/85">Landlines and cell phones.</span>
         </h1>
         <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/85 sm:text-xl">
-          Reach any phone in Mexico at one flat rate. They don't need an app,
-          a smartphone, or internet — they just answer their phone.
+          Reach any phone in Mexico. They don't need an app, a smartphone, or
+          internet — they just answer their phone.
         </p>
 
         <div class="mt-9 flex flex-wrap items-center gap-4">
@@ -124,12 +146,14 @@ const finePrint = "Calls billed by the minute, 60-second minimum.";
   <section class="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-20">
     <div class="grid gap-8 md:grid-cols-3">
       <div class="rounded-2xl bg-white p-7 shadow-sm ring-1 ring-black/5">
-        <p class="text-3xl font-extrabold text-[var(--color-maroon)]">6¢/min</p>
-        <h2 class="mt-3 text-lg font-bold">One flat rate</h2>
+        <p class="text-3xl font-extrabold text-[var(--color-maroon)]">
+          {from}{rate}/min
+        </p>
+        <h2 class="mt-3 text-lg font-bold">You see it before you dial</h2>
         <p class="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
-          Every call to Mexico is six cents per minute — a landline in
-          Guadalajara or a cell phone in Mexico City, same price. No tiers,
-          no surprises.
+          A landline in Guadalajara or a cell phone in Mexico City — the app
+          shows the exact per-minute rate for the number you typed, before the
+          call starts. No tiers, no surprises.
         </p>
       </div>
 
@@ -157,12 +181,13 @@ const finePrint = "Calls billed by the minute, 60-second minimum.";
   <section class="bg-[var(--color-cream)]">
     <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
       <p class="text-5xl font-extrabold tracking-tight text-[var(--color-maroon)] sm:text-6xl">
-        6¢/min
+        {from}{rate}/min
       </p>
       <p class="mt-3 text-lg font-semibold">
-        To any phone in Mexico — landlines &amp; cell phones, one rate.
+        To any phone in Mexico — landlines &amp; cell phones.
       </p>
       <p class="mt-2 text-sm text-[var(--color-muted)]">{finePrint}</p>
+      <RateDisclosure card={card} class="mx-auto mt-4 max-w-xl" />
     </div>
   </section>
 

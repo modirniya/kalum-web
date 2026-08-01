@@ -3,7 +3,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import AppStoreBadge from "../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
-import { voipRestrictedDestinations, rateLabel } from "../lib/destinations";
+import {
+  voipRestrictedPricedDestinations,
+  formatRate,
+  fromPrefix,
+} from "../lib/rates";
 
 // Evergreen explainer for the "WhatsApp calls blocked in the Gulf" query.
 // Claims are kept hedged and dateless: some Gulf countries restrict voice
@@ -12,7 +16,8 @@ import { voipRestrictedDestinations, rateLabel } from "../lib/destinations";
 // on those apps — never as circumventing a restriction. The country list is
 // data-driven from the `voipRestricted` flag so it stays in sync with the
 // destination pages.
-const restricted = voipRestrictedDestinations();
+const { card, priced: restricted } = await voipRestrictedPricedDestinations();
+const from = fromPrefix(card.basis);
 
 const faqs = [
   {
@@ -125,7 +130,8 @@ const structuredData = {
       <p class="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
         These are the destinations where callers most often run into internet
         app-call restrictions. With Kalum you dial the real number instead —
-        one per-minute rate, landlines and mobiles alike.
+        landlines and mobiles alike, at the per-minute rate the app shows you
+        before the call starts.
       </p>
 
       <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -139,8 +145,15 @@ const structuredData = {
                 <span class="text-lg font-bold text-[var(--color-text)]">
                   Call {d.name}
                 </span>
-                <span class="shrink-0 text-xl font-extrabold text-[var(--color-maroon)]">
-                  {rateLabel(d)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+                <span class="shrink-0 text-right">
+                  {from && (
+                    <span class="block text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                      from
+                    </span>
+                  )}
+                  <span class="text-xl font-extrabold text-[var(--color-maroon)]">
+                    {formatRate(d.rateCents)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+                  </span>
                 </span>
               </a>
             </li>

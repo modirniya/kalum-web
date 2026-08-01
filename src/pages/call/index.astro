@@ -2,19 +2,27 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AppStoreBadge from "../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
-import { destinations, rateLabel, RATES_AS_OF } from "../../lib/destinations";
+import RateDisclosure from "../../components/RateDisclosure.astro";
+import { pricedDestinations, formatRate, fromPrefix } from "../../lib/rates";
 
-// Lead the title with the cheapest listed rate so the hook self-updates
-// when destinations.ts changes — no hardcoded figure to drift.
-const minRate = Math.min(...destinations.map((d) => d.rateCents));
+// The rates hub. Rates come from the live rate card at build time and are
+// baked into this HTML — see src/lib/rates.ts.
+const { card, priced } = await pricedDestinations();
+const from = fromPrefix(card.basis);
+
+// Lead the title with the cheapest listed rate so the hook self-updates with
+// the rate card — no hardcoded figure to drift.
+const minRate = Math.min(...priced.map((d) => d.rateCents));
 
 // Group destinations by region for a scannable index. Fixed display order;
-// empty regions are dropped so adding/removing destinations just works.
+// empty regions are dropped so adding/removing destinations just works. This
+// is a grouping order, not a ranking — Kalum is a general international
+// calling provider, so the hub leads with no favored region.
 const regionOrder = ["Americas", "Middle East", "Asia", "Africa"] as const;
 const grouped = regionOrder
   .map((region) => ({
     region,
-    items: destinations.filter((d) => d.region === region),
+    items: priced.filter((d) => d.region === region),
   }))
   .filter((g) => g.items.length > 0);
 ---
@@ -33,10 +41,10 @@ const grouped = regionOrder
         Cheap international calls, by destination.
       </h1>
       <p class="mt-5 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
-        One per-minute rate per country, landlines and mobiles alike — and the
-        person you call never needs an app or internet. Here are per-minute
-        rates for some of the most-called destinations, grouped by region; the
-        app shows live rates for 180+ countries before you dial.
+        Per-minute rates to landlines and mobiles, and the person you call
+        never needs an app or internet. Here are some of the most-called
+        destinations, grouped by region; the app shows live rates for 180+
+        countries before you dial.
       </p>
 
       <div class="mt-12 space-y-12">
@@ -61,8 +69,15 @@ const grouped = regionOrder
                           +{d.dialCode} &middot; landlines &amp; mobiles
                         </span>
                       </span>
-                      <span class="shrink-0 text-2xl font-extrabold text-[var(--color-maroon)]">
-                        {rateLabel(d)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+                      <span class="shrink-0 text-right">
+                        {from && (
+                          <span class="block text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                            from
+                          </span>
+                        )}
+                        <span class="text-2xl font-extrabold text-[var(--color-maroon)]">
+                          {formatRate(d.rateCents)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+                        </span>
                       </span>
                     </a>
                   </li>
@@ -73,10 +88,7 @@ const grouped = regionOrder
         }
       </div>
 
-      <p class="mt-8 text-sm text-[var(--color-muted)]">
-        Rates as of {RATES_AS_OF}. Calls billed by the minute, 60-second
-        minimum. The app always shows the current rate before you dial.
-      </p>
+      <RateDisclosure card={card} class="mt-8" />
     </div>
   </section>
 
@@ -94,11 +106,13 @@ const grouped = regionOrder
           they charge.
         </p>
         <p>
+          Rates can also differ within a country: a mobile and a landline sit
+          on different networks, which is why the figures above are a starting
+          price per destination rather than one price for every number there.
           That's why Kalum shows you the live per-minute rate for the exact
-          number you're dialing, before the call starts. For the destinations
-          above, one rate covers landlines and mobiles alike. Calls are billed
-          by the minute with a 60-second minimum — no connection fees and no
-          hidden charges.
+          number you're dialing, before the call starts. Calls are billed by
+          the minute, rounded up, with a one-minute minimum — no connection
+          fees and no hidden charges.
         </p>
         <p>
           There's no subscription either: you add prepaid credit starting from

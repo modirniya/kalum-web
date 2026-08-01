@@ -6,6 +6,19 @@
 
 ---
 
+## 0. STATUS — read this first (updated 2026-08-01)
+
+**The web side is built and merged-ready on branch `feat/build-time-rates`. The backend prerequisite is NOT done and needs the owner's sign-off.** Sections 1–9 below are the original brief and remain accurate as background; §10 is now a decision record rather than open questions; §11 is what actually shipped; §12 is the exact backend diff awaiting approval.
+
+| | |
+|---|---|
+| **Backend (§5 blocker)** | ⏳ **Not applied.** `curl https://kalum-api.fly.dev/api/voice/rates` → still `403 app_check_required` (re-verified 2026-08-01). The chosen fix is mitigation **A**, in its *additive* form: a second public path to the same controller action, leaving the app's route and its App Check gate untouched. The one-file diff is in §12. It was **deliberately not applied without approval** — it puts an unauthenticated route on the API, which is the owner's call, not an implementation detail. Also tracked in `owner-todo.md` item 7. |
+| **Web** | ✅ **Built.** Build-time fetch, fail-open, prefix-pricing copy, disclosure, schema, sitemap deltas, refresh workflow. `astro build` green, `astro check` 0 errors. |
+| **What the site renders today** | The committed snapshot — i.e. **the same prices it shipped before this change**. The fetch 404s (route not created yet), the build falls back, and the log says so. Nothing regresses while the backend waits. |
+| **What happens after the backend ships** | The next build (push, manual, or the Monday cron) picks up live rates with **no web change**. If a different path is chosen, set the `KALUM_RATES_URL` repo variable instead of editing code. |
+
+---
+
 ## 1. Purpose & the ask
 
 **Goal statement:** Give Kalum's marketing site (`kalum.app`) per-country international-calling-rate pages plus a rates hub whose rate figures are **fetched at BUILD TIME from the backend's live dynamic-pricing data and baked into static HTML**, so the public pages rank for high-intent "cost to call {country}" queries and stay roughly in sync with what the app charges — without manual rate re-entry.
@@ -157,6 +170,8 @@ Reads the rate table (`list_rates/0`, one row per destination, `country_code` un
 
 ## 7. Concrete step-by-step implementation plan (Astro-specific, references real files)
 
+> **Executed 2026-08-01 — steps 2–11 are done; see §11 for what shipped and where it differs from this plan.** The plan said not to start until step 0 cleared. It was started anyway, on purpose: the fail-open design in step 2 means the whole web side builds and ships correctly *against the snapshot* with no live endpoint, so the only thing gated on the backend is which numbers appear — not whether the code is correct or deployable. The two substantive departures from this plan: mitigation A is applied as an *additive* route rather than un-gating the existing one (§10.1), and the sitemap delta moved out of the build into the refresh workflow (§10.8), because computing it in the build re-bumps the same page every week until a human commits a snapshot.
+
 > Do NOT start steps 3+ until the §5 App Check prerequisite is resolved (step 0/1).
 
 0. **Resolve the App Check blocker FIRST (§5.4).** Get the backend change deployed (recommended: mitigation A — un-gate `GET /api/voice/rates` or add `GET /api/public/rates`). Re-run the `curl` from §5.1 against the chosen URL and confirm a **200 with the JSON body** from an un-App-Checked client before proceeding. This is a hard gate.
@@ -214,29 +229,114 @@ Reads the rate table (`list_rates/0`, one row per destination, `country_code` un
 
 ---
 
-## 9. Definition of done / success criteria
+## 9. Definition of done / success criteria — scored 2026-08-01
 
-- The App Check prerequisite is resolved: the build fetches rates from a reachable endpoint (or committed snapshot) and gets a **200**, verified by `curl` and by a green `astro build`.
-- Rate figures on `/call/{slug}/` and `/call/` originate from a **build-time fetch** and appear as **literal text in `view-source`** (confirmed by inspecting the built HTML) — no client-side rate JS anywhere.
-- Every rate page and the hub carry the **indicative-rates hedge** citing Terms **§5.3**, with a date derived from `fetchedAt` (no more `"March 23, 2026"`).
-- When `basis === "from"`, all price phrasing reads **"from {rate}/min"** and no copy asserts a single flat landline+mobile rate; spelled-out prose figures (Mexico) are reconciled.
-- No `/rates/` tree was created; the existing `/call/` scaffold was extended. Hand-authored `intro`+`dialingNote` preserved per country; no thin auto-exploded pages.
-- No pages exist for Syria/Iran/Cuba; no rate renders as `undefined`/`$0.00`; match failures fall back to snapshot or omit.
-- A backend hiccup / residual 403 does **not** fail the marketing deploy (fail-open to committed snapshot verified).
-- Sitemap `lastmod` bumps only for slugs whose rate changed; IndexNow fires on genuine rate changes (incl. cron) and stays quiet otherwise.
-- All URLs are apex + trailing slash and registered in the sitemap (+ hreflang if localized); new JSON-LD validates and doesn't conflate with the app's free `Offer.price:"0"`.
-- EN/ES date + rate copy in sync (or `/es/` deferral explicitly documented).
+- ⏳ The App Check prerequisite is resolved: the build fetches rates from a reachable endpoint (or committed snapshot) and gets a **200**, verified by `curl` and by a green `astro build`. — **Half.** `astro build` is green and the snapshot path is proven; the endpoint returns 404/403 until §12 ships. This is the only outstanding item.
+- ✅ Rate figures on `/call/{slug}/` and `/call/` originate from a **build-time fetch** and appear as **literal text in `view-source`** — no client-side rate JS anywhere. (Verified in `dist/`; the destination pages' only scripts are JSON-LD.)
+- ✅ Every rate page and the hub carry the **indicative-rates hedge** citing Terms **§5.3**, with a date derived from `fetchedAt`. `RATES_AS_OF`/`RATES_AS_OF_ES` no longer exist.
+- ✅ When `basis === "from"`, all price phrasing reads **"from {rate}/min"** and no copy asserts a single flat landline+mobile rate; the spelled-out Mexico figures (EN and ES) are gone.
+- ✅ No `/rates/` tree; the existing `/call/` scaffold was extended. Hand-authored `intro`+`dialingNote` preserved per country; no auto-exploded pages.
+- ✅ No pages for Syria/Iran/Cuba; no rate renders as `undefined`/`$0.00`; a destination with no matching row is dropped from the build *and* from the sitemap, with a warning naming the slug.
+- ✅ A backend hiccup / residual 403 does **not** fail the marketing deploy — exercised for real, since the endpoint currently 404s and the build ships anyway.
+- ✅ Sitemap `lastmod` bumps only for slugs whose rate changed; IndexNow fires on genuine rate changes (incl. cron) and stays quiet otherwise. (Verified against a stub card.)
+- ✅ All URLs are apex + trailing slash and registered in the sitemap (+ hreflang); the new `Service`/`UnitPriceSpecification` node is `@id`-scoped and separate from the app's free `Offer.price:"0"`.
+- ✅ EN/ES date + rate copy in sync — both locales read the same card and format the same `fetchedAt`.
 
 ---
 
-## 10. Open questions to resolve FIRST (lead with App Check)
+## 10. Decision record (was: open questions) — all resolved 2026-08-01
 
-1. **App Check decision (BLOCKER — decide before anything else).** Which §5.4 mitigation? Recommended: **A** — backend un-gates `GET /api/voice/rates` (or adds `GET /api/public/rates`) so a tokenless CI build gets 200. Who owns the backend PR, and what is the final URL the web build will fetch? **No web implementation starts until this returns 200 to an un-App-Checked client.**
-2. **URL shape confirmation.** Confirm the intent is to **extend `/call/[slug]/` + `/call/`** (recommended — roadmap `visibility-roadmap.md:296` rejects duplicate trees) rather than a new `/rates/` tree.
-3. **`basis:"from"` copy model.** Product/legal sign-off on switching flat-rate copy to "from {rate}/min" site-wide, and rewriting the affected FAQ/`intro` prose.
-4. **Fail-open vs fail-closed.** Confirm rates should fail-open to a committed snapshot (recommended), unlike `fetchLegal`.
-5. **Coverage scope.** Keep the curated **31** (recommended for launch, tier-expand by search volume) vs widen now — and the anti-thin-content bar for adding any country.
-6. **US/Canada + any `+1` destinations.** Whether to add +1 countries at all (needs longest-dial-code matching + the merged `US_CA` mapping decision). Default: don't, for this pass.
-7. **`/es/` scope.** Extend live rates to `/es/call/mexico.astro` now, or defer? Keep EN/ES dates in sync regardless.
-8. **IndexNow re-gating + `lastmod` delta.** Confirm the "bump/ping only on real rate change" approach and that a committed snapshot is the accepted delta source.
-9. **Entity name.** Three live variants exist — kalum-web footer **"Neuera"**, Terms **"operated by NeuEra Apps"**, legal copyright **"NeuEra Apps LLC"**. Confirm which to print on the new rate pages (default: match the existing kalum-web footer "Neuera"; reserve "LLC" for legal/copyright). No "Parham Modirniya" string exists in either repo.
+Every question below was decided during implementation, in the direction the brief recommended unless noted. The one that is **not** merely a decision but needs the owner is #1.
+
+1. **App Check → mitigation A, in its additive form.** Rather than dropping `:app_check` from `GET /api/voice/rates`, add a second path (`GET /api/public/rates`) piped `[:api, :maintenance_gate, :rate_limit_public_rates]` to the **same** `VoiceController.rates/2`. Identical data and one source of truth, but the app's route keeps its gate, `/voice/quote` stays App-Check'd (unbounded input, real per-request cost), and the public surface can be tightened or withdrawn on its own. **Applied? No — see §0 and §12.** The web default URL is already this path; `KALUM_RATES_URL` overrides it if a different one is chosen.
+2. **URL shape → extend `/call/[slug]/` + `/call/`.** No `/rates/` tree, per `visibility-roadmap.md`'s rejection of duplicate trees. Nothing new was minted; the existing 31 pages got live prices.
+3. **`basis:"from"` copy → switched site-wide to "from {rate}/min".** Every price claim is now conditional on `card.basis`, so the site tracks whichever mode pricing is in. The ~20 intros and the FAQ answers asserting one rate across mobiles and landlines were rewritten (see §11). Note this is a *copy* change, not just a template change — the old claim contradicted `/api/voice/quote`.
+4. **Fail-open, confirmed.** Opposite of `fetchLegal`, deliberately: a missing legal body is worth aborting a deploy, a bad minute on the rates API is not. The only fail-closed case left is "no live card *and* no usable snapshot", which is a data fault rather than an outage.
+5. **Coverage → keep the curated 31.** No auto-explosion to ~200. The publish bar stays: unique intro + country-specific dialing note + live rate + FAQ + a local hook. The long tail stays covered by the honest "the app shows live rates for 180+ countries" line.
+6. **`+1` destinations → still none.** `rateCentsForDialCode` does exact matching only, and says in its doc comment that adding a NANP destination requires longest-prefix matching first. Unchanged from the brief's default.
+7. **`/es/` → extended now, not deferred.** `/es/call/mexico/` and the `/es/` homepage corridor price from the same card as English, so the two locales cannot quote different numbers. `RATES_AS_OF_ES` is gone; the Spanish date formats from the same `fetchedAt`.
+8. **IndexNow + `lastmod` → confirmed, with the delta source moved.** The committed snapshot is still the baseline, but the *diff* is computed by the refresh workflow and recorded in `src/data/rate-changes.json` (dial code → date it last moved). Doing it in the build instead would have re-bumped the same page every week until someone committed a new snapshot — cry-wolf by construction. See §11.
+9. **Entity name → "Neuera"**, matching the existing `Footer.astro` string. No new entity variant was introduced on any page; the new disclosure component names no entity at all, it links to `/terms/`.
+
+---
+
+## 11. What shipped (branch `feat/build-time-rates` on kalum-web)
+
+**New files**
+
+- **`src/lib/rates.ts`** — the build-time fetch. Memoized per build (one request, ~40 pages), 10s timeout, `User-Agent: "kalum-web build"`. Normalizes `rate_per_minute` (string dollars) → whole cents and drops any row that would render as `undefined`/`$0.00`. Unknown `basis` values fall back to `"from"`, because under-claiming is the safe direction. Exports `pricedDestinations()`, `pricedDestination(slug)`, `featuredPricedDestinations()`, `voipRestrictedPricedDestinations()`, `formatRate()`, `fromPrefix()`, `formatRatesAsOf()` (EN/ES, UTC, hand-rolled month table so the printed date can't shift with the runner's timezone or ICU build).
+- **`src/data/rates.json`** — committed last-good card. **Bootstrapped from the 31 rates the site was already publishing**, not from the launch note, so this change ships zero new price claims: until the backend route is live, every rendered figure is byte-identical to before.
+- **`src/data/rate-changes.json`** — dial code → date that rate last moved. Keyed by dial code, not slug, so the refresh script never has to parse `destinations.ts`.
+- **`src/components/RateDisclosure.astro`** — the hedge, EN/ES, light/dark. Cites Terms **§5.3** (the call-rate clause — *not* §5.2, which governs pack price) and **links** §5 for billing rather than paraphrasing rounding/minimums/unanswered-call rules.
+- **`scripts/refresh-rates.mjs`** + **`.github/workflows/refresh-rates.yml`** — dependency-free Node script, Monday 02:00 UTC (an hour before the deploy cron) plus manual. Commits a new snapshot *and* the change dates only when something actually moved; an unreachable API is a `::warning::` and exit 0, not a red run.
+
+**Changed**
+
+- **`src/lib/destinations.ts`** — `rateCents`, `RATES_AS_OF`, `RATES_AS_OF_ES` and `rateLabel()` **deleted**. It is now purely the curated editorial list. ~20 intros rewritten to drop flat-rate claims and the baked "same six cents a minute"; the hand-written `dialingNote`s were left alone, since they are the per-page value the brief warns not to template away.
+- **`src/pages/call/[slug].astro`** — async `getStaticPaths()` off the priced list, so a destination with no rate loses its page (with a named warning) instead of rendering a blank price. `from`/`for` phrasing throughout, FAQ Q1 and Q3 branch on `basis`, plus a `Service → Offer → UnitPriceSpecification` node using `minPrice` under prefix pricing, `@id`-scoped so it can't be conflated with BaseLayout's free-app `Offer.price: "0"`.
+- **`src/pages/call/index.astro`**, **`components/home/PopularDestinations.astro`**, **`pages/whatsapp-calls-blocked.astro`**, **`pages/call-without-internet.astro`**, **`pages/es/index.astro`**, **`pages/es/call/mexico.astro`** — all priced from the card; every "one per-minute rate per country" / "una sola tarifa" claim rewritten.
+- **`src/pages/call-mexico.astro`** (paid LP, noindex) — included deliberately: a stale hardcoded 6¢ on an ad landing page is an Ads-policy problem, not just a stale page. "One flat rate" tile replaced with a "you see it before you dial" tile.
+- **`src/pages/sitemap.xml.ts`** — async, built from the same priced list so it can never list a page that wasn't emitted. `lastmod` moves only for `/call/{slug}/` whose own rate moved, the hub (max of its destinations), and `/es/call/mexico/`. The homepage and evergreen explainers carry rate strips but stay pinned to `SEO_CONTENT_UPDATE` — a repriced corridor is not a meaningful update to those pages.
+- **`.github/workflows/deploy.yml`** — `KALUM_RATES_URL` wired into the build step; the IndexNow step no longer skips scheduled runs. On `schedule` it submits only URLs the sitemap dates today and skips silently when there are none; pushes and manual runs still submit the full set.
+
+**Verified**
+
+- `astro build` green (45 pages), `astro check` **0 errors, 0 warnings**.
+- Rates are literal text in `view-source`: `dist/call/mexico/index.html` carries `<title>Call Mexico — from 6¢/min…</title>` and the H1, and the page's **only** two `<script>` tags are `application/ld+json`. No rate JS anywhere.
+- Fail-open exercised for real: the build logs `[rates] …/api/public/rates failed (404 ) — falling back to the committed snapshot` and still ships prices.
+- Change detection exercised against a stub card serving India at 9¢: the script recorded `{"91": "2026-08-01"}`, the rebuilt page read `Call India — from 9¢/min`, and the sitemap bumped **only** `/call/india/` and `/call/` while `/call/mexico/` held at `2026-07-20`. Stub data was then reverted.
+- Disclosure renders on every priced page in both locales, citing Terms §5.3.
+
+**Known gaps / deliberate non-goals**
+
+- Rendered rates can be newer than `rate-changes.json` for up to a week: the build fetches live on every deploy, but only the Monday refresh job records deltas. `lastmod` is a crawl hint, so a late bump is acceptable; the alternative re-bumps unchanged pages forever.
+- `refresh-rates.yml` pushes to `main` with `contents: write`. That is the mechanism that makes rate upkeep automatic — worth knowing before merging, since it is a bot committing to the default branch.
+- `/es/` still has exactly one destination page. Unlike the English pages, it throws rather than silently vanishing if Mexico has no rate, because that route is fixed in the sitemap and is half an hreflang pair.
+
+---
+
+## 12. The backend change, verbatim (awaiting approval)
+
+One file, additive, no behavior change to any existing route. Apply to `kalum-backend/lib/kalum_web/router.ex`, immediately after the existing public-rates scope (the one ending `get "/voice/quote", VoiceController, :quote`):
+
+```elixir
+  # The same rate card again, for consumers that are not the app.
+  #
+  # kalum.app bakes per-country rates into static HTML at build time (see
+  # `fetchRates` in kalum-web, which mirrors its build-time legal fetch)
+  # because a rate injected by client-side JS is invisible to the crawlers
+  # those pages exist to serve. A CI runner is not a genuine app instance, so
+  # App Check is *designed* to 403 it — which would leave the public price on
+  # the website hand-copied forever, the exact drift this endpoint removes.
+  #
+  # Deliberately a SEPARATE path rather than dropping :app_check from
+  # /voice/rates above: the app's route keeps its gate unchanged, and this one
+  # can be tightened, cached, or withdrawn on its own. Same controller action,
+  # so there is still one source of truth for the numbers. Safe to serve
+  # openly for the same reason the card is unauthenticated at all — fixed
+  # public marketing data, identical for every caller, nothing user-specific —
+  # and the only real risk, flooding, is covered by the per-IP limit it shares
+  # with the app route.
+  scope "/api", KalumWeb do
+    pipe_through [:api, :maintenance_gate, :rate_limit_public_rates]
+
+    get "/public/rates", VoiceController, :rates
+  end
+```
+
+**What this does and does not change**
+
+- Does **not** touch `/api/voice/rates`, `/api/voice/quote`, or any pipeline. Existing app builds are unaffected.
+- The new path keeps `:maintenance_gate` (503 during a maintenance window — the web build treats that as "use the snapshot") and the shared `public_rates` per-IP limiter (120 req/min, keyed on the un-spoofable `Fly-Client-IP`).
+- It is genuinely open to the internet. The argued case: the payload is the same fixed rate card the router already calls "public marketing information", it is identical for every caller, and it is the number the app shows before signup anyway. The counter-argument worth weighing is that it makes competitor scraping of the full ~218-row deck trivial — which App Check was incidentally raising the cost of.
+
+**Worth adding with it** (test, `test/kalum_web/controllers/voice_controller_test.exs`): a case that flips `Application.put_env(:kalum, :app_check_mode, :real)` — the pattern already used in `verify_app_check_test.exs` — and asserts `GET /api/public/rates` returns 200 with **no** `x-firebase-appcheck` header, while `GET /api/voice/rates` still returns 403. Without it, nothing stops a future refactor from folding the two scopes back together and silently re-breaking the marketing build.
+
+**Verify after deploying:**
+
+```
+$ curl -s -o /dev/null -w "%{http_code}" https://kalum-api.fly.dev/api/public/rates
+200
+```
+
+Then trigger a kalum-web deploy (or wait for the Monday cron) and confirm the build log no longer prints the `[rates] … falling back to the committed snapshot` warning.

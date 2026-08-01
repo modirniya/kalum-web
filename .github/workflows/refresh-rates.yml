@@ -1,0 +1,59 @@
+name: Refresh rate snapshot
+
+# Keeps src/data/rates.json in step with the live rate card, and records which
+# destinations actually moved so the sitemap can bump only those pages.
+#
+# The build fetches the card itself, so this is not what puts prices on the
+# site — it is what gives the build a last-good copy to fall back to when the
+# API is down, and what gives the sitemap an honest per-page lastmod.
+#
+# A commit here pushes to main, which triggers the deploy workflow. Quiet weeks
+# commit nothing and deploy nothing.
+
+on:
+  schedule:
+    # Monday 02:00 UTC — an hour ahead of the deploy cron, so a change lands
+    # in main in time for that run rather than waiting a week.
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-rates
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # No npm install: the script is dependency-free on purpose, so a broken
+      # lockfile can never stop rates from refreshing.
+      - name: Refresh snapshot
+        env:
+          # Repo variable, so the URL can be repointed without a code change.
+          KALUM_RATES_URL: ${{ vars.KALUM_RATES_URL }}
+        run: node scripts/refresh-rates.mjs
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- src/data/; then
+            echo "No snapshot changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/rates.json src/data/rate-changes.json
+          git commit -m "chore(rates): refresh rate snapshot
+
+          Automated by .github/workflows/refresh-rates.yml."
+          git push

@@ -1,0 +1,68 @@
+---
+import { formatRatesAsOf, type RateCard } from "../lib/rates";
+
+// The hedge that has to sit next to every rate figure on this site.
+//
+// Public rates are a build-time snapshot of a card that moves as carrier costs
+// move, and under prefix pricing each figure is a country's cheapest prefix —
+// not one price covering mobile and landline. So the page never claims to be
+// authoritative: it points at the in-app rate, which Terms §5.3 makes the one
+// that is actually charged. Billing mechanics are linked, not paraphrased —
+// a partial restatement of §5.4 (rounding, minimums, unanswered calls) reads
+// as the full rule and would be worse than a link.
+
+interface Props {
+  card: RateCard;
+  locale?: "en" | "es";
+  /** "dark" for the brand-gradient hero, "light" for cream/white sections. */
+  tone?: "light" | "dark";
+  class?: string;
+}
+
+const { card, locale = "en", tone = "light", class: className = "" } = Astro.props;
+
+const date = formatRatesAsOf(card.fetchedAt, locale);
+const prefixPriced = card.basis === "from";
+
+const toneClass =
+  tone === "dark" ? "text-white/70" : "text-[var(--color-muted)]";
+const linkClass =
+  tone === "dark"
+    ? "underline underline-offset-2 hover:text-white transition"
+    : "underline underline-offset-2 hover:text-[var(--color-maroon)] transition";
+
+const copy =
+  locale === "es"
+    ? {
+        lead: `Tarifas indicativas en dólares, actualizadas el ${date}.`,
+        varies: prefixPriced
+          ? "Las tarifas varían según el destino y pueden cambiar, y un celular y un fijo del mismo país pueden costar distinto."
+          : "Las tarifas varían según el destino y pueden cambiar.",
+        authority: "La tarifa que la app de Kalum muestra antes de marcar es la que se cobra",
+        terms: "Términos §5.3",
+        billing:
+          "Las llamadas se cobran por minuto, redondeando hacia arriba, con un mínimo de un minuto",
+        billingTerms: "Términos §5",
+        billingTail: "tiene el detalle completo de la facturación.",
+      }
+    : {
+        lead: `Indicative rates in USD, updated ${date}.`,
+        varies: prefixPriced
+          ? "Rates vary by destination and can change, and mobile and landline numbers in the same country can price differently."
+          : "Rates vary by destination and can change.",
+        authority: "The rate the Kalum app shows before you dial is the rate you pay",
+        terms: "Terms §5.3",
+        billing:
+          "Calls are billed per minute, rounded up, with a one-minute minimum",
+        billingTerms: "Terms §5",
+        billingTail: "has the full billing details.",
+      };
+---
+
+<p class={`text-sm ${toneClass} ${className}`}>
+  {copy.lead}{" "}{copy.varies}{" "}{copy.authority} (<a
+    href="/terms/"
+    class={linkClass}>{copy.terms}</a
+  >). {copy.billing} — <a href="/terms/" class={linkClass}>{copy.billingTerms}</a>
+  {copy.billingTail}
+</p>

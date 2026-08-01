@@ -103,9 +103,16 @@ IndexNow submissions return 200 in the Actions log.
 
 ## Phase 3 — Destination expansion + internal linking — DONE (2026-07-20); 31 destinations live
 
-Every new country is **rate-gated**: before adding a row, confirm in the
-admin rate table that the destination is routable with a marketable rate,
-and record the check date. Update `RATES_AS_OF` when rates are re-copied.
+Every new country is **rate-gated**: before adding a row, confirm the
+destination is routable with a marketable rate.
+
+*Superseded 2026-08-01:* rates are no longer copied by hand, so there is no
+`RATES_AS_OF` to update — a destination is priced from the live rate card at
+build time and the "rate as of" date comes from the fetch. Adding a country now
+means adding its curated row (slug, dial code, intro, dialing note); the rate
+attaches itself, and a dial code the card does not carry is dropped from the
+build with a warning rather than shipping a blank price. See
+`docs/rates-page-seo-brief.md`.
 
 Internal linking (shipped, uses the existing 10 destinations):
 
@@ -237,8 +244,10 @@ switcher only.
       intent Spanish pages). Purpose-written Mexican Spanish (celular, saldo,
       marcar), not literal MT; targets "llamadas internacionales baratas",
       "app de llamadas internacionales", "cómo llamar a México", "llamar sin
-      internet". Rates single-sourced from `destinations.ts`; `RATES_AS_OF_ES`
-      added for the Spanish date. Each page: full hreflang, self-canonical,
+      internet". Rates single-sourced from the same build-time rate card as
+      the English pages (was `destinations.ts` + a hand-stamped
+      `RATES_AS_OF_ES`; the Spanish date now formats from the fetch
+      timestamp). Each page: full hreflang, self-canonical,
       Spanish FAQPage schema, Spanish nav/footer/alt. `/es/call/` (full rates
       index) deferred — needs Spanish names for all 31 destinations; a
       standalone Spanish Mexico page avoided forking the whole destinations
@@ -284,6 +293,44 @@ this file; Step 4 same bar as Step 2 plus RTL visual review.
       Destination pages keep their existing single BreadcrumbList (verified
       not doubled). Skipped `/how-it-works/` and `/support/` — utility pages
       one level deep where a Home→Page crumb is noise, not the paid noindex LP.
+
+---
+
+## Phase 7 — Build-time rates — BUILT (2026-08-01), gated on a backend deploy
+
+The rates section stopped being hand-maintained. Prices are fetched from the
+backend's rate card during `astro build` and baked into the HTML — never
+client-side, since a JS-injected number is invisible to the crawlers these
+pages exist for. Full context and the decision record: `rates-page-seo-brief.md`.
+
+- [x] `src/lib/rates.ts` — build-time fetch mirroring `fetchLegal()`, but
+      **fails open** to a committed snapshot (`src/data/rates.json`) so an API
+      hiccup can't block a marketing deploy.
+- [x] Hardcoded `rateCents`, `RATES_AS_OF` and `RATES_AS_OF_ES` deleted. Every
+      "rate as of" date now formats from the fetch timestamp, so it cannot go
+      stale (it was ~4 months out).
+- [x] **Prefix-pricing copy fix.** Production prices each country's cheapest
+      prefix, so every figure is a floor: all price phrasing reads "from
+      X/min", and the ~20 intros and FAQs claiming one rate covers a country's
+      mobiles and landlines were rewritten. That claim contradicted the quote
+      the app gives before a call.
+- [x] Indicative-rates disclosure (`RateDisclosure.astro`) on every page that
+      prints a price, citing Terms §5.3 and linking rather than paraphrasing
+      the §5 billing rules.
+- [x] `Service` → `Offer` → `UnitPriceSpecification` JSON-LD per destination
+      (`minPrice` under prefix pricing). Semantic hygiene for answer engines,
+      not a rich result — kept distinct from the app's free `Offer.price: "0"`.
+- [x] Sitemap `lastmod` moves only for destinations whose own rate moved, and
+      the cron IndexNow ping now fires on genuine changes instead of being
+      skipped outright.
+- [ ] **Gated:** the build gets a 403/404 until the backend serves the card
+      without App Check — see the owner action items below. Until then every
+      build falls back to the committed snapshot, which is the same set of
+      prices the site shipped before this change.
+
+**No `/rates/` tree was created** — `/call/{slug}/` and `/call/` already own
+both intents, and a parallel tree is the cannibalization this file rejects
+below.
 
 ---
 

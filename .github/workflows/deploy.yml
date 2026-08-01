@@ -25,10 +25,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # The build fetches the live rate card and bakes per-country rates into
+      # the HTML (src/lib/rates.ts). It fails open: if the card is unreachable
+      # the build uses the committed snapshot in src/data/rates.json rather
+      # than shipping pages with no prices, so a bad minute on the API never
+      # blocks a deploy. Set the KALUM_RATES_URL repo variable to repoint it.
       - name: Build with Astro
         uses: withastro/action@v3
         with:
           node-version: 20
+        env:
+          KALUM_RATES_URL: ${{ vars.KALUM_RATES_URL }}
 
   deploy:
     needs: build
@@ -41,20 +48,36 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      # Notify IndexNow (Bing, Yandex, Seznam, …) of the current URL set so
-      # changed pages get re-crawled quickly. The key is PUBLIC by design —
-      # it is served at https://kalum.app/<key>.txt. Runs on content pushes
-      # and manual runs, not the weekly cron (nothing changes there).
-      # Never fails the deploy.
+      # Notify IndexNow (Bing, Yandex, Seznam, …) so changed pages get
+      # re-crawled quickly. The key is PUBLIC by design — it is served at
+      # https://kalum.app/<key>.txt. Never fails the deploy.
+      #
+      # Scheduled runs used to be skipped outright ("nothing changes there"),
+      # which stopped being true once rates started refreshing themselves: a
+      # cron deploy can now genuinely reprice pages. So the cron submits only
+      # the URLs the sitemap dates as changed today, and submits nothing on a
+      # quiet week. Pushes and manual runs still submit the full set — a human
+      # changed something, and which pages is not knowable from here.
       - name: Notify IndexNow
-        if: github.event_name != 'schedule'
         continue-on-error: true
+        env:
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           python3 - <<'PY'
-          import urllib.request, json, re
+          import urllib.request, json, re, os, datetime
           KEY, HOST = "f9ae384da454e9d1a2aed641e586c16c", "kalum.app"
           sm = urllib.request.urlopen(f"https://{HOST}/sitemap.xml", timeout=30).read().decode()
           urls = re.findall(r"<loc>([^<]+)</loc>", sm)
+
+          if os.environ.get("EVENT_NAME") == "schedule":
+              today = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
+              entries = re.findall(r"<loc>([^<]+)</loc>\s*<lastmod>([^<]+)</lastmod>", sm)
+              urls = [loc for loc, lastmod in entries if lastmod.startswith(today)]
+              if not urls:
+                  print("IndexNow — scheduled run, nothing dated today. Skipping.")
+                  raise SystemExit(0)
+              print(f"IndexNow — scheduled run, {len(urls)} URL(s) changed today.")
+
           payload = {
               "host": HOST,
               "key": KEY,
