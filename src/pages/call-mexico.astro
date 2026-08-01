@@ -8,9 +8,9 @@ import heroScreen from "../assets/screenshots/home.png";
 
 // ────────────────────────────────────────────────────────────────────────────
 // Standalone paid-traffic landing page for the "Call Mexico" Google Ads test.
-//  - noindex: paid-only, must not compete with the MENA-oriented organic site.
-//  - bare:    no site-wide Header/Footer (those carry MENA-oriented copy that
-//             would dilute the Mexico message).
+//  - noindex: paid-only, must not compete with the general international-calling organic site.
+//  - bare:    no site-wide Header/Footer (those carry general marketing copy
+//             that would dilute the Mexico message).
 //  - Both stores live: App Store + Google Play CTAs, identical for all visitors.
 //  - No client-side device routing / content swapping (keeps us cloaking-safe
 //    on static GitHub Pages — Googlebot and users get identical HTML).
@@ -185,7 +185,7 @@ const finePrint = "Calls billed by the minute, 60-second minimum.";
     </div>
   </section>
 
-  <!-- Minimal footer — legal links for ad-quality compliance, no MENA copy. -->
+  <!-- Minimal footer — legal links for ad-quality compliance, no general marketing copy. -->
   <footer class="bg-[var(--color-navy)] text-white/70">
     <div class="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-8 text-xs md:flex-row md:items-center md:justify-between md:px-8">
       <p>&copy; {new Date().getFullYear()} Neuera &middot; Kalum is a product of Neuera</p>
