@@ -290,6 +290,7 @@ Every question below was decided during implementation, in the direction the bri
 **Known gaps / deliberate non-goals**
 
 - Rendered rates can be newer than `rate-changes.json` for up to a week: the build fetches live on every deploy, but only the Monday refresh job records deltas. `lastmod` is a crawl hint, so a late bump is acceptable; the alternative re-bumps unchanged pages forever.
+- **The refresh job's commit does not trigger a deploy** (found 2026-08-01, on its first real run). GitHub suppresses workflow runs for pushes made with the default `GITHUB_TOKEN`, so the two crons hand off by clock instead: refresh at Monday 02:00 UTC, deploy at 03:00. Prices are unaffected — the deploy fetches the live card itself regardless — so this only delays `lastmod` accuracy to the weekly cycle. Pushing with a PAT secret would make it change-triggered.
 - `refresh-rates.yml` pushes to `main` with `contents: write`. That is the mechanism that makes rate upkeep automatic — worth knowing before merging, since it is a bot committing to the default branch.
 - `/es/` still has exactly one destination page. Unlike the English pages, it throws rather than silently vanishing if Mexico has no rate, because that route is fixed in the sitemap and is half an hreflang pair.
 

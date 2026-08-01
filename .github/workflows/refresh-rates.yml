@@ -7,8 +7,19 @@ name: Refresh rate snapshot
 # site — it is what gives the build a last-good copy to fall back to when the
 # API is down, and what gives the sitemap an honest per-page lastmod.
 #
-# A commit here pushes to main, which triggers the deploy workflow. Quiet weeks
-# commit nothing and deploy nothing.
+# A commit here does NOT trigger the deploy workflow. GitHub deliberately
+# suppresses workflow runs for pushes made with the default GITHUB_TOKEN, to
+# stop workflows retriggering each other forever. So the schedule is the
+# handoff: this runs Monday 02:00 UTC, the deploy cron runs 03:00 UTC and
+# picks the new snapshot up an hour later.
+#
+# That is only about lastmod accuracy, not about prices — the deploy fetches
+# the live card itself either way, so a mid-week deploy still ships current
+# rates, it just does not know which pages changed. If change-triggered
+# deploys are ever wanted, push with a PAT stored as a secret instead of the
+# default token; nothing else here needs to change.
+#
+# Quiet weeks commit nothing.
 
 on:
   schedule:
