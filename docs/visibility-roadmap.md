@@ -136,6 +136,10 @@ New destination pages — DONE (2026-07-20). Rates from the admin table
       gate (the template's H1 is price-led) and exceeds the sub-dollar cents
       display (`rateLabel` would show "110¢"). Revisit only with a
       connectivity-led hero variant, not a plain data row.
+      *Update 2026-08-01: both blockers are now gone — `formatRate` renders
+      ≥$1 as "$1.10", and the value-led hero variant exists (Phase 7b). Somalia
+      is unblocked if someone writes it a real intro and dialing note; it was
+      left out of that pass only because the pass was about existing pages.*
 - [x] **Central America:** Guatemala (24¢), El Salvador (35¢), Honduras
       (29¢). Full payoff comes after the Phase 5 Spanish locale.
 
@@ -331,6 +335,35 @@ pages exist for. Full context and the decision record: `rates-page-seo-brief.md`
 **No `/rates/` tree was created** — `/call/{slug}/` and `/call/` already own
 both intents, and a parallel tree is the cannibalization this file rejects
 below.
+
+---
+
+## Phase 7b — Editorial pass after live rates landed — DONE (2026-08-01)
+
+Turning on live rates revealed the site had been advertising roughly half the
+real price on most corridors: 27 of 31 destinations were under-quoted, several
+by ~100% (Sudan 45→87¢, Nigeria 20→40¢, Vietnam 15→31¢). Publishing the true
+figures was correct but left a dozen pages leading with a number that no longer
+sells. Two fixes:
+
+- [x] **Value-led hero above 50¢** (`PRICE_LED_MAX_CENTS` in
+      `call/[slug].astro`). Twelve destinations now lead with what Kalum
+      actually offers that corridor instead of the price — "Call any Sudanese
+      phone. / Landlines and mobiles. No app, smartphone, or internet on their
+      end." VoIP-restricted destinations (UAE, Qatar, Oman) lead with the
+      restriction. **The figure is not hidden**: it moves to its own hero line,
+      and stays in the FAQ, the schema and every cross-link. Hiding a price to
+      win a click is the trust failure this section exists to prevent. One
+      constant moves the boundary; it currently splits Nepal (51¢, value-led)
+      from Sri Lanka (49¢, price-led), so re-check it when rates move.
+- [x] **Rebalanced `featuredSlugs`.** The homepage strip was five-sixths
+      Middle East, which read as diaspora-first and contradicted the
+      general-provider positioning. Now Mexico 4¢, Colombia 7¢, India 9¢,
+      Turkey 13¢, Egypt 35¢, Nigeria 40¢ — all four regions, and every entry
+      below the price-led threshold so the strip never advertises a figure the
+      destination page itself declined to lead with. The UAE was dropped for
+      that reason; it still leads `/whatsapp-calls-blocked/`, where its story
+      is the restriction rather than the rate.
 
 ---
 

@@ -401,14 +401,29 @@ export function nameAtSentenceStart(d: Destination): string {
  * Corridors surfaced in the homepage "Popular destinations" strip and the
  * footer, in display order. Data-driven: edit this list to change what's
  * featured, and newly added destinations flow in the moment they appear here.
+ *
+ * Two rules this list has to keep satisfying, both easy to break by accident:
+ *
+ * 1. **Spread the regions.** This strip is the clearest signal of who the
+ *    product is for. It was five-sixths Middle East, which read as a
+ *    diaspora-first service and contradicted the general-provider positioning
+ *    the rest of the site was rewritten around. All four regions now appear.
+ * 2. **Feature corridors whose price still sells.** Every entry sits under the
+ *    price-led threshold in `call/[slug].astro`, so the strip never advertises
+ *    a figure the destination page itself has decided not to lead with. The
+ *    UAE was dropped for exactly that reason when it repriced past it — it is
+ *    still linked everywhere else, and it leads the /whatsapp-calls-blocked/
+ *    page, where its story is the restriction rather than the rate.
+ *
+ * Rates move on their own now, so re-check this list when they do.
  */
 export const featuredSlugs = [
   "mexico",
-  "egypt",
-  "lebanon",
+  "colombia",
+  "india",
   "turkey",
-  "saudi-arabia",
-  "uae",
+  "egypt",
+  "nigeria",
 ];
 
 /** Featured destinations in `featuredSlugs` order, skipping any unknown slug. */

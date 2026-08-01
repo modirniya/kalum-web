@@ -46,8 +46,50 @@ const asOf = formatRatesAsOf(card.fetchedAt);
 // a fixed price takes "for".
 const preposition = card.basis === "from" ? "from" : "for";
 
-const title = `Call ${d.name} — ${from}${rate}/min to Any Phone | Kalum`;
-const description = `Call ${d.name} ${preposition} ${rate} a minute with Kalum — landlines and mobiles, no app, smartphone, or internet needed on their end. Prepaid credit that never expires.`;
+/**
+ * Above this, the page stops leading with the price.
+ *
+ * A price-led headline only works while the price is a selling point. "Call
+ * Mexico from 4¢ a minute" sells; "Call Sudan from 87¢ a minute" is an
+ * anti-hook, and dynamic pricing moves corridors across that line without
+ * anyone editing a page. The old rule was all-or-nothing — Somalia was left
+ * unpublished at $1.10 — and the roadmap said to revisit it "only with a
+ * connectivity-led hero variant, not a plain data row". This is that variant.
+ *
+ * It changes what the page LEADS with, never what it discloses: the exact
+ * figure stays in the hero, the FAQ, the schema and the cross-links. Hiding a
+ * price to win a click is the trust failure this whole section exists to
+ * avoid. Tune the one number below to move the boundary.
+ */
+const PRICE_LED_MAX_CENTS = 50;
+const priceLed = d.rateCents < PRICE_LED_MAX_CENTS;
+
+// What the page leads with instead, when the price isn't the story. Both lines
+// are claims the site already makes and can back — no per-country research
+// smuggled in, and nothing that stops being true when a rate moves again.
+const valueSubline = d.voipRestricted
+  ? `Voice calls on many internet apps are restricted there. Kalum dials the real number.`
+  : `Landlines and mobiles. No app, smartphone, or internet on their end.`;
+
+// Assembled here rather than interpolated in the markup: adjacent expressions
+// inside a JSX fragment lose the whitespace between them, which silently
+// welded the headline into "Call Mexicofrom4¢ a minute".
+const headline = priceLed
+  ? `Call ${d.name} ${preposition} ${rate} a minute.`
+  : `Call any ${d.demonym} phone.`;
+const subhead = priceLed
+  ? "Landlines and mobiles. They just pick up."
+  : valueSubline;
+const heroRateLine = `Currently ${from}${rate} a minute to any ${d.demonym} number.`;
+
+const title = priceLed
+  ? `Call ${d.name} — ${from}${rate}/min to Any Phone | Kalum`
+  : `Call ${d.name} — Rates and How to Dial | Kalum`;
+
+const description = priceLed
+  ? `Call ${d.name} ${preposition} ${rate} a minute with Kalum — landlines and mobiles, no app, smartphone, or internet needed on their end. Prepaid credit that never expires.`
+  : `Call any ${d.demonym} landline or mobile with Kalum — no app, smartphone, or internet needed on their end. See the current per-minute rate before you dial. Prepaid credit that never expires.`;
+
 const canonical = `https://kalum.app/call/${d.slug}/`;
 /** Dollars-per-minute, the form schema.org wants. */
 const priceUsd = (d.rateCents / 100).toFixed(2);
@@ -169,12 +211,21 @@ const structuredData = {
         Calling {d.name} &middot; +{d.dialCode}
       </p>
       <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-        Call {d.name} {preposition} {rate} a minute.
-        <span class="block text-white/85">Landlines and mobiles. They just pick up.</span>
+        {headline}
+        <span class="block text-white/85">{subhead}</span>
       </h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
         {d.intro}
       </p>
+
+      {
+        /* The price left the headline, so it gets its own line rather than
+           living only in the FAQ — this page still has to answer "what does
+           it cost" above the fold. */
+        !priceLed && (
+          <p class="mt-6 text-lg font-semibold text-white sm:text-xl">{heroRateLine}</p>
+        )
+      }
 
       <div class="mt-9 flex flex-wrap items-center gap-4">
         <AppStoreBadge size="lg" utm={`kalum-web-call-${d.slug}`} />
