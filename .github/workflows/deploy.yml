@@ -23,17 +23,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # The build fetches the live rate card and bakes per-country rates into
       # the HTML (src/lib/rates.ts). It fails open: if the card is unreachable
       # the build uses the committed snapshot in src/data/rates.json rather
       # than shipping pages with no prices, so a bad minute on the API never
       # blocks a deploy. Set the KALUM_RATES_URL repo variable to repoint it.
+      # actions/deploy-pages below is deliberately left at v4 — it already runs
+      # on node24, so it is not part of the Node 20 deprecation.
       - name: Build with Astro
-        uses: withastro/action@v3
+        uses: withastro/action@v6
         with:
-          node-version: 20
+          node-version: 24
         env:
           KALUM_RATES_URL: ${{ vars.KALUM_RATES_URL }}
 

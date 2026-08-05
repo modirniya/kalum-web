@@ -39,13 +39,19 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
+      # checkout is held at v5 rather than the newest major on purpose: v6
+      # changed how it persists git credentials, and the "Commit if changed"
+      # step below relies on those credentials to push.
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
+      # setup-node v5 auto-enables package-manager caching, but only when
+      # package.json has a `packageManager` field. It does not, so the
+      # deliberate no-install policy below is unaffected.
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 24
 
       # No npm install: the script is dependency-free on purpose, so a broken
       # lockfile can never stop rates from refreshing.
