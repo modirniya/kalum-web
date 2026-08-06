@@ -30,8 +30,6 @@ jobs:
       # the build uses the committed snapshot in src/data/rates.json rather
       # than shipping pages with no prices, so a bad minute on the API never
       # blocks a deploy. Set the KALUM_RATES_URL repo variable to repoint it.
-      # actions/deploy-pages below is deliberately left at v4 — it already runs
-      # on node24, so it is not part of the Node 20 deprecation.
       - name: Build with Astro
         uses: withastro/action@v6
         with:
@@ -46,9 +44,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # v5 is the Node 24 bump (v4 was node20). The compatibility caveat in its
+      # release notes applies to GitHub Enterprise Server, not github.com.
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
       # Notify IndexNow (Bing, Yandex, Seznam, …) so changed pages get
       # re-crawled quickly. The key is PUBLIC by design — it is served at
