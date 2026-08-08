@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { alternatesFor } from "../lib/i18n";
 import Steps from "../components/howitworks/Steps.astro";
 import FAQ from "../components/howitworks/FAQ.astro";
 import GooglePlayBadge from "../components/GooglePlayBadge.astro";
@@ -10,6 +11,7 @@ import AppStoreBadge from "../components/AppStoreBadge.astro";
   title="How Kalum Works — Cheap Calls With No App for Recipients"
   description="Sign up with your number, add $4.99 in credit, dial any phone. The person you call doesn't need an app or internet — they just pick up."
   canonical="https://kalum.app/how-it-works/"
+  alternates={alternatesFor("/how-it-works/")}
 >
   <Steps />
   <FAQ />

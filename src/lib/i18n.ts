@@ -19,8 +19,14 @@ export interface Alternate {
  */
 export const localizedPairs: { en: string; es: string }[] = [
   { en: "/", es: "/es/" },
+  { en: "/how-it-works/", es: "/es/how-it-works/" },
   { en: "/call-without-internet/", es: "/es/call-without-internet/" },
+  { en: "/call/", es: "/es/call/" },
   { en: "/call/mexico/", es: "/es/call/mexico/" },
+  { en: "/call/colombia/", es: "/es/call/colombia/" },
+  { en: "/call/guatemala/", es: "/es/call/guatemala/" },
+  { en: "/call/honduras/", es: "/es/call/honduras/" },
+  { en: "/call/el-salvador/", es: "/es/call/el-salvador/" },
 ];
 
 /**

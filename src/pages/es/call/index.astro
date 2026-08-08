@@ -1,0 +1,172 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import AppStoreBadge from "../../../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../../../components/GooglePlayBadge.astro";
+import RateDisclosure from "../../../components/RateDisclosure.astro";
+import Breadcrumb from "../../../components/Breadcrumb.astro";
+import { pricedDestinations, formatRate, fromPrefix } from "../../../lib/rates";
+import { alternatesFor } from "../../../lib/i18n";
+import { ES_NAMES, ES_REGIONS, DESTINATION_COPY_ES } from "../_destinations-es";
+
+// Spanish rates hub, mirroring /call/. Rates come from the live rate card at
+// build time and are baked into the HTML, same as the English hub.
+const { card, priced } = await pricedDestinations();
+const from = fromPrefix(card.basis, "es");
+
+// Country names come from the Spanish table; a destination added to
+// destinations.ts without a Spanish name falls back to its English name
+// rather than dropping out of the hub silently.
+const esName = (slug: string, fallback: string) => ES_NAMES[slug] ?? fallback;
+
+// Which destinations have a full Spanish page of their own. Everything else
+// links to its English page, which is honest about where the reader lands and
+// avoids advertising a Spanish URL that does not exist.
+const hasEsPage = (slug: string) =>
+  slug === "mexico" || slug in DESTINATION_COPY_ES;
+
+// Same fixed grouping order as the English hub. This is a grouping order, not
+// a ranking — América leads because this is the Spanish subtree and that is
+// where its readers call, not because the site favours a region.
+const regionOrder = ["Americas", "Middle East", "Asia", "Africa"] as const;
+const grouped = regionOrder
+  .map((region) => ({
+    region: ES_REGIONS[region] ?? region,
+    items: priced.filter((d) => d.region === region),
+  }))
+  .filter((g) => g.items.length > 0);
+---
+
+<BaseLayout
+  title="Tarifas para Llamar al Extranjero por País | Kalum"
+  description="Tarifas por minuto para llamar a fijos y celulares con Kalum — México, Colombia, Guatemala, Honduras, El Salvador y más. Sin app ni internet del lado de quien recibe."
+  canonical="https://kalum.app/es/call/"
+  lang="es"
+  alternates={alternatesFor("/es/call/")}
+>
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <Breadcrumb items={[{ name: "Inicio", href: "/es/" }, { name: "Destinos" }]} />
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
+        Destinos
+      </p>
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        Llama a cualquier teléfono, en cualquier país.
+        <span class="block text-white/85">Fijos y celulares.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        Kalum marca números de teléfono reales, así que la persona a la que
+        llamas no necesita app, ni smartphone, ni internet. Estos son algunos
+        de los destinos más llamados; en la app ves la tarifa de más de 180
+        países antes de marcar.
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-es-destinos" />
+        <GooglePlayBadge size="lg" utm="kalum-web-es-destinos" />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-[var(--color-cream)] py-16 md:py-24">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <div class="space-y-12">
+        {
+          grouped.map((group) => (
+            <div>
+              <h2 class="text-2xl font-extrabold tracking-tight text-[var(--color-text)]">
+                {group.region}
+              </h2>
+              <ul class="mt-5 grid gap-4 sm:grid-cols-2">
+                {group.items.map((d) => (
+                  <li>
+                    <a
+                      href={hasEsPage(d.slug) ? `/es/call/${d.slug}/` : `/call/${d.slug}/`}
+                      class="flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white p-6 shadow-sm transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
+                    >
+                      <span>
+                        <span class="block text-lg font-bold text-[var(--color-text)]">
+                          Llamar a {esName(d.slug, d.name)}
+                        </span>
+                        <span class="mt-1 block text-sm text-[var(--color-muted)]">
+                          +{d.dialCode} &middot; fijos y celulares
+                        </span>
+                      </span>
+                      <span class="shrink-0 text-right">
+                        {from && (
+                          <span class="block text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                            desde
+                          </span>
+                        )}
+                        <span class="text-2xl font-extrabold text-[var(--color-maroon)]">
+                          {formatRate(d.rateCents)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <RateDisclosure card={card} locale="es" class="mt-8" />
+    </div>
+  </section>
+
+  <section class="bg-white py-16 md:py-24">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Cómo funcionan las tarifas internacionales
+      </h2>
+      <div class="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-muted)]">
+        <p>
+          Las redes telefónicas de cada país cobran su propio precio por
+          conectar una llamada entrante, y por eso las tarifas cambian según el
+          destino — un minuto a México no cuesta lo mismo que un minuto a
+          Honduras. Las tarifas también se mueven con el tiempo, según lo que
+          cobren esas redes.
+        </p>
+        <p>
+          Dentro de un mismo país también hay diferencias: un celular y un fijo
+          están en redes distintas, así que las cifras de arriba son un precio
+          de partida por destino, no un precio único para todos los números de
+          ese país. Por eso Kalum te muestra la tarifa por minuto del número
+          exacto que marcas, antes de que empiece la llamada. Se cobra por
+          minuto, redondeando hacia arriba, con un mínimo de un minuto — sin
+          cargos por conexión ni cobros escondidos.
+        </p>
+        <p>
+          Tampoco hay suscripción: agregas saldo de prepago desde $4.99, nunca
+          vence, y pagas solo los minutos que usas.
+          <a
+            href="/es/call-without-internet/"
+            class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+          >Mira cómo se llama sin internet de su lado &rarr;</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        ¿No ves tu país?
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-white/85">
+        Kalum llama a fijos y celulares en más de 180 países. Descarga la app y
+        consulta la tarifa de cualquier destino — verla es gratis y no hay
+        suscripción.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-es-destinos" />
+        <GooglePlayBadge size="lg" utm="kalum-web-es-destinos" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

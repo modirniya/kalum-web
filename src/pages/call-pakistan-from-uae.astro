@@ -1,0 +1,259 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AppStoreBadge from "../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../components/GooglePlayBadge.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import RateDisclosure from "../components/RateDisclosure.astro";
+import { pricedDestination, formatRate, fromPrefix } from "../lib/rates";
+
+// Second corridor page, and the second-largest expatriate group in the UAE.
+// Same intent as the India page — "I am here and the call won't go through" —
+// but the copy is written for this corridor rather than templated from it:
+// different numbering plan, different destinations within the country, and a
+// different reason landlines still matter.
+const { card, destination: pakistan } = await pricedDestination("pakistan");
+const from = fromPrefix(card.basis);
+const canonical = "https://kalum.app/call-pakistan-from-uae/";
+const priceUsd = pakistan ? (pakistan.rateCents / 100).toFixed(2) : null;
+
+const faqs = [
+  {
+    q: "Why won't my WhatsApp call to Pakistan connect from the UAE?",
+    a: "Voice and video calls over many internet apps are restricted in the UAE. Text messages and voice notes generally still send, so the app looks like it is working right up until the call fails. Which apps this affects can change over time.",
+  },
+  {
+    q: "How does Kalum get through?",
+    a: "It isn't an app-to-app call. Kalum uses your connection in the UAE to dial the Pakistani number over the international phone network, so a normal incoming call arrives on their handset.",
+  },
+  {
+    q: "Does the person in Pakistan need an app or internet?",
+    a: "No. Nothing at all on their end — no app, no account, no smartphone, no data. A basic phone or a landline receives the call exactly like any other.",
+  },
+  {
+    q: "How do I dial a Pakistani number from the UAE?",
+    a: "Pakistani mobiles are 10 digits starting with 3, written locally as 03…. Drop the leading 0 and dial +92 followed by the rest of the number. Landlines use a city code such as 21 for Karachi or 42 for Lahore, also without the leading zero.",
+  },
+  {
+    q: "What does it cost, and is there a subscription?",
+    a: "No subscription. You add prepaid credit from $4.99, see the exact per-minute rate in the app before you dial, and pay only for the minutes you use. Credit never expires.",
+  },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "FAQPage",
+      "@id": `${canonical}#faq`,
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
+    },
+    {
+      "@type": "Service",
+      "@id": `${canonical}#service`,
+      name: "Calls to Pakistan from the UAE",
+      serviceType: "International calling",
+      provider: { "@id": "https://kalum.app/#organization" },
+      areaServed: { "@type": "Country", name: "Pakistan" },
+      ...(priceUsd
+        ? {
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "USD",
+              priceSpecification: {
+                "@type": "UnitPriceSpecification",
+                priceCurrency: "USD",
+                ...(card.basis === "from"
+                  ? { minPrice: priceUsd }
+                  : { price: priceUsd }),
+                referenceQuantity: {
+                  "@type": "QuantitativeValue",
+                  value: 1,
+                  unitCode: "MIN",
+                },
+                validFrom: card.fetchedAt,
+              },
+            },
+          }
+        : {}),
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="Call Pakistan from the UAE — When App Calls Are Blocked | Kalum"
+  description="Voice calls on many internet apps are restricted in the UAE. Kalum dials Pakistani landlines and mobiles directly — no app needed on their end. See the rate before you call."
+  canonical={canonical}
+>
+  <!-- Hero -->
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <Breadcrumb
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Calling from the UAE", href: "/call-from-uae/" },
+          { name: "Pakistan" },
+        ]}
+      />
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        Call Pakistan from the UAE.
+        <span class="block text-white/85">No app on their end.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        Voice calls on many internet apps are restricted in the UAE. Kalum
+        doesn't rely on them — it dials the Pakistani number over the phone
+        network, so a normal call lands on their handset.
+      </p>
+
+      {
+        pakistan && (
+          <p class="mt-6 text-lg font-semibold text-white">
+            Currently {from}{formatRate(pakistan.rateCents)} a minute to any Pakistani number.
+          </p>
+        )
+      }
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-pakistan-from-uae" />
+        <GooglePlayBadge size="lg" utm="kalum-web-pakistan-from-uae" />
+      </div>
+
+      <p class="mt-5 text-sm text-white/70">
+        Start with $4.99. No subscription. Credit never expires.
+      </p>
+    </div>
+  </section>
+
+  <!-- Why -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Messages send. The call won't.
+      </h2>
+      <div class="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-muted)]">
+        <p>
+          If you have tried to ring Lahore or Peshawar from the Emirates, you
+          know the shape of it. Texts arrive, voice notes arrive, the app shows
+          everyone online — and the call itself never connects. Voice and video
+          calling over many internet apps is restricted in the UAE, and the
+          restriction lands on exactly that one feature.
+        </p>
+        <p>
+          Kalum takes a different route. It is not an app-to-app internet call
+          at all: it uses your connection here to place a real telephone call
+          to the Pakistani number, over the same international phone network a
+          landline would use.
+        </p>
+        <p>
+          That changes who is reachable. Anyone with a working phone number
+          qualifies — a parent on a basic handset, a landline in the village, a
+          shop that will pass the phone along. There is nothing to install,
+          nothing to sign up for, and no data connection needed at their end.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dialing -->
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Dialing a Pakistani number
+      </h2>
+      <p class="mt-6 text-lg leading-relaxed text-[var(--color-muted)]">
+        Pakistani mobiles are 10 digits starting with 3, written locally as
+        03…. Drop that leading 0 and dial
+        <strong class="text-[var(--color-text)]">+92</strong> followed by the
+        rest. Landlines take a city code — 21 for Karachi, 42 for Lahore, 51
+        for Islamabad — again with the leading zero removed.
+      </p>
+      {
+        pakistan && (
+          <p class="mt-5 text-lg leading-relaxed text-[var(--color-muted)]">
+            The app shows the exact per-minute rate for the number you have
+            entered before the call starts — currently {from}
+            {formatRate(pakistan.rateCents)} a minute to Pakistan. Calls bill
+            per minute with a one-minute minimum.
+          </p>
+        )
+      }
+
+      <RateDisclosure card={card} class="mt-6" />
+
+      <p class="mt-8 text-base text-[var(--color-muted)]">
+        <a
+          href="/call/pakistan/"
+          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+        >Full Pakistan rates and dialing guide &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Common questions
+      </h2>
+
+      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
+        {
+          faqs.map((faq) => (
+            <li>
+              <details class="group py-5">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
+                  <span>{faq.q}</span>
+                  <span
+                    aria-hidden="true"
+                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
+                  {faq.a}
+                </p>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="mt-8 text-base text-[var(--color-muted)]">
+        Calling India, the Philippines or elsewhere?
+        <a
+          href="/call-from-uae/"
+          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+        >Calling abroad from the UAE &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        One tap, and it rings in Pakistan.
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-white/85">
+        Download Kalum, add $4.99 in credit, and dial any Pakistani landline or
+        mobile. Pay only for the minutes you use.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-pakistan-from-uae" />
+        <GooglePlayBadge size="lg" utm="kalum-web-pakistan-from-uae" />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</BaseLayout>
