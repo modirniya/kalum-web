@@ -19,9 +19,21 @@ export interface Destination {
   dialingNote: string;
   /**
    * True where voice calls on many internet apps are commonly restricted
-   * (the Gulf). Drives the /whatsapp-calls-blocked/ explainer's country list
-   * and a cross-link callout on the destination page. Kept to the countries
-   * whose intro copy already states the restriction.
+   * (the Gulf). Drives the /whatsapp-calls-blocked/ explainer's country list,
+   * the /call-from-uae/ cluster, and a cross-link callout on the destination
+   * page. Kept to the countries whose intro copy already states the
+   * restriction.
+   *
+   * ⚠️ THIS FLAG DECAYS. It is a claim about another country's current policy,
+   * and those move. Oman carried it until 2026-08 and was removed after its
+   * block was reported lifted; Saudi Arabia liberalised back in 2017 and has
+   * never carried it; Kuwait and Bahrain have no active block. Egypt and
+   * Jordan restrict *periodically* or degrade quality rather than blocking
+   * outright — too unsettled to assert, so they stay unflagged.
+   *
+   * Re-verify before adding a country, and prefer removing a flag to keeping
+   * a stale one: every page this drives states the restriction as fact, so a
+   * wrong flag publishes a wrong claim.
    */
   voipRestricted?: boolean;
 }
@@ -187,10 +199,15 @@ export const destinations: Destination[] = [
     demonym: "Omani",
     dialCode: "968",
     intro:
-      "Muscat, Salalah, Sohar — voice calls on many internet apps are restricted in Oman, so Kalum dials regular Omani phone numbers instead.",
+      "Muscat, Salalah, Sohar — call any Omani landline or mobile, with nothing to install or sign up for on their end.",
     dialingNote:
       "Omani numbers are 8 digits with no leading zero — mobiles start with 7 or 9. Dial +968 and then the full 8-digit number.",
-    voipRestricted: true,
+    // voipRestricted removed 2026-08: Oman's long-standing WhatsApp-calling
+    // block was widely reported lifted in December 2024, and users have since
+    // reported calls connecting without a VPN. The TRA never announced a
+    // formal change, so the position is unsettled rather than reversed — which
+    // is precisely why this page should no longer assert a restriction. A
+    // claim that has stopped being reliably true is worse than a missing one.
   },
   {
     slug: "bahrain",

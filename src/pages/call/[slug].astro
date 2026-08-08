@@ -3,7 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import AppStoreBadge from "../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
 import RateDisclosure from "../../components/RateDisclosure.astro";
-import { nameAtSentenceStart } from "../../lib/destinations";
+import { featuredSlugs, nameAtSentenceStart } from "../../lib/destinations";
 import {
   pricedDestinations,
   formatRate,
@@ -24,12 +24,46 @@ import { alternatesFor } from "../../lib/i18n";
 // landlines. Rendering a "from" figure as flat would let this page contradict
 // the quote the app gives before the call — the one number that gets billed.
 
+/**
+ * How many sibling destinations the "More destinations" block links to.
+ *
+ * This used to be "all of them". With 31 destination pages each linking to the
+ * other 30, internal authority spread perfectly evenly across a set in which
+ * every member ranked 29-42, and nothing was ever elevated — an audit measured
+ * 32 sibling links per page. Link equity divides: pointing at everything is
+ * the same as pointing at nothing, and it is why the /call/ hub itself sits at
+ * position 28.9 while its children sit below it.
+ *
+ * The replacement is deliberate rather than exhaustive: same-region neighbours
+ * first, because that is the block a human actually finds useful, then the
+ * featured destinations to top up. Both are sets we want ranking, and the
+ * long tail stays reachable through the /call/ hub and the sitemap — it just
+ * stops diluting every page on the site.
+ */
 export async function getStaticPaths() {
+  // Declared INSIDE getStaticPaths on purpose. Astro extracts this function
+  // into its own isolated scope at build time, so it cannot see frontmatter
+  // consts declared above it — a module-level `const RELATED_LIMIT` type-checks
+  // clean and then fails the build with "RELATED_LIMIT is not defined".
+  const RELATED_LIMIT = 8;
+
   const { card, priced } = await pricedDestinations();
-  return priced.map((destination) => ({
-    params: { slug: destination.slug },
-    props: { destination, card, others: priced.filter((o) => o.slug !== destination.slug) },
-  }));
+  const featured = new Set(featuredSlugs);
+
+  return priced.map((destination) => {
+    const rest = priced.filter((o) => o.slug !== destination.slug);
+    const sameRegion = rest.filter((o) => o.region === destination.region);
+    const topUp = rest.filter(
+      (o) => o.region !== destination.region && featured.has(o.slug),
+    );
+    // Region-mates first, then featured from elsewhere; dedupe by slug and cap.
+    const others = [...sameRegion, ...topUp].slice(0, RELATED_LIMIT);
+
+    return {
+      params: { slug: destination.slug },
+      props: { destination, card, others },
+    };
+  });
 }
 
 interface Props {
@@ -60,8 +94,21 @@ const preposition = card.basis === "from" ? "from" : "for";
  * figure stays in the hero, the FAQ, the schema and the cross-links. Hiding a
  * price to win a click is the trust failure this whole section exists to
  * avoid. Tune the one number below to move the boundary.
+ *
+ * 2026-08-08 — lowered 50 -> 10 on competitive evidence. Every SERP we rank
+ * 4-10 on is a price comparison with rival rates visible in the snippet, and
+ * we lose all of them: Turkey 9c vs 1.9c, Jordan 32c vs 4c, Saudi 21c vs 10.9c,
+ * Iraq 51c vs 20.5c. At zero margin we still could not match, because Twilio's
+ * cost to us exceeds their retail. At 50c, 30 of 31 pages led with a number
+ * that loses the comparison before the click. Below 10c we are genuinely
+ * competitive (Mexico 3c, UK 3c, India 7c) and the price is worth leading on;
+ * above it, the honest hook is the thing rivals cannot match — the person you
+ * call needs no app, no smartphone and no internet.
+ *
+ * Raise this again once multi-provider least-cost routing lands and the rates
+ * are competitive. The price becoming a selling point again is the signal.
  */
-const PRICE_LED_MAX_CENTS = 50;
+const PRICE_LED_MAX_CENTS = 10;
 const priceLed = d.rateCents < PRICE_LED_MAX_CENTS;
 
 // What the page leads with instead, when the price isn't the story. Both lines

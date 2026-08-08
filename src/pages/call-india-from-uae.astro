@@ -1,0 +1,263 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AppStoreBadge from "../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../components/GooglePlayBadge.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import RateDisclosure from "../components/RateDisclosure.astro";
+import { pricedDestination, formatRate, fromPrefix } from "../lib/rates";
+
+// The single largest corridor this product has: Indian nationals are the
+// biggest expatriate group in the UAE, and voice calls on many internet apps
+// are restricted there. Written as a corridor page — a shape competitors own
+// and this site had none of — rather than another destination page, because
+// the search intent is "I am here and cannot call there", not "what does India
+// cost".
+//
+// Rate is the India destination rate, fetched live. If the feed has no India
+// row this build, the page renders without a figure rather than a blank one.
+const { card, destination: india } = await pricedDestination("india");
+const from = fromPrefix(card.basis);
+const canonical = "https://kalum.app/call-india-from-uae/";
+const priceUsd = india ? (india.rateCents / 100).toFixed(2) : null;
+
+const faqs = [
+  {
+    q: "Why can't I make WhatsApp calls to India from the UAE?",
+    a: "Voice and video calls on many internet apps are restricted in the UAE. Messaging usually still works, which is why the failure is confusing — the chat goes through but the call won't connect. Which apps are affected can change over time.",
+  },
+  {
+    q: "How does Kalum reach an Indian number instead?",
+    a: "Kalum places a real telephone call rather than an app-to-app internet call. It uses your connection in the UAE to dial the Indian number over the international phone network, so an ordinary incoming call arrives at the other end.",
+  },
+  {
+    q: "Does the person in India need WhatsApp or a smartphone?",
+    a: "No. They need nothing at all — no app, no account, no smartphone, no internet. A basic handset or a landline works exactly the same way, which matters when you are calling parents or a family home.",
+  },
+  {
+    q: "How do I dial an Indian number from the UAE?",
+    a: "Indian mobiles are 10 digits starting with 6, 7, 8 or 9. Drop any leading 0 and dial +91 followed by the full 10-digit number. Kalum shows you the exact per-minute rate for that number before the call connects.",
+  },
+  {
+    q: "What does calling India cost?",
+    a: "You see the exact per-minute rate in the app before you dial, and calls are billed per minute with a one-minute minimum. Credit starts at $4.99, there is no subscription, and unused credit never expires.",
+  },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "FAQPage",
+      "@id": `${canonical}#faq`,
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
+    },
+    {
+      "@type": "Service",
+      "@id": `${canonical}#service`,
+      name: "Calls to India from the UAE",
+      serviceType: "International calling",
+      provider: { "@id": "https://kalum.app/#organization" },
+      areaServed: { "@type": "Country", name: "India" },
+      ...(priceUsd
+        ? {
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "USD",
+              priceSpecification: {
+                "@type": "UnitPriceSpecification",
+                priceCurrency: "USD",
+                ...(card.basis === "from"
+                  ? { minPrice: priceUsd }
+                  : { price: priceUsd }),
+                referenceQuantity: {
+                  "@type": "QuantitativeValue",
+                  value: 1,
+                  unitCode: "MIN",
+                },
+                validFrom: card.fetchedAt,
+              },
+            },
+          }
+        : {}),
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="Call India from the UAE — When WhatsApp Calls Won't Connect | Kalum"
+  description="Voice calls on many internet apps are restricted in the UAE. Kalum dials Indian landlines and mobiles directly — nothing to install on their end. See the per-minute rate before you call."
+  canonical={canonical}
+>
+  <!-- Hero -->
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <Breadcrumb
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Calling from the UAE", href: "/call-from-uae/" },
+          { name: "India" },
+        ]}
+      />
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        Call India from the UAE.
+        <span class="block text-white/85">Their phone just rings.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        Voice calls on many internet apps are restricted in the UAE, so the
+        call to Kochi or Hyderabad fails while the chat goes through. Kalum
+        dials the Indian number itself, over the phone network.
+      </p>
+
+      {
+        india && (
+          <p class="mt-6 text-lg font-semibold text-white">
+            Currently {from}{formatRate(india.rateCents)} a minute to any Indian number.
+          </p>
+        )
+      }
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-india-from-uae" />
+        <GooglePlayBadge size="lg" utm="kalum-web-india-from-uae" />
+      </div>
+
+      <p class="mt-5 text-sm text-white/70">
+        Start with $4.99. No subscription. Credit never expires.
+      </p>
+    </div>
+  </section>
+
+  <!-- Why -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        The chat works. The call doesn't.
+      </h2>
+      <div class="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-muted)]">
+        <p>
+          It's a familiar pattern in the Emirates: messages, photos and voice
+          notes to India send instantly, but the moment you press call, nothing
+          happens. Voice and video calling over many internet apps is
+          restricted in the UAE, and that restriction applies to the call while
+          leaving the rest of the app alone.
+        </p>
+        <p>
+          Kalum sidesteps the question entirely by not being an internet call.
+          It uses your connection here to place a genuine telephone call to the
+          Indian number, routed over the international phone network. What
+          rings in India is an ordinary phone call.
+        </p>
+        <p>
+          The practical consequence is who you can now reach. Not just family
+          who are online and on the same app — but a landline at home, a
+          grandparent with a basic handset, a neighbour who can fetch someone,
+          an office number. None of them install anything.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dialing -->
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Dialing an Indian number
+      </h2>
+      <p class="mt-6 text-lg leading-relaxed text-[var(--color-muted)]">
+        Indian mobiles are 10 digits starting with 6, 7, 8 or 9. Drop any
+        leading 0 and dial <strong class="text-[var(--color-text)]">+91</strong>
+        followed by the full 10-digit number. Landlines add an STD code — 22
+        for Mumbai, 11 for Delhi, 80 for Bengaluru — again without the leading
+        zero.
+      </p>
+      {
+        india && (
+          <p class="mt-5 text-lg leading-relaxed text-[var(--color-muted)]">
+            Kalum shows the exact per-minute rate for the number you have typed
+            before the call connects — currently {from}
+            {formatRate(india.rateCents)} a minute to India. Calls are billed
+            per minute with a one-minute minimum.
+          </p>
+        )
+      }
+
+      <RateDisclosure card={card} class="mt-6" />
+
+      <p class="mt-8 text-base text-[var(--color-muted)]">
+        <a
+          href="/call/india/"
+          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+        >Full India rates and dialing guide &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Common questions
+      </h2>
+
+      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
+        {
+          faqs.map((faq) => (
+            <li>
+              <details class="group py-5">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
+                  <span>{faq.q}</span>
+                  <span
+                    aria-hidden="true"
+                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
+                  {faq.a}
+                </p>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="mt-8 text-base text-[var(--color-muted)]">
+        Calling somewhere else from the Emirates?
+        <a
+          href="/call-from-uae/"
+          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+        >Calling abroad from the UAE &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        Call home tonight.
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-white/85">
+        Download Kalum, add $4.99 in credit, and dial any Indian landline or
+        mobile. Pay only for the minutes you use.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-india-from-uae" />
+        <GooglePlayBadge size="lg" utm="kalum-web-india-from-uae" />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</BaseLayout>

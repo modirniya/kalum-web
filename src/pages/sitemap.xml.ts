@@ -19,6 +19,14 @@ const SITE = "https://kalum.app";
 // format blocks on destination pages, evergreen pages, and the /es/ locale.
 const SEO_CONTENT_UPDATE = "2026-07-20";
 
+// The outbound-from-UAE cluster's own publication date. Kept separate from
+// SEO_CONTENT_UPDATE so adding pages never restamps the pages that did not
+// change — the cry-wolf this file exists to avoid.
+const VOIP_CLUSTER_ADDED = "2026-08-08";
+
+// Publication date of the Spanish expansion, for the same reason.
+const ES_EXPANSION = "2026-08-08";
+
 /**
  * Rate pages get a later lastmod than SEO_CONTENT_UPDATE only when their own
  * rate actually moved — the dates come from src/data/rate-changes.json, which
@@ -55,18 +63,42 @@ export const GET: APIRoute = async () => {
     { path: "/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
     { path: "/calling-app-vs-internet-calling/", lastmod: SEO_CONTENT_UPDATE },
     { path: "/whatsapp-calls-blocked/", lastmod: SEO_CONTENT_UPDATE },
+    // Outbound-from-the-Gulf cluster (2026-08-08). /whatsapp-calls-blocked/
+    // serves calling INTO a restricted market; these serve calling OUT of one,
+    // which is the corridor shape competitors own and we had none of. Kept to
+    // three deliberately — the 29 templated /call/ pages already show what
+    // happens when this shape is mass-produced.
+    { path: "/call-from-uae/", lastmod: VOIP_CLUSTER_ADDED },
+    { path: "/call-india-from-uae/", lastmod: VOIP_CLUSTER_ADDED },
+    { path: "/call-pakistan-from-uae/", lastmod: VOIP_CLUSTER_ADDED },
     { path: "/call/", lastmod: hubLastmod },
     ...priced.map((d) => ({
       path: `/call/${d.slug}/`,
       lastmod: rateLastmod(d.dialCode),
     })),
-    // Spanish locale
+    // Spanish locale. Expanded 3 -> 9 pages on 2026-08-08: /es/ is the
+    // highest-efficiency content on the site, ranking roughly twice as well
+    // per page as English (position 11.4 overall, 8.1 on mobile, against an
+    // English median of 20.7) — it was starved of pages, not underperforming.
+    // The four added corridors are the Americas' remaining Spanish-speaking
+    // destinations, i.e. the US-Hispanic diaspora routes.
     { path: "/es/", lastmod: SEO_CONTENT_UPDATE },
     {
       path: "/es/call/mexico/",
       lastmod: mexico ? rateLastmod(mexico.dialCode) : SEO_CONTENT_UPDATE,
     },
     { path: "/es/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
+    { path: "/es/how-it-works/", lastmod: ES_EXPANSION },
+    { path: "/es/call/", lastmod: ES_EXPANSION },
+    ...(["colombia", "guatemala", "honduras", "el-salvador"] as const).map(
+      (slug) => {
+        const d = priced.find((p) => p.slug === slug);
+        return {
+          path: `/es/call/${slug}/`,
+          lastmod: d ? rateLastmod(d.dialCode) : ES_EXPANSION,
+        };
+      },
+    ),
   ];
 
   const urls = pages

@@ -4,6 +4,7 @@ import AppStoreBadge from "../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
 import RateDisclosure from "../../components/RateDisclosure.astro";
 import { pricedDestinations, formatRate, fromPrefix } from "../../lib/rates";
+import { alternatesFor } from "../../lib/i18n";
 
 // The rates hub. Rates come from the live rate card at build time and are
 // baked into this HTML — see src/lib/rates.ts.
@@ -31,6 +32,7 @@ const grouped = regionOrder
   title={`International Calling Rates by Country — from ${minRate}¢/min | Kalum`}
   description="Per-minute rates for cheap international calls with Kalum — Mexico, India, the Philippines, Egypt, Nigeria, and more. Landlines and mobiles, no app needed on their end."
   canonical="https://kalum.app/call/"
+  alternates={alternatesFor("/call/")}
 >
   <section class="bg-[var(--color-cream)] py-16 md:py-24">
     <div class="mx-auto max-w-4xl px-5 md:px-8">

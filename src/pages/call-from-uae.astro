@@ -1,0 +1,287 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AppStoreBadge from "../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../components/GooglePlayBadge.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import RateDisclosure from "../components/RateDisclosure.astro";
+import { pricedDestinations, formatRate, fromPrefix } from "../lib/rates";
+
+// Hub for people CALLING OUT of the UAE — the other side of
+// /whatsapp-calls-blocked/, which is written for people calling INTO the Gulf.
+//
+// Why this page exists: the UAE is a supported origin market, roughly 88% of
+// its residents are expatriates, and voice calls on many internet apps are
+// restricted there. That combination — a large diaspora that cannot use the
+// obvious free option — is the one search intent where Kalum's price is not
+// the deciding factor. The competing SERP is visa blogs, eSIM sellers and VPN
+// affiliates rather than calling services.
+//
+// Claims are hedged exactly as the sibling page hedges them: some apps, often
+// restricted, varies and can change. Kalum's angle is always positive — it
+// dials a regular number, so it does not depend on those apps — and never
+// framed as circumventing anything. No legal advice, and no claim about which
+// apps are licensed: that list is the regulator's to publish, not ours.
+const { card, priced } = await pricedDestinations();
+const from = fromPrefix(card.basis);
+
+// The corridors that actually matter out of the UAE, by resident population.
+// Data-driven from the priced list so a destination losing its rate drops out
+// rather than rendering a blank price.
+const corridorSlugs = [
+  "india",
+  "pakistan",
+  "philippines",
+  "bangladesh",
+  "egypt",
+  "nepal",
+  "sri-lanka",
+  "jordan",
+];
+const corridors = corridorSlugs
+  .map((slug) => priced.find((d) => d.slug === slug))
+  .filter((d): d is NonNullable<typeof d> => Boolean(d));
+
+const canonical = "https://kalum.app/call-from-uae/";
+
+const faqs = [
+  {
+    q: "Why won't WhatsApp calls work in the UAE?",
+    a: "Voice and video calls on many internet apps are restricted in the UAE. Where that applies, an app-to-app call may not connect even though messaging and the rest of the internet work normally. Which apps this affects can change over time.",
+  },
+  {
+    q: "How is Kalum different from a calling app?",
+    a: "Kalum doesn't place an app-to-app internet call. It uses your connection to dial a regular phone number over the phone network, so the call reaches any landline or mobile abroad. The person you call needs no app, no smartphone and no internet on their end.",
+  },
+  {
+    q: "Do I need a VPN to use Kalum in the UAE?",
+    a: "No. Kalum places a regular phone call to a normal number rather than an internet app call, so there is nothing to configure on your side — you dial and it rings.",
+  },
+  {
+    q: "What does it cost to call home from the UAE?",
+    a: "Rates are per-destination and you see the exact per-minute rate in the app before you dial. You add prepaid credit starting from $4.99 — no subscription, no monthly fee, and your credit never expires.",
+  },
+  {
+    q: "Can I call landlines, or only mobiles?",
+    a: "Both. Kalum reaches landlines and mobiles in more than 200 countries, which matters when you are calling a parent or a family home that has no smartphone at all.",
+  },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "FAQPage",
+      "@id": `${canonical}#faq`,
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
+    },
+    {
+      "@type": "Service",
+      "@id": `${canonical}#service`,
+      name: "International calls from the UAE",
+      serviceType: "International calling",
+      provider: { "@id": "https://kalum.app/#organization" },
+      areaServed: { "@type": "Country", name: "United Arab Emirates" },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="Calling Abroad from the UAE — When App Calls Won't Connect | Kalum"
+  description="Voice calls on many internet apps are restricted in the UAE. Kalum dials a regular phone number instead — landlines and mobiles worldwide, with no app needed on their end."
+  canonical={canonical}
+>
+  <!-- Hero -->
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <Breadcrumb items={[{ name: "Home", href: "/" }, { name: "Calling from the UAE" }]} />
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
+        For everyone calling home from the Emirates
+      </p>
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        App calls won't connect from the UAE?
+        <span class="block text-white/85">Dial the real number.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        Voice and video calls on many internet apps are restricted in the UAE.
+        Kalum doesn't depend on those apps — it uses your connection to place a
+        normal phone call to a real number, anywhere in the world.
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-call-from-uae" />
+        <GooglePlayBadge size="lg" utm="kalum-web-call-from-uae" />
+      </div>
+
+      <p class="mt-5 text-sm text-white/70">
+        Start with $4.99. No subscription. Credit never expires.
+      </p>
+    </div>
+  </section>
+
+  <!-- The problem, and the mechanism -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Why the call fails — and what Kalum does instead
+      </h2>
+      <div class="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-muted)]">
+        <p>
+          In the UAE, voice and video calling over many internet apps is
+          restricted. Messages, photos and voice notes usually go through
+          perfectly well; it's the live call that fails. That catches people
+          out, because everything about the app looks like it's working.
+        </p>
+        <p>
+          Kalum isn't an app-to-app call, so it isn't part of that equation. It
+          uses whatever connection you have — home WiFi, office WiFi, mobile
+          data — to place a genuine telephone call over the international phone
+          network. What arrives at the other end is an ordinary incoming call.
+        </p>
+        <p>
+          That matters most for the people you're most likely to be calling. A
+          parent with a basic handset, a landline at the family home, an office
+          switchboard: none of them need an app, an account, a smartphone or an
+          internet connection. Their phone simply rings.
+          <a
+            href="/how-it-works/"
+            class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+          >See how Kalum works &rarr;</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Corridors -->
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Where people in the UAE call
+      </h2>
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
+        The Emirates is overwhelmingly a country of expatriates, and these are
+        the destinations that come up most. Every rate is the one the app
+        shows you before the call starts.
+      </p>
+
+      <ul class="mt-10 grid gap-4 sm:grid-cols-2">
+        {
+          corridors.map((d) => (
+            <li>
+              <a
+                href={`/call/${d.slug}/`}
+                class="flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white p-5 shadow-sm transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
+              >
+                <span class="text-lg font-bold text-[var(--color-text)]">
+                  Call {d.name}
+                </span>
+                <span class="shrink-0 text-right">
+                  {from && (
+                    <span class="block text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                      from
+                    </span>
+                  )}
+                  <span class="text-xl font-extrabold text-[var(--color-maroon)]">
+                    {formatRate(d.rateCents)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <RateDisclosure card={card} class="mt-6" />
+
+      <div class="mt-8 space-y-2 text-base text-[var(--color-muted)]">
+        <p>
+          Calling India or Pakistan in particular?
+          <a
+            href="/call-india-from-uae/"
+            class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+          >India from the UAE &rarr;</a>
+          &middot;
+          <a
+            href="/call-pakistan-from-uae/"
+            class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+          >Pakistan from the UAE &rarr;</a>
+        </p>
+        <p>
+          Somewhere else entirely?
+          <a
+            href="/call/"
+            class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+          >See all destinations &rarr;</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Common questions
+      </h2>
+
+      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
+        {
+          faqs.map((faq) => (
+            <li>
+              <details class="group py-5">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
+                  <span>{faq.q}</span>
+                  <span
+                    aria-hidden="true"
+                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
+                  {faq.a}
+                </p>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="mt-8 text-base text-[var(--color-muted)]">
+        Calling <em>into</em> the Gulf instead?
+        <a
+          href="/whatsapp-calls-blocked/"
+          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+        >WhatsApp calls blocked in the Gulf &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        Their phone rings. That's the whole trick.
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-white/85">
+        Download Kalum, add $4.99 in credit, and dial any landline or mobile in
+        200+ countries. Pay only for the minutes you use.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-call-from-uae" />
+        <GooglePlayBadge size="lg" utm="kalum-web-call-from-uae" />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</BaseLayout>

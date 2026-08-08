@@ -1,0 +1,190 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AppStoreBadge from "../../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { alternatesFor } from "../../lib/i18n";
+
+// Spanish version of /how-it-works/. The English page composes
+// components/howitworks/{Steps,FAQ}.astro, which hold their copy inline and
+// have no locale seam; rather than reach into shared components, the Spanish
+// copy lives here. If a third locale ever needs this page, that is the point
+// to lift the strings out of both.
+//
+// Purpose-written Spanish, neutral Latin-American register. Same verified
+// claims as the English page — nothing added, nothing softened.
+const steps = [
+  {
+    n: "1",
+    title: "Regístrate con tu número",
+    body: "Abre Kalum, escribe tu número y pon el código de verificación que te llega por SMS. Sin correo y sin contraseña que recordar. Tu cuenta queda lista en menos de un minuto.",
+    note: "Tu número de teléfono es con lo que entras. Lo usamos solo para verificarte.",
+  },
+  {
+    n: "2",
+    title: "Agrega $4.99 de saldo",
+    body: "Recarga por el App Store en iPhone o con cualquier tarjeta de débito o crédito en Android. Empieza con $4.99 para probar la conexión al país al que llamas y agrega más cuando quieras. Pagas sobre la marcha: sin mensualidades ni contratos.",
+    note: "Tu saldo nunca vence. Lo que agregas se queda en tu cuenta.",
+  },
+  {
+    n: "3",
+    title: "Marca como con cualquier teléfono",
+    body: "Elige el código del país, escribe el número y llama. La persona contesta en su teléfono de siempre — fijo o celular, smartphone o teléfono básico, en cualquier parte del mundo. No necesita tener Kalum.",
+    note: "Ves la tarifa por minuto antes de marcar. Sin sorpresas.",
+  },
+];
+
+const faqs = [
+  {
+    q: "¿Necesito internet para llamar?",
+    a: "Sí, pero solo de tu lado. Quien recibe la llamada no. Kalum usa tus datos o Wi-Fi para iniciar la llamada y luego la pasa por las redes telefónicas reales de todo el mundo. La persona a la que llamas contesta en su teléfono normal, como en cualquier otra llamada.",
+  },
+  {
+    q: "¿La persona a la que llamo necesita la app?",
+    a: "No. Solo contesta su teléfono. Kalum funciona con cualquier número fijo o celular, incluso con teléfonos básicos sin internet. No tienes que convencer a nadie de descargar nada.",
+  },
+  {
+    q: "¿Cómo se cobran las llamadas?",
+    a: "Por minuto, con un mínimo de 60 segundos. Las llamadas se redondean al minuto completo. Puedes ver la tarifa exacta por minuto de cualquier país antes de marcar. Sin cargos por conexión ni cobros escondidos.",
+  },
+  {
+    q: "¿Mi saldo vence?",
+    a: "Nunca. El saldo que agregas se queda en tu cuenta hasta que lo uses. No hay mensualidades, ni saldo mínimo, ni contratos.",
+  },
+  {
+    q: "¿A qué países puedo llamar?",
+    a: "A más de 180 destinos en todo el mundo — fijos y celulares en África, América, Asia, Europa y el Medio Oriente. Puedes ver la tarifa exacta por minuto de cualquier país antes de marcar.",
+  },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+---
+
+<BaseLayout
+  title="Cómo Funciona Kalum — Llamadas Baratas Sin App para Quien Recibe"
+  description="Regístrate con tu número, agrega $4.99 de saldo y marca a cualquier teléfono. La persona a la que llamas no necesita app ni internet — solo contesta."
+  canonical="https://kalum.app/es/how-it-works/"
+  lang="es"
+  alternates={alternatesFor("/es/how-it-works/")}
+>
+  <!-- Hero + steps -->
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <Breadcrumb items={[{ name: "Inicio", href: "/es/" }, { name: "Cómo funciona" }]} />
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        Cómo funciona Kalum
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        Tres pasos para llamar a quien sea, donde sea — aunque no tenga
+        internet ni smartphone.
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-es-como-funciona" />
+        <GooglePlayBadge size="lg" utm="kalum-web-es-como-funciona" />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <ol class="space-y-12">
+        {
+          steps.map((step) => (
+            <li class="grid gap-6 md:grid-cols-[auto_1fr] md:gap-10">
+              <div
+                aria-hidden="true"
+                class="text-7xl font-extrabold leading-none text-[var(--color-teal)] md:text-8xl"
+              >
+                {step.n}
+              </div>
+              <div>
+                <h2 class="text-2xl font-bold text-[var(--color-text)] sm:text-3xl">
+                  {step.title}
+                </h2>
+                <p class="mt-3 text-lg leading-relaxed text-[var(--color-text)]/85">
+                  {step.body}
+                </p>
+                <p class="mt-4 border-l-4 border-[var(--color-maroon)] pl-4 text-base italic text-[var(--color-muted)]">
+                  {step.note}
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <p class="mt-14 text-base text-[var(--color-muted)]">
+        ¿Quieres ver las tarifas por país?
+        <a
+          href="/es/call/"
+          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+        >Mira los destinos y sus tarifas &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Preguntas frecuentes
+      </h2>
+
+      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
+        {
+          faqs.map((faq) => (
+            <li>
+              <details class="group py-5">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
+                  <span>{faq.q}</span>
+                  <span
+                    aria-hidden="true"
+                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
+                  {faq.a}
+                </p>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        ¿Listo para tu primera llamada?
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-white/85">
+        Disponible en iPhone y Android.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm="kalum-web-es-como-funciona" />
+        <GooglePlayBadge size="lg" utm="kalum-web-es-como-funciona" />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</BaseLayout>

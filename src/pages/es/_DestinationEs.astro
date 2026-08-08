@@ -1,0 +1,270 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AppStoreBadge from "../../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
+import RateDisclosure from "../../components/RateDisclosure.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { pricedDestination, formatRate, formatRatesAsOf } from "../../lib/rates";
+import { alternatesFor } from "../../lib/i18n";
+import {
+  DESTINATION_COPY_ES,
+  PRICE_LED_MAX_CENTS_ES,
+} from "./_destinations-es";
+
+// Shared body for the Spanish destination pages. Underscore-prefixed so Astro
+// treats it as a component, not a route.
+//
+// The rate is single-sourced from the live card at build time, exactly as the
+// English pages are, so /call/{slug}/ and /es/call/{slug}/ can never quote
+// different prices. Prose comes from the per-locale table next door.
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+
+const copy = DESTINATION_COPY_ES[slug];
+if (!copy) {
+  throw new Error(`es/call/${slug}: no Spanish copy in _destinations-es.ts`);
+}
+
+const { card, destination: d } = await pricedDestination(slug);
+if (!d) {
+  // These routes are fixed: each is in the sitemap and is half of an hreflang
+  // pair, so quietly skipping one would strand its English alternate. A row
+  // missing from BOTH the live card and the committed snapshot is a data
+  // fault, not a bad minute on the API.
+  throw new Error(
+    `es/call/${slug}: no rate for this destination in the live card or src/data/rates.json`
+  );
+}
+
+const rate = formatRate(d.rateCents);
+const asOf = formatRatesAsOf(card.fetchedAt, "es");
+// "desde 6¢" for a cheapest-prefix floor, "por 6¢" for a fixed price.
+const preposition = card.basis === "from" ? "desde" : "por";
+const fromEs = card.basis === "from" ? "desde " : "";
+const canonicalPath = `/es/call/${slug}/`;
+const canonical = `https://kalum.app${canonicalPath}`;
+
+// Same rule as the English pages: a price-led headline only works while the
+// price is a selling point. Above the threshold the page leads with what the
+// product does instead — the figure still appears below, in the FAQ and in
+// the schema.
+const priceLed = d.rateCents < PRICE_LED_MAX_CENTS_ES;
+
+const headline = priceLed
+  ? `Llama a ${copy.name} ${preposition} ${rate} el minuto.`
+  : `Llama a cualquier teléfono en ${copy.name}.`;
+const subhead = priceLed
+  ? "Fijos y celulares. Solo contestan."
+  : "Fijos y celulares. Sin app, sin smartphone y sin internet de su lado.";
+const heroRateLine = `Actualmente ${fromEs}${rate} el minuto a cualquier número de ${copy.name}.`;
+
+const title = priceLed
+  ? `Llamar a ${copy.name} — ${fromEs}${rate}/min a Cualquier Teléfono | Kalum`
+  : `Llamar a ${copy.name} — Tarifas y Cómo Marcar | Kalum`;
+const description = priceLed
+  ? `Llama a ${copy.name} ${preposition} ${rate} por minuto con Kalum — fijos y celulares. Sin app ni internet del lado de quien recibe. Saldo de prepago que nunca vence.`
+  : `Llama a cualquier fijo o celular de ${copy.name} con Kalum — sin app, sin smartphone y sin internet del lado de quien recibe. Ves la tarifa por minuto antes de marcar. Saldo de prepago que nunca vence.`;
+
+const faqs = [
+  {
+    q: `¿Cuánto cuesta llamar a ${copy.name} con Kalum?`,
+    a:
+      card.basis === "from"
+        ? `Desde ${rate} por minuto a cualquier número de ${copy.name} (vigente al ${asOf}). Un celular y un fijo pueden costar distinto, así que la app te muestra la tarifa exacta del número que marcas antes de llamar — esa es la que se cobra. Las llamadas se cobran por minuto, redondeando hacia arriba, con un mínimo de un minuto.`
+        : `${rate} por minuto a cualquier número de ${copy.name} (vigente al ${asOf}). Las llamadas se cobran por minuto, redondeando hacia arriba, con un mínimo de un minuto, y siempre ves la tarifa actual en la app antes de marcar.`,
+  },
+  {
+    q: `¿La persona en ${copy.name} necesita la app o internet?`,
+    a: "No. Kalum pasa por las redes telefónicas reales, así que su teléfono suena como cualquier llamada normal. No necesita app, ni smartphone, ni internet — funciona hasta con un fijo o un teléfono básico.",
+  },
+  {
+    q: `¿Puedo llamar a teléfonos fijos en ${copy.name}?`,
+    a:
+      card.basis === "from"
+        ? `Sí. Kalum llama igual a fijos y a celulares en ${copy.name}, y quien contesta lo hace en el teléfono que ya tiene. La tarifa por minuto puede variar entre uno y otro, así que la app te muestra la tarifa exacta del número que marcas antes de que empiece la llamada.`
+        : `Sí. Los fijos y los celulares en ${copy.name} cuestan lo mismo, ${rate} por minuto. A quien llames contesta en el teléfono que ya tiene.`,
+  },
+  {
+    q: `¿Cómo llamo a ${copy.name} desde Estados Unidos?`,
+    a: `Descarga Kalum en iPhone o Android, regístrate con tu número de teléfono y agrega saldo desde $4.99. Elige ${copy.name} (+${d.dialCode}) en el marcador, escribe el número local y llama.`,
+  },
+  {
+    q: `¿Puedo llamar a ${copy.name} desde mi celular?`,
+    a: `Sí. Kalum funciona en tu propio iPhone o Android, así que llamas a ${copy.name} directo desde tu celular por Wi-Fi o datos móviles. La persona contesta en el teléfono que ya tiene — sin app ni internet de su lado.`,
+  },
+  {
+    q: `¿Cuál es el formato de los números en ${copy.name}?`,
+    a: copy.numberFormatFaq,
+  },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  lang="es"
+  alternates={alternatesFor(canonicalPath)}
+>
+  <!-- Hero -->
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <Breadcrumb
+        items={[
+          { name: "Inicio", href: "/es/" },
+          { name: "Destinos", href: "/es/call/" },
+          { name: copy.linkLabel },
+        ]}
+      />
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
+        Llamando a {copy.name} &middot; +{d.dialCode}
+      </p>
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        {headline}
+        <span class="block text-white/85">{subhead}</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        {copy.heroSubline}
+      </p>
+
+      {
+        !priceLed && (
+          <p class="mt-6 text-lg font-semibold text-white/90">{heroRateLine}</p>
+        )
+      }
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm={`kalum-web-es-call-${slug}`} />
+        <GooglePlayBadge size="lg" utm={`kalum-web-es-call-${slug}`} />
+      </div>
+
+      <RateDisclosure card={card} locale="es" tone="dark" class="mt-5 max-w-2xl" />
+    </div>
+  </section>
+
+  <!-- How to call -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Cómo llamar a {copy.name}
+      </h2>
+
+      <ol class="mt-12 grid gap-6 md:grid-cols-3">
+        <li class="rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
+          <span aria-hidden="true" class="text-6xl font-extrabold leading-none text-[var(--color-teal)]">1</span>
+          <h3 class="mt-4 text-xl font-bold text-[var(--color-text)]">Descarga Kalum</h3>
+          <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+            Descarga la app en iPhone o Android y regístrate con tu número. Un
+            código de verificación — sin correo ni contraseña.
+          </p>
+        </li>
+        <li class="rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
+          <span aria-hidden="true" class="text-6xl font-extrabold leading-none text-[var(--color-teal)]">2</span>
+          <h3 class="mt-4 text-xl font-bold text-[var(--color-text)]">Agrega saldo</h3>
+          <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+            Empieza con $4.99 y recarga cuando quieras. Sin suscripción ni
+            contrato — tu saldo nunca vence.
+          </p>
+        </li>
+        <li class="rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
+          <span aria-hidden="true" class="text-6xl font-extrabold leading-none text-[var(--color-teal)]">3</span>
+          <h3 class="mt-4 text-xl font-bold text-[var(--color-text)]">Marca +{d.dialCode}</h3>
+          <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+            Elige {copy.name} (+{d.dialCode}) en el marcador, escribe el número
+            local y llama. Su teléfono suena como cualquier llamada.
+          </p>
+        </li>
+      </ol>
+
+      <div class="mt-8 rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
+        <h3 class="text-xl font-bold text-[var(--color-text)]">
+          {copy.numberFormat.title}
+        </h3>
+        <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+          {copy.numberFormat.body}
+        </p>
+      </div>
+
+      <p class="mt-8 text-base text-[var(--color-muted)]">
+        ¿Llamas a alguien sin internet?
+        <a
+          href="/es/call-without-internet/"
+          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+        >Así funciona una llamada sin internet de su lado &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl">
+        Llamar a {copy.name}, sin dudas.
+      </h2>
+
+      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
+        {
+          faqs.map((faq) => (
+            <li>
+              <details class="group py-5">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
+                  <span>{faq.q}</span>
+                  <span
+                    aria-hidden="true"
+                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
+                  {faq.a}
+                </p>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        ¿Listo para llamar a {copy.name}?
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-white/85">
+        Descarga Kalum, agrega $4.99 de saldo y marca. Pagas solo los minutos
+        que usas.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm={`kalum-web-es-call-${slug}`} />
+        <GooglePlayBadge size="lg" utm={`kalum-web-es-call-${slug}`} />
+      </div>
+      <RateDisclosure card={card} locale="es" tone="dark" class="mx-auto mt-5 max-w-xl" />
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</BaseLayout>
