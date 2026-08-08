@@ -40,9 +40,26 @@ const ES_EXPANSION = "2026-08-08";
  */
 const changeDates = rateChanges as Record<string, string>;
 
+/**
+ * 2026-08-08: the destination pages' own copy changed, not just their rate.
+ * Lowering PRICE_LED_MAX_CENTS from 50 to 10 rewrote the title, H1 and meta
+ * description of 26 of the 31 pages — they stopped leading with a price and
+ * started leading with the no-app-on-their-end hook.
+ *
+ * That is a genuine content change and it needs to outrank the rate-derived
+ * date, which sat at 2026-08-05 and would have told Google nothing happened.
+ * This is NOT the cry-wolf case this file warns about: that is bumping every
+ * URL because one corridor repriced. Here the pages themselves were rewritten.
+ *
+ * Delete this once the affected pages have been recrawled — leaving it pinned
+ * forever would make the date meaningless.
+ */
+const COPY_CHANGE = "2026-08-08";
+
 function rateLastmod(dialCode: string): string {
   const changed = changeDates[dialCode];
-  return changed && changed > SEO_CONTENT_UPDATE ? changed : SEO_CONTENT_UPDATE;
+  const rateDate = changed && changed > SEO_CONTENT_UPDATE ? changed : SEO_CONTENT_UPDATE;
+  return rateDate > COPY_CHANGE ? rateDate : COPY_CHANGE;
 }
 
 export const GET: APIRoute = async () => {
@@ -58,7 +75,10 @@ export const GET: APIRoute = async () => {
 
   const pages: { path: string; lastmod: string }[] = [
     { path: "/", lastmod: SEO_CONTENT_UPDATE },
-    { path: "/how-it-works/", lastmod: "2026-07-02" },
+    // 2026-08-08: gained hreflang alternates to /es/how-it-works/. That changes
+    // how Google clusters the pair, and this page has not been recrawled since
+    // 2026-07-12 — it never even saw the 2026-07-20 content update.
+    { path: "/how-it-works/", lastmod: COPY_CHANGE },
     { path: "/support/", lastmod: "2026-07-02" },
     { path: "/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
     { path: "/calling-app-vs-internet-calling/", lastmod: SEO_CONTENT_UPDATE },
