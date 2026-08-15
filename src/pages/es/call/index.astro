@@ -4,14 +4,21 @@ import AppStoreBadge from "../../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../../components/GooglePlayBadge.astro";
 import RateDisclosure from "../../../components/RateDisclosure.astro";
 import Breadcrumb from "../../../components/Breadcrumb.astro";
+import RateFinder from "../../../components/RateFinder.astro";
 import { pricedDestinations, formatRate, fromPrefix } from "../../../lib/rates";
 import { alternatesFor } from "../../../lib/i18n";
 import { ES_NAMES, ES_REGIONS, DESTINATION_COPY_ES } from "../_destinations-es";
+import { localNamesByDialCode } from "../../../lib/rate-finder";
 
 // Spanish rates hub, mirroring /call/. Rates come from the live rate card at
 // build time and are baked into the HTML, same as the English hub.
 const { card, priced } = await pricedDestinations();
 const from = fromPrefix(card.basis, "es");
+
+// Spanish names for the curated destinations, re-keyed by dial code. The other
+// ~187 countries keep the card's English spelling rather than dropping out of
+// the finder — a visitor must always be able to find a destination we price.
+const finderNamesEs = localNamesByDialCode(ES_NAMES);
 
 // Country names come from the Spanish table; a destination added to
 // destinations.ts without a Spanish name falls back to its English name
@@ -74,6 +81,8 @@ const grouped = regionOrder
 
   <section class="bg-[var(--color-cream)] py-16 md:py-24">
     <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <RateFinder card={card} locale="es" localNames={finderNamesEs} class="mb-12" />
+
       <div class="space-y-12">
         {
           grouped.map((group) => (
