@@ -5,6 +5,7 @@ import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import { alternatesFor } from "../../lib/i18n";
 import { coverage } from "../../lib/rates";
+import SignupOrigins from "../../components/SignupOrigins.astro";
 
 const countries = await coverage();
 
@@ -190,4 +191,10 @@ const structuredData = {
   </section>
 
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <section class="bg-[var(--color-cream)] py-16 md:py-20">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <SignupOrigins locale="es" />
+    </div>
+  </section>
 </BaseLayout>

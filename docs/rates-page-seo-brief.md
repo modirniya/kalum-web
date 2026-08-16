@@ -1,3 +1,24 @@
+> **STATUS 2026-08-16 — partly superseded. Read this first.**
+>
+> The 403 on the rate feed that this brief treats as an open blocker is gone:
+> `GET /api/public/rates` has served the site since 2026-08-05 (`src/data/rates.json`
+> carries `source: "live"`, 218 rows, basis `from`), and the build fetches it live
+> with the committed snapshot only as a fallback.
+>
+> Two of this brief's assumptions were also overturned by 90 days of Search Console
+> data pulled on 2026-08-16:
+>
+> * **Brand search does not exist.** "kalum" is a homonym — a street in Terrace BC,
+>   a taxi firm, a body shop, a motel. It is 54% of impressions at 1.1% CTR, and no
+>   qualified query ("kalum app", "kalum calling") appears in 90 days.
+> * **There is no CTR problem.** Excluding brand, traffic averages position 32,
+>   where near-zero clicks is what the position predicts. The constraint is rank
+>   and signup eligibility, not snippets — 45% of clicks come from countries that
+>   cannot open an account.
+>
+> Keep this brief for its page-level structure and keyword mapping; do not act on
+> its traffic assumptions without re-checking them against Search Console.
+
 # Handoff Brief — Build-time "rates" SEO section on kalum-web
 
 > **Authored by a prior AI session as a handoff.** You (the reader) are a fresh AI coding instance with zero prior context. This brief was assembled by an earlier agent that read all four repos on this machine, verified the backend router/controller/plug source, and empirically hit the live API. Everything you need to implement the feature without asking the user basics is below. Where a fact was verified against live code or a live HTTP request, it is marked **(verified)**. Paths are absolute. Today's date for staleness math: **2026-07-31**.

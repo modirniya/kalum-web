@@ -1,0 +1,69 @@
+---
+/**
+ * Where you can create a Kalum account.
+ *
+ * This exists because the site had no answer to it anywhere. Every page says
+ * "sign up with your number" and none said where that works, so someone in a
+ * country we cannot register installs the app, hits "Service not available in
+ * your country", and the only place they can express that is a review.
+ *
+ * That is the actual cost being avoided. With one rating on the App Store, a
+ * single 1-star "installed it, couldn't even register" takes 5.0 to 3.0 — and
+ * it would be an entirely fair review, because nothing warned them.
+ *
+ * ⚠️ Signup origin and call destination are DIFFERENT constraints and must not
+ * be conflated on the page. You can call ~218 destinations; you can register
+ * from 57 countries. Someone in Egypt cannot open an account, but an account
+ * holder in Germany can call Egypt all day.
+ */
+import origins from "../data/signup-origins.json";
+
+interface Props {
+  locale?: "en" | "es";
+  class?: string;
+}
+
+const { locale = "en", class: klass = "" } = Astro.props;
+const list = origins.countries as string[];
+
+const t =
+  locale === "es"
+    ? {
+        h: "Dónde puedes crear una cuenta",
+        lead: `Puedes registrarte en Kalum desde ${list.length} países. Esto es distinto de a dónde puedes llamar — llamas a más de 200 destinos desde cualquiera de estos países.`,
+        why: "La lista viene de dónde nuestro procesador de pagos puede operar, no de la cobertura telefónica.",
+        toggle: "Ver los países",
+      }
+    : {
+        h: "Where you can create an account",
+        lead: `You can sign up for Kalum from ${list.length} countries. That is a different thing from where you can call — from any of these you can dial 200+ destinations.`,
+        why: "The list is set by where our payment processor can operate, not by phone coverage.",
+        toggle: "See the countries",
+      };
+---
+
+<div class:list={["rounded-2xl border border-black/5 bg-white p-6 shadow-sm md:p-8", klass]}>
+  <h2 class="text-xl font-extrabold tracking-tight text-[var(--color-text)]">
+    {t.h}
+  </h2>
+  <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">{t.lead}</p>
+
+  <details class="mt-4 group">
+    <summary
+      class="cursor-pointer list-none text-sm font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+    >
+      {t.toggle}
+      <span aria-hidden="true" class="inline-block transition group-open:rotate-90">&rsaquo;</span>
+    </summary>
+    <!-- Rendered in the HTML regardless of the details state, so it is present
+         for crawlers and for anyone who lands here from a search for their own
+         country. -->
+    <ul
+      class="mt-4 grid gap-x-6 gap-y-1 text-sm text-[var(--color-text)] sm:grid-cols-2 md:grid-cols-3"
+    >
+      {list.map((c) => <li>{c}</li>)}
+    </ul>
+  </details>
+
+  <p class="mt-4 text-xs leading-relaxed text-[var(--color-muted)]">{t.why}</p>
+</div>
