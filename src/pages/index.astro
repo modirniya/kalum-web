@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/home/Hero.astro";
+import RateFinderSection from "../components/home/RateFinderSection.astro";
 import NoInternet from "../components/home/NoInternet.astro";
 import HowItWorksTeaser from "../components/home/HowItWorksTeaser.astro";
 import PopularDestinations from "../components/home/PopularDestinations.astro";
@@ -8,15 +9,19 @@ import TrustStrip from "../components/home/TrustStrip.astro";
 import HomeFAQ from "../components/home/HomeFAQ.astro";
 import FinalCTA from "../components/home/FinalCTA.astro";
 import { alternatesFor } from "../lib/i18n";
+import { coverage } from "../lib/rates";
+
+const countries = await coverage();
 ---
 
 <BaseLayout
   title="Kalum: Cheap International Calling App — Call Any Phone Abroad"
-  description="Kalum is a cheap international calling app — call landlines and mobiles in 180+ countries. No app, smartphone, or internet needed on their end. Start from $4.99."
+  description={`Kalum is a cheap international calling app — call landlines and mobiles in ${countries}+ countries. No app, smartphone, or internet needed on their end. Start from $4.99.`}
   canonical="https://kalum.app/"
   alternates={alternatesFor("/")}
 >
   <Hero />
+  <RateFinderSection />
   <NoInternet />
   <HowItWorksTeaser />
   <PopularDestinations />

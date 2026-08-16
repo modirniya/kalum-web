@@ -13,6 +13,9 @@ import {
   type RateCard,
 } from "../../lib/rates";
 import { alternatesFor } from "../../lib/i18n";
+import { coverage } from "../../lib/rates";
+
+const countries = await coverage();
 
 // Organic destination pages — indexable, unlike the /call-mexico paid LP.
 // Rates are fetched from the live rate card while the site builds and baked
@@ -392,7 +395,7 @@ const structuredData = {
         More destinations
       </h2>
       <p class="mt-3 text-base text-[var(--color-muted)]">
-        Kalum calls landlines and mobiles in 180+ countries. A few more:
+        Kalum calls landlines and mobiles in {countries}+ countries. A few more:
       </p>
       <ul class="mt-6 flex flex-wrap gap-3">
         {

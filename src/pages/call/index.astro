@@ -6,6 +6,9 @@ import RateDisclosure from "../../components/RateDisclosure.astro";
 import RateFinder from "../../components/RateFinder.astro";
 import { pricedDestinations, formatRate, fromPrefix } from "../../lib/rates";
 import { alternatesFor } from "../../lib/i18n";
+import { coverage } from "../../lib/rates";
+
+const countries = await coverage();
 
 // The rates hub. Rates come from the live rate card at build time and are
 // baked into this HTML — see src/lib/rates.ts.
@@ -137,7 +140,7 @@ const grouped = regionOrder
         Don't see your country?
       </h2>
       <p class="mx-auto mt-4 max-w-xl text-white/85">
-        Kalum reaches landlines and mobiles in 180+ countries. Download the
+        Kalum reaches landlines and mobiles in {countries}+ countries. Download the
         app and check the live rate for any destination — free to look, no
         subscription.
       </p>

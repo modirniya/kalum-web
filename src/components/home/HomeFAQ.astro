@@ -1,11 +1,14 @@
 ---
+import { coverage } from "../../lib/rates";
+
+const countries = await coverage();
 // Homepage FAQ. Kept distinct from the longer /how-it-works FAQ to avoid
 // duplicate content. Doubles as keyword-rich body copy and emits FAQPage
 // structured data for rich results. Copy must stay within verified claims.
 const faqs = [
   {
     q: "What is Kalum?",
-    a: "Kalum is an international calling app for cheap calls to any phone abroad. You call landlines and mobiles in 180+ countries straight from your iPhone or Android, and the person on the other end answers on whatever phone they already have.",
+    a: `Kalum is an international calling app for cheap calls to any phone abroad. You call landlines and mobiles in ${countries}+ countries straight from your iPhone or Android, and the person on the other end answers on whatever phone they already have.`,
   },
   {
     q: "Does the person I call need the app or internet?",
@@ -21,7 +24,7 @@ const faqs = [
   },
   {
     q: "Which countries can I call?",
-    a: "Over 180 destinations worldwide — landlines and mobiles across Africa, the Americas, Asia, Europe, and the Middle East.",
+    a: `Over ${countries} destinations worldwide — landlines and mobiles across Africa, the Americas, Asia, Europe, and the Middle East.`,
   },
 ];
 

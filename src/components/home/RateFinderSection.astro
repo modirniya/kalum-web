@@ -1,0 +1,65 @@
+---
+/**
+ * Homepage rate finder.
+ *
+ * Sits directly under the hero because "what does it cost to call X" is the
+ * first question a visitor has, and the homepage is by a wide margin the
+ * most-seen page on the site. It previously lived only on /call/, one click
+ * behind a nav item labelled "Destinations" — which asks the visitor to guess
+ * that destinations means prices.
+ *
+ * Section chrome mirrors the other homepage sections (see
+ * PopularDestinations.astro): cream ground, py-20 md:py-28, max-w-5xl. The
+ * finder's own heading is suppressed here — this section supplies the h2, and
+ * two headings inside one section is a document-outline bug.
+ */
+import RateFinder from "../RateFinder.astro";
+import { fetchRates } from "../../lib/rates";
+import { localNamesByDialCode } from "../../lib/rate-finder";
+import { ES_NAMES } from "../../pages/es/_destinations-es";
+
+interface Props {
+  locale?: "en" | "es";
+}
+
+const { locale = "en" } = Astro.props;
+
+// Same card the prices elsewhere on this page render from, so the finder can
+// never disagree with the destination grid below it.
+const card = await fetchRates();
+const localNames = locale === "es" ? localNamesByDialCode(ES_NAMES) : {};
+
+const t =
+  locale === "es"
+    ? {
+        h2: "¿Cuánto cuesta tu llamada?",
+        sub: "Elige el país al que llamas y ve la tarifa por minuto al instante. Sin registro y sin dar tu número.",
+      }
+    : {
+        h2: "What does your call cost?",
+        sub: "Pick the country you're calling and see the per-minute rate straight away. No sign-up, and we never ask for a phone number.",
+      };
+---
+
+<section class="bg-white py-20 md:py-28">
+  <div class="mx-auto max-w-6xl px-5 md:px-8">
+    <div class="max-w-2xl">
+      <h2
+        class="text-3xl font-extrabold tracking-tight text-[var(--color-text)] sm:text-4xl"
+      >
+        {t.h2}
+      </h2>
+      <p class="mt-4 text-lg leading-relaxed text-[var(--color-muted)]">
+        {t.sub}
+      </p>
+    </div>
+
+    <RateFinder
+      card={card}
+      locale={locale}
+      localNames={localNames}
+      showHeading={false}
+      class="mt-10"
+    />
+  </div>
+</section>

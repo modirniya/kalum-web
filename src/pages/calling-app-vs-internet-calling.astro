@@ -3,6 +3,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import AppStoreBadge from "../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
+import { coverage } from "../lib/rates";
+
+const countries = await coverage();
 
 // Honest comparison page: free internet calling apps vs an international
 // calling app that dials real phone numbers. Statements about internet
@@ -44,7 +47,7 @@ const faqs = [
   },
   {
     q: "Can internet calling apps call landlines?",
-    a: "Free app-to-app calls can't — a landline can't install an app. Kalum dials real phone numbers, so landlines and mobiles in 180+ countries ring like any other call.",
+    a: `Free app-to-app calls can't — a landline can't install an app. Kalum dials real phone numbers, so landlines and mobiles in ${countries}+ countries ring like any other call.`,
   },
   {
     q: "Why not just use a free internet app?",
@@ -233,7 +236,7 @@ const structuredData = {
       </h2>
       <p class="mx-auto mt-4 max-w-xl text-white/85">
         Download Kalum, add $4.99 in credit, and dial landlines and mobiles
-        in 180+ countries. Pay only for the minutes you use.
+        in {countries}+ countries. Pay only for the minutes you use.
       </p>
       <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
         <AppStoreBadge size="lg" utm="kalum-web-vs-internet" />

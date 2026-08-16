@@ -4,6 +4,9 @@ import AppStoreBadge from "../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import { alternatesFor } from "../../lib/i18n";
+import { coverage } from "../../lib/rates";
+
+const countries = await coverage();
 
 // Spanish version of /call-without-internet/ — the core differentiator for
 // the Mexico corridor. Purpose-written Spanish, verified claims only.
@@ -33,7 +36,7 @@ const faqs = [
   },
   {
     q: "¿Puedo llamar a teléfonos fijos?",
-    a: "Sí. Kalum llama a fijos y celulares en más de 180 países. A quien llames contesta en el teléfono que ya tiene — nada que descargar, nada que configurar de su lado.",
+    a: `Sí. Kalum llama a fijos y celulares en más de ${countries} países. A quien llames contesta en el teléfono que ya tiene — nada que descargar, nada que configurar de su lado.`,
   },
   {
     q: "¿Cuánto cuesta?",
@@ -54,7 +57,7 @@ const structuredData = {
 
 <BaseLayout
   title="Llamar a Alguien Sin Internet — Su Teléfono Suena | Kalum"
-  description="Llama a personas sin internet, sin smartphone y sin apps. Kalum pasa por las redes telefónicas reales, así que cualquier fijo o teléfono básico en más de 180 países simplemente suena."
+  description={`Llama a personas sin internet, sin smartphone y sin apps. Kalum pasa por las redes telefónicas reales, así que cualquier fijo o teléfono básico en más de ${countries} países simplemente suena.`}
   canonical="https://kalum.app/es/call-without-internet/"
   lang="es"
   alternates={alternatesFor("/es/call-without-internet/")}
@@ -77,7 +80,7 @@ const structuredData = {
       </h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
         Kalum es una app de llamadas internacionales que marca a números de
-        teléfono reales — fijos y celulares en más de 180 países. La persona a
+        teléfono reales — fijos y celulares en más de {countries} países. La persona a
         la que llamas no necesita app, ni smartphone, ni internet.
       </p>
 
@@ -190,7 +193,7 @@ const structuredData = {
       </h2>
       <p class="mx-auto mt-4 max-w-xl text-white/85">
         Descarga Kalum, agrega $4.99 de saldo y marca a cualquier fijo o celular
-        en más de 180 países. Pagas solo los minutos que usas.
+        en más de {countries} países. Pagas solo los minutos que usas.
       </p>
       <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
         <AppStoreBadge size="lg" utm="kalum-web-es-sin-internet" />

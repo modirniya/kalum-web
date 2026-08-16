@@ -3,6 +3,9 @@ import { Image } from "astro:assets";
 import heroScreen from "../../assets/screenshots/home.png";
 import GooglePlayBadge from "../GooglePlayBadge.astro";
 import AppStoreBadge from "../AppStoreBadge.astro";
+import { coverage } from "../../lib/rates";
+
+const countries = await coverage();
 ---
 
 <section class="brand-gradient relative overflow-hidden text-white">
@@ -21,7 +24,7 @@ import AppStoreBadge from "../AppStoreBadge.astro";
         <span class="block text-white/85">They just pick up.</span>
       </h1>
       <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/85 sm:text-xl">
-        Cheap calls to landlines and mobiles in 180+ countries.
+        Cheap calls to landlines and mobiles in {countries}+ countries.
         No app on their side. No internet on their side.
         Just a regular phone call.
       </p>

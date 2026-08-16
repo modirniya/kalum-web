@@ -16,6 +16,9 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { storeUrls } from "../lib/stores";
 import type { Alternate } from "../lib/i18n";
+import { coverage } from "../lib/rates";
+
+const countries = await coverage();
 
 interface Props {
   title: string;
@@ -133,7 +136,7 @@ const structuredData = {
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="Kalum — cheap international calls to any phone in 180+ countries"
+      content={`Kalum — cheap international calls to any phone in ${countries}+ countries`}
     />
 
     <meta name="twitter:card" content="summary_large_image" />

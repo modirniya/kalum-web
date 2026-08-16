@@ -29,7 +29,7 @@
  * comment on POST /api/public/lookup.
  */
 import type { RateCard } from "../lib/rates";
-import { fromPrefix, formatRatesAsOf } from "../lib/rates";
+import { fromPrefix, formatRatesAsOf, coverageFloor } from "../lib/rates";
 import { finderRows } from "../lib/rate-finder";
 
 interface Props {
@@ -37,12 +37,28 @@ interface Props {
   locale?: "en" | "es";
   /** Dial code → translated country name, for destinations that have one. */
   localNames?: Record<string, string>;
+  /**
+   * Render the component's own heading and sub-line.
+   *
+   * Off when the surrounding section already supplies an `<h2>` — two headings
+   * in one section is a document-outline bug, not a style preference.
+   */
+  showHeading?: boolean;
   class?: string;
 }
 
-const { card, locale = "en", localNames = {}, class: klass = "" } = Astro.props;
+const {
+  card,
+  locale = "en",
+  localNames = {},
+  showHeading = true,
+  class: klass = "",
+} = Astro.props;
 
 const rows = finderRows(card, localNames);
+// Same floored figure the rest of the site quotes, so the box and the copy
+// beside it never show two different numbers.
+const shownCount = coverageFloor(card);
 const from = fromPrefix(card.basis, locale);
 const asOf = formatRatesAsOf(card.fetchedAt, locale);
 
@@ -60,7 +76,7 @@ const t =
     ? {
         heading: "¿A dónde llamas?",
         sub: "Elige un destino para ver la tarifa. Sin registro, sin número de teléfono.",
-        placeholder: `Busca entre ${rows.length} destinos…`,
+        placeholder: `Busca entre ${shownCount}+ destinos…`,
         search: "Buscar destinos",
         popular: "Populares:",
         idle: "Elige un destino y la tarifa aparece aquí.",
@@ -73,7 +89,7 @@ const t =
     : {
         heading: "Where are you calling?",
         sub: "Pick a destination to see the rate. No sign-up, no phone number.",
-        placeholder: `Search ${rows.length} destinations…`,
+        placeholder: `Search ${shownCount}+ destinations…`,
         search: "Search destinations",
         popular: "Popular:",
         idle: "Choose a destination and the rate appears here.",
@@ -100,12 +116,18 @@ const popular = popularCodes
 >
   <div class="grid gap-0 md:grid-cols-[1fr_20rem]">
     <div class="p-6 md:p-8">
-      <h2 class="text-xl font-extrabold tracking-tight text-[var(--color-text)]">
-        {t.heading}
-      </h2>
-      <p class="mt-1 text-sm text-[var(--color-muted)]">{t.sub}</p>
+      {
+        showHeading && (
+          <>
+            <h2 class="text-xl font-extrabold tracking-tight text-[var(--color-text)]">
+              {t.heading}
+            </h2>
+            <p class="mt-1 text-sm text-[var(--color-muted)]">{t.sub}</p>
+          </>
+        )
+      }
 
-      <form class="mt-5" data-finder-form novalidate>
+      <form class:list={[showHeading ? "mt-5" : ""]} data-finder-form novalidate>
         <!-- Honeypot, same pattern as SupportForm. -->
         <input
           type="text"

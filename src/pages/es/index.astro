@@ -3,8 +3,11 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import AppStoreBadge from "../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
 import RateDisclosure from "../../components/RateDisclosure.astro";
-import { pricedDestination, formatRate } from "../../lib/rates";
+import { pricedDestination, formatRate, coverage } from "../../lib/rates";
 import { alternatesFor } from "../../lib/i18n";
+import RateFinderSection from "../../components/home/RateFinderSection.astro";
+
+const countries = await coverage();
 
 // Spanish homepage (Mexico corridor). Purpose-written Spanish, not a literal
 // translation — Mexican conventions (celular, saldo, marcar) and keyword
@@ -52,7 +55,7 @@ const steps = [
 const faqs = [
   {
     q: "¿Qué es Kalum?",
-    a: "Kalum es una app de llamadas internacionales baratas a cualquier teléfono. Llamas a fijos y celulares en más de 180 países desde tu iPhone o Android, y la persona contesta en el teléfono que ya tiene.",
+    a: `Kalum es una app de llamadas internacionales baratas a cualquier teléfono. Llamas a fijos y celulares en más de ${countries} países desde tu iPhone o Android, y la persona contesta en el teléfono que ya tiene.`,
   },
   {
     q: "¿La persona a la que llamo necesita la app o internet?",
@@ -68,7 +71,7 @@ const faqs = [
   },
   {
     q: "¿A qué países puedo llamar?",
-    a: "Más de 180 destinos en todo el mundo — fijos y celulares en África, América, Asia, Europa y el Medio Oriente.",
+    a: `Más de ${countries} destinos en todo el mundo — fijos y celulares en África, América, Asia, Europa y el Medio Oriente.`,
   },
 ];
 
@@ -85,7 +88,7 @@ const faqSchema = {
 
 <BaseLayout
   title="Kalum: App de Llamadas Internacionales Baratas a Cualquier Teléfono"
-  description="Kalum es una app de llamadas internacionales baratas — llama a fijos y celulares en más de 180 países. Sin app ni internet del lado de quien recibe. Desde $4.99."
+  description={`Kalum es una app de llamadas internacionales baratas — llama a fijos y celulares en más de ${countries} países. Sin app ni internet del lado de quien recibe. Desde $4.99.`}
   canonical="https://kalum.app/es/"
   lang="es"
   alternates={alternatesFor("/es/")}
@@ -106,7 +109,7 @@ const faqSchema = {
         <span class="block text-white/85">Solo contestan.</span>
       </h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
-        Llama a teléfonos fijos y celulares en más de 180 países. Sin app de su
+        Llama a teléfonos fijos y celulares en más de {countries} países. Sin app de su
         lado. Sin internet de su lado. Es una llamada telefónica normal.
       </p>
 
@@ -120,6 +123,8 @@ const faqSchema = {
       </p>
     </div>
   </section>
+
+  <RateFinderSection locale="es" />
 
   <!-- No internet needed -->
   <section class="bg-[var(--color-cream)] py-20 md:py-28">

@@ -4,6 +4,9 @@ import AppStoreBadge from "../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import RateDisclosure from "../components/RateDisclosure.astro";
+import { coverage } from "../lib/rates";
+
+const countries = await coverage();
 import {
   voipRestrictedPricedDestinations,
   formatRate,
@@ -214,7 +217,7 @@ const structuredData = {
       </h2>
       <p class="mx-auto mt-4 max-w-xl text-white/85">
         Download Kalum, add $4.99 in credit, and dial any landline or mobile in
-        180+ countries. Pay only for the minutes you use.
+        {countries}+ countries. Pay only for the minutes you use.
       </p>
       <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
         <AppStoreBadge size="lg" utm="kalum-web-whatsapp-blocked" />

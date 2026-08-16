@@ -5,6 +5,9 @@ import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import RateDisclosure from "../components/RateDisclosure.astro";
 import { pricedDestinations, formatRate, fromPrefix } from "../lib/rates";
+import { coverage } from "../lib/rates";
+
+const countries = await coverage();
 
 // Hub for people CALLING OUT of the UAE — the other side of
 // /whatsapp-calls-blocked/, which is written for people calling INTO the Gulf.
@@ -62,7 +65,7 @@ const faqs = [
   },
   {
     q: "Can I call landlines, or only mobiles?",
-    a: "Both. Kalum reaches landlines and mobiles in more than 200 countries, which matters when you are calling a parent or a family home that has no smartphone at all.",
+    a: `Both. Kalum reaches landlines and mobiles in more than ${countries} countries, which matters when you are calling a parent or a family home that has no smartphone at all.`,
   },
 ];
 
@@ -274,7 +277,7 @@ const structuredData = {
       </h2>
       <p class="mx-auto mt-4 max-w-xl text-white/85">
         Download Kalum, add $4.99 in credit, and dial any landline or mobile in
-        200+ countries. Pay only for the minutes you use.
+        {countries}+ countries. Pay only for the minutes you use.
       </p>
       <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
         <AppStoreBadge size="lg" utm="kalum-web-call-from-uae" />

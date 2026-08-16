@@ -255,6 +255,40 @@ export async function pricedDestination(
   return { card, destination: priced.find((d) => d.slug === slug) };
 }
 
+/**
+ * How many destinations to claim in marketing copy, floored to the nearest 50.
+ *
+ * The card currently carries 218 sellable destinations, so this returns 200 and
+ * the copy reads "200+ countries". Two reasons for a floor rather than the
+ * exact figure:
+ *
+ *   - **It can only understate.** The number on the page stays true between a
+ *     rate refresh and the next deploy, and true even if a destination is
+ *     withdrawn. The site previously claimed "180+" against 218 — understating
+ *     by 20% — and "200+" on one newer page, contradicting itself.
+ *   - **It does not churn.** One destination added or removed must not silently
+ *     rewrite this claim in 31 places across 20 files. Same cry-wolf problem
+ *     `sitemap.xml.ts` exists to avoid.
+ *
+ * Counted from the rate card, which is the same source every price on the site
+ * renders from — so the claim cannot drift from the prices beside it.
+ *
+ * ⚠️ A card row is necessary but NOT sufficient for a destination to be
+ * sellable: its dial code must also be resolvable by
+ * `RateEngine.extract_country_code/1` in kalum-backend, or the call is
+ * mispriced rather than rejected. Both held at 218/218 when this was written
+ * (verified 2026-08-15, zero gaps in either direction). If that ever diverges,
+ * the honest count is the intersection, not `card.rates.length`.
+ */
+export function coverageFloor(card: RateCard): number {
+  return Math.floor(card.rates.length / 50) * 50;
+}
+
+/** `coverageFloor` for this build's card. Memoized via `fetchRates`. */
+export async function coverage(): Promise<number> {
+  return coverageFloor(await fetchRates());
+}
+
 /** Display form: "6¢" under a dollar, "$1.10" at or above it. */
 export function formatRate(rateCents: number): string {
   return rateCents >= 100 ? `$${(rateCents / 100).toFixed(2)}` : `${rateCents}¢`;

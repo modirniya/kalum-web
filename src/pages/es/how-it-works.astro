@@ -4,6 +4,9 @@ import AppStoreBadge from "../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import { alternatesFor } from "../../lib/i18n";
+import { coverage } from "../../lib/rates";
+
+const countries = await coverage();
 
 // Spanish version of /how-it-works/. The English page composes
 // components/howitworks/{Steps,FAQ}.astro, which hold their copy inline and
@@ -53,7 +56,7 @@ const faqs = [
   },
   {
     q: "¿A qué países puedo llamar?",
-    a: "A más de 180 destinos en todo el mundo — fijos y celulares en África, América, Asia, Europa y el Medio Oriente. Puedes ver la tarifa exacta por minuto de cualquier país antes de marcar.",
+    a: `A más de ${countries} destinos en todo el mundo — fijos y celulares en África, América, Asia, Europa y el Medio Oriente. Puedes ver la tarifa exacta por minuto de cualquier país antes de marcar.`,
   },
 ];
 

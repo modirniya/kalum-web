@@ -43,7 +43,7 @@ export interface Destination {
  * hand-written copy that earns each one. Deliberately a fraction of the ~200
  * callable destinations — a page is worth publishing only when it has a real
  * intro, a real dialing note, and a rate, and templated filler for the long
- * tail is what "the app shows live rates for 180+ countries" covers instead.
+ * tail is what "the app shows live rates for 200+ countries" covers instead.
  *
  * PRICES ARE NOT IN THIS FILE. They used to be, hand-copied from the admin
  * panel with a manually stamped "rates as of" date, and they drifted — the app

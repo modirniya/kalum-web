@@ -1,6 +1,9 @@
 ---
+import { coverage } from "../../lib/rates";
+
+const countries = await coverage();
 const items = [
-  "180+ countries",
+  `${countries}+ countries`,
   "No subscriptions",
   "No contracts",
   "Credit never expires",

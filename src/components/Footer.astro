@@ -4,6 +4,9 @@ import icon from "../assets/kalum-icon.jpg";
 import GooglePlayBadge from "./GooglePlayBadge.astro";
 import AppStoreBadge from "./AppStoreBadge.astro";
 import { featuredDestinations } from "../lib/destinations";
+import { coverage } from "../lib/rates";
+
+const countries = await coverage();
 
 const year = new Date().getFullYear();
 const popular = featuredDestinations();
@@ -14,7 +17,7 @@ const isES = path === "/es/" || path.startsWith("/es/");
 const t = isES
   ? {
       blurb:
-        "Llamadas económicas a teléfonos fijos y celulares en más de 180 países. Solo contestan su teléfono.",
+        `Llamadas económicas a teléfonos fijos y celulares en más de ${countries} países. Solo contestan su teléfono.`,
       product: "Producto",
       legal: "Legal",
       getApp: "Descargar la app",
@@ -30,7 +33,7 @@ const t = isES
     }
   : {
       blurb:
-        "Cheap calls to landlines and mobiles in 180+ countries. They just pick up the phone.",
+        `Cheap calls to landlines and mobiles in ${countries}+ countries. They just pick up the phone.`,
       product: "Product",
       legal: "Legal",
       getApp: "Get the app",

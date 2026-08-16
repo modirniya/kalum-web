@@ -6,6 +6,9 @@ import Breadcrumb from "../components/Breadcrumb.astro";
 import RateDisclosure from "../components/RateDisclosure.astro";
 import { pricedDestinations, formatRate, fromPrefix } from "../lib/rates";
 import { alternatesFor } from "../lib/i18n";
+import { coverage } from "../lib/rates";
+
+const countries = await coverage();
 
 // Evergreen page for the core differentiator: the person you call needs no
 // internet, app, or smartphone. Copy stays within verified claims.
@@ -25,7 +28,7 @@ const faqs = [
   },
   {
     q: "Can I call landlines?",
-    a: "Yes. Kalum calls landlines and mobiles in 180+ countries. Whoever you call answers on whatever phone they already have — nothing to download, nothing to set up on their side.",
+    a: `Yes. Kalum calls landlines and mobiles in ${countries}+ countries. Whoever you call answers on whatever phone they already have — nothing to download, nothing to set up on their side.`,
   },
   {
     q: "What does it cost?",
@@ -61,7 +64,7 @@ const reasons = [
 
 <BaseLayout
   title="Call Someone Without Internet — Their Phone Just Rings | Kalum"
-  description="Call people who have no internet, no smartphone, and no apps. Kalum routes your call through real phone networks, so any landline or feature phone in 180+ countries just rings."
+  description={`Call people who have no internet, no smartphone, and no apps. Kalum routes your call through real phone networks, so any landline or feature phone in ${countries}+ countries just rings.`}
   canonical="https://kalum.app/call-without-internet/"
   alternates={alternatesFor("/call-without-internet/")}
 >
@@ -83,7 +86,7 @@ const reasons = [
       </h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
         Kalum is an international calling app that reaches real phone
-        numbers — landlines and mobiles in 180+ countries. The person you
+        numbers — landlines and mobiles in {countries}+ countries. The person you
         call needs no app, no smartphone, and no internet.
       </p>
 

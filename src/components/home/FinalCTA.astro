@@ -1,6 +1,9 @@
 ---
 import GooglePlayBadge from "../GooglePlayBadge.astro";
 import AppStoreBadge from "../AppStoreBadge.astro";
+import { coverage } from "../../lib/rates";
+
+const countries = await coverage();
 ---
 
 <section id="download" class="brand-gradient relative overflow-hidden text-white">
@@ -15,7 +18,7 @@ import AppStoreBadge from "../AppStoreBadge.astro";
     </h2>
     <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
       No commitment. Add more anytime. Cheap calls to landlines and
-      mobiles in 180+ countries &mdash; on iPhone and Android.
+      mobiles in {countries}+ countries &mdash; on iPhone and Android.
     </p>
 
     <div class="mt-10 flex flex-wrap items-center justify-center gap-4">

@@ -1,4 +1,7 @@
 ---
+import { coverage } from "../../lib/rates";
+
+const countries = await coverage();
 const faqs = [
   {
     q: "Do I need internet to call?",
@@ -18,7 +21,7 @@ const faqs = [
   },
   {
     q: "Which countries can I call?",
-    a: "Over 180 destinations worldwide — landlines and mobiles across Africa, the Americas, Asia, Europe, and the Middle East. You can see the exact per-minute rate for any country before you dial.",
+    a: `Over ${countries} destinations worldwide — landlines and mobiles across Africa, the Americas, Asia, Europe, and the Middle East. You can see the exact per-minute rate for any country before you dial.`,
   },
 ];
 ---

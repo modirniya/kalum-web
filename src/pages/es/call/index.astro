@@ -5,10 +5,17 @@ import GooglePlayBadge from "../../../components/GooglePlayBadge.astro";
 import RateDisclosure from "../../../components/RateDisclosure.astro";
 import Breadcrumb from "../../../components/Breadcrumb.astro";
 import RateFinder from "../../../components/RateFinder.astro";
-import { pricedDestinations, formatRate, fromPrefix } from "../../../lib/rates";
+import {
+  pricedDestinations,
+  formatRate,
+  fromPrefix,
+  coverage,
+} from "../../../lib/rates";
 import { alternatesFor } from "../../../lib/i18n";
 import { ES_NAMES, ES_REGIONS, DESTINATION_COPY_ES } from "../_destinations-es";
 import { localNamesByDialCode } from "../../../lib/rate-finder";
+
+const countries = await coverage();
 
 // Spanish rates hub, mirroring /call/. Rates come from the live rate card at
 // build time and are baked into the HTML, same as the English hub.
@@ -168,7 +175,7 @@ const grouped = regionOrder
         ¿No ves tu país?
       </h2>
       <p class="mx-auto mt-4 max-w-xl text-white/85">
-        Kalum llama a fijos y celulares en más de 180 países. Descarga la app y
+        Kalum llama a fijos y celulares en más de {countries} países. Descarga la app y
         consulta la tarifa de cualquier destino — verla es gratis y no hay
         suscripción.
       </p>
