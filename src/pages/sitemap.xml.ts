@@ -56,6 +56,27 @@ const changeDates = rateChanges as Record<string, string>;
  */
 const COPY_CHANGE = "2026-08-08";
 
+/**
+ * 2026-08-16: the rate finder shipped onto both homepages and both /call/
+ * hubs, and the destination-count claim was corrected sitewide — "180+"
+ * against 218 actually sellable — which rewrote four meta descriptions and
+ * several FAQ answers (body copy *and* their FAQPage schema).
+ *
+ * Applied only to the pages whose own content meaningfully changed, verified
+ * by diffing the built output before and after rather than by assuming.
+ *
+ * The 31 `/call/<slug>/` pages are deliberately EXCLUDED. Their entire diff is
+ * the shared footer blurb, `og:image:alt`, and one word in a closing CTA
+ * sentence; title, H1, meta description and rate are all unchanged. Restamping
+ * 31 URLs for that is exactly the cry-wolf this file exists to avoid, and it
+ * would bury the nine pages that genuinely changed. `/whatsapp-calls-blocked/`
+ * and the from-UAE cluster are excluded for the same reason.
+ */
+const FINDER_AND_COUNT = "2026-08-16";
+
+/** The later of two ISO dates. */
+const later = (a: string, b: string) => (a > b ? a : b);
+
 function rateLastmod(dialCode: string): string {
   const changed = changeDates[dialCode];
   const rateDate = changed && changed > SEO_CONTENT_UPDATE ? changed : SEO_CONTENT_UPDATE;
@@ -74,14 +95,14 @@ export const GET: APIRoute = async () => {
     .reduce((latest, date) => (date > latest ? date : latest), SEO_CONTENT_UPDATE);
 
   const pages: { path: string; lastmod: string }[] = [
-    { path: "/", lastmod: SEO_CONTENT_UPDATE },
-    // 2026-08-08: gained hreflang alternates to /es/how-it-works/. That changes
-    // how Google clusters the pair, and this page has not been recrawled since
-    // 2026-07-12 — it never even saw the 2026-07-20 content update.
-    { path: "/how-it-works/", lastmod: COPY_CHANGE },
+    { path: "/", lastmod: FINDER_AND_COUNT },
+    // Was COPY_CHANGE for the hreflang pairing with /es/how-it-works/; now
+    // later still, because its FAQ answer and that answer's FAQPage schema
+    // both changed with the count correction.
+    { path: "/how-it-works/", lastmod: FINDER_AND_COUNT },
     { path: "/support/", lastmod: "2026-07-02" },
-    { path: "/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
-    { path: "/calling-app-vs-internet-calling/", lastmod: SEO_CONTENT_UPDATE },
+    { path: "/call-without-internet/", lastmod: FINDER_AND_COUNT },
+    { path: "/calling-app-vs-internet-calling/", lastmod: FINDER_AND_COUNT },
     { path: "/whatsapp-calls-blocked/", lastmod: SEO_CONTENT_UPDATE },
     // Outbound-from-the-Gulf cluster (2026-08-08). /whatsapp-calls-blocked/
     // serves calling INTO a restricted market; these serve calling OUT of one,
@@ -91,7 +112,7 @@ export const GET: APIRoute = async () => {
     { path: "/call-from-uae/", lastmod: VOIP_CLUSTER_ADDED },
     { path: "/call-india-from-uae/", lastmod: VOIP_CLUSTER_ADDED },
     { path: "/call-pakistan-from-uae/", lastmod: VOIP_CLUSTER_ADDED },
-    { path: "/call/", lastmod: hubLastmod },
+    { path: "/call/", lastmod: later(hubLastmod, FINDER_AND_COUNT) },
     ...priced.map((d) => ({
       path: `/call/${d.slug}/`,
       lastmod: rateLastmod(d.dialCode),
@@ -102,14 +123,14 @@ export const GET: APIRoute = async () => {
     // English median of 20.7) — it was starved of pages, not underperforming.
     // The four added corridors are the Americas' remaining Spanish-speaking
     // destinations, i.e. the US-Hispanic diaspora routes.
-    { path: "/es/", lastmod: SEO_CONTENT_UPDATE },
+    { path: "/es/", lastmod: FINDER_AND_COUNT },
     {
       path: "/es/call/mexico/",
       lastmod: mexico ? rateLastmod(mexico.dialCode) : SEO_CONTENT_UPDATE,
     },
-    { path: "/es/call-without-internet/", lastmod: SEO_CONTENT_UPDATE },
-    { path: "/es/how-it-works/", lastmod: ES_EXPANSION },
-    { path: "/es/call/", lastmod: ES_EXPANSION },
+    { path: "/es/call-without-internet/", lastmod: FINDER_AND_COUNT },
+    { path: "/es/how-it-works/", lastmod: FINDER_AND_COUNT },
+    { path: "/es/call/", lastmod: FINDER_AND_COUNT },
     ...(["colombia", "guatemala", "honduras", "el-salvador"] as const).map(
       (slug) => {
         const d = priced.find((p) => p.slug === slug);
