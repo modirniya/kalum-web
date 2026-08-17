@@ -1,7 +1,7 @@
 {
   "note": "Last-good rate card. The build fetches the live card and renders that; this file is only what it falls back to when the API is unreachable, and the baseline the refresh workflow diffs against to decide which pages actually changed. Refreshed and committed by .github/workflows/refresh-rates.yml — hand-edit only to bootstrap or correct it.",
   "source": "live",
-  "fetchedAt": "2026-08-05T23:46:15.746Z",
+  "fetchedAt": "2026-08-17T03:02:11.820Z",
   "basis": "from",
   "rates": [
     {
@@ -92,7 +92,7 @@
     {
       "country_code": "880",
       "country_name": "Bangladesh",
-      "rate_per_minute": "0.08"
+      "rate_per_minute": "0.06"
     },
     {
       "country_code": "1246",
@@ -212,7 +212,7 @@
     {
       "country_code": "57",
       "country_name": "Colombia",
-      "rate_per_minute": "0.05"
+      "rate_per_minute": "0.04"
     },
     {
       "country_code": "269",
@@ -287,7 +287,7 @@
     {
       "country_code": "20",
       "country_name": "Egypt",
-      "rate_per_minute": "0.25"
+      "rate_per_minute": "0.22"
     },
     {
       "country_code": "503",
@@ -317,7 +317,7 @@
     {
       "country_code": "251",
       "country_name": "Ethiopia",
-      "rate_per_minute": "0.59"
+      "rate_per_minute": "0.55"
     },
     {
       "country_code": "500",
@@ -457,7 +457,7 @@
     {
       "country_code": "91",
       "country_name": "India",
-      "rate_per_minute": "0.07"
+      "rate_per_minute": "0.04"
     },
     {
       "country_code": "62",
@@ -732,7 +732,7 @@
     {
       "country_code": "234",
       "country_name": "Nigeria",
-      "rate_per_minute": "0.28"
+      "rate_per_minute": "0.26"
     },
     {
       "country_code": "1670",
@@ -762,7 +762,7 @@
     {
       "country_code": "970",
       "country_name": "Palestine",
-      "rate_per_minute": "0.51"
+      "rate_per_minute": "0.47"
     },
     {
       "country_code": "507",
