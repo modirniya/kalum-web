@@ -40,10 +40,10 @@ const grouped = regionOrder
 >
   <section class="bg-[var(--color-cream)] py-16 md:py-24">
     <div class="mx-auto max-w-4xl px-5 md:px-8">
-      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-maroon)]">
+      <p class="eyebrow text-[var(--color-maroon)]">
         Destinations
       </p>
-      <h1 class="mt-4 text-4xl font-extrabold tracking-display text-[var(--color-text)] sm:text-5xl">
+      <h1 class="mt-4 text-4xl font-extrabold leading-[1.05] tracking-display text-[var(--color-text)] sm:text-5xl">
         Cheap international calls, by destination.
       </h1>
       <p class="mt-5 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
@@ -59,7 +59,7 @@ const grouped = regionOrder
         {
           grouped.map((group) => (
             <div>
-              <h2 class="text-2xl font-extrabold tracking-display text-[var(--color-text)]">
+              <h2 class="text-2xl font-extrabold tracking-display text-[var(--color-text)] sm:text-3xl">
                 {group.region}
               </h2>
               <ul class="mt-5 grid gap-4 sm:grid-cols-2">
@@ -79,11 +79,11 @@ const grouped = regionOrder
                       </span>
                       <span class="shrink-0 text-right">
                         {from && (
-                          <span class="block text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                          <span class="micro-label block text-[var(--color-muted)]">
                             from
                           </span>
                         )}
-                        <span class="text-2xl font-extrabold text-[var(--color-maroon)]">
+                        <span class="text-2xl font-extrabold tabular-nums text-[var(--color-maroon)]">
                           {formatRate(d.rateCents)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
                         </span>
                       </span>
@@ -139,7 +139,7 @@ const grouped = regionOrder
       <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl">
         Don't see your country?
       </h2>
-      <p class="mx-auto mt-4 max-w-xl text-white/85">
+      <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
         Kalum reaches landlines and mobiles in {countries}+ countries. Download the
         app and check the live rate for any destination — free to look, no
         subscription.

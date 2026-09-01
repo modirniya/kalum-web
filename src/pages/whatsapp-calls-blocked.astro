@@ -67,7 +67,7 @@ const structuredData = {
 
     <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
       <Breadcrumb items={[{ name: "Home", href: "/" }, { name: "WhatsApp calls blocked" }]} />
-      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-teal-light)]">
+      <p class="eyebrow text-[var(--color-teal-light)]">
         When internet calls won't connect
       </p>
       <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-display sm:text-5xl lg:text-6xl">
@@ -151,11 +151,11 @@ const structuredData = {
                 </span>
                 <span class="shrink-0 text-right">
                   {from && (
-                    <span class="block text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                    <span class="micro-label block text-[var(--color-muted)]">
                       from
                     </span>
                   )}
-                  <span class="text-xl font-extrabold text-[var(--color-maroon)]">
+                  <span class="text-2xl font-extrabold tabular-nums text-[var(--color-maroon)]">
                     {formatRate(d.rateCents)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
                   </span>
                 </span>
@@ -215,7 +215,7 @@ const structuredData = {
       <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl">
         Reach them on a real phone.
       </h2>
-      <p class="mx-auto mt-4 max-w-xl text-white/85">
+      <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
         Download Kalum, add $4.99 in credit, and dial any landline or mobile in
         {countries}+ countries. Pay only for the minutes you use.
       </p>
