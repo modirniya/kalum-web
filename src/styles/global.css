@@ -7,10 +7,16 @@
   --color-maroon-dark: #2A0603;
   --color-teal: #38B2AC;
   --color-teal-light: #4FD1C5;
+  /* Teal reads as a wash at text sizes on a light ground — 2.4:1 on cream.
+     The app darkens it the same way for light-mode labels and icons. */
+  --color-teal-ink: #0E8F86;
   --color-navy: #1A1A2E;
-  --color-cream: #F7FAFC;
-  --color-text: #2D3748;
-  --color-muted: #718096;
+  /* Warm neutrals, matching the app's light theme rather than the cool
+     blue-greys the site launched with. --color-muted carries ~87 body
+     paragraphs and was failing AA at 3.83:1 on cream; this is 5.54:1. */
+  --color-cream: #FAF6EE;
+  --color-text: #241E1B;
+  --color-muted: #6B6259;
   --color-success: #48BB78;
   --color-error: #F56565;
 
