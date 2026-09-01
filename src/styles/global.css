@@ -14,8 +14,10 @@
   --color-success: #48BB78;
   --color-error: #F56565;
 
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, sans-serif;
+  /* Same face the app ships (Plus Jakarta Sans v2.071, aliased "Kalum" there).
+     The Variable suffix is Fontsource's family name for the wght-axis file. */
+  --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 @layer base {
@@ -35,6 +37,15 @@
     background: var(--color-maroon);
     color: white;
   }
+}
+
+/* Display tracking. Plus Jakarta Sans sets its word space at 0.170em against
+   Inter's 0.219em — 22% tighter — so the -0.025em tracking these headings want
+   optically welds words together at hero sizes. The word-spacing gives back
+   what the tracking takes, without changing where lines break. */
+@utility tracking-display {
+  letter-spacing: -0.025em;
+  word-spacing: 0.08em;
 }
 
 @utility brand-gradient {

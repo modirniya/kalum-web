@@ -88,7 +88,7 @@ const popular = popularCodes
       {
         showHeading && (
           <>
-            <h2 class="text-xl font-extrabold tracking-tight text-[var(--color-text)]">
+            <h2 class="text-xl font-extrabold tracking-display text-[var(--color-text)]">
               {t.heading}
             </h2>
             <p class="mt-1 text-sm text-[var(--color-muted)]">{t.sub}</p>
@@ -252,7 +252,7 @@ const popular = popularCodes
         (copy.from
           ? `<span class="text-sm font-semibold text-[var(--color-muted)]">${esc(copy.from.trim())}</span>`
           : "") +
-        `<span class="text-4xl font-extrabold tracking-tight text-[var(--color-maroon)] tabular-nums">${money(r[2])}</span>` +
+        `<span class="text-4xl font-extrabold tracking-display text-[var(--color-maroon)] tabular-nums">${money(r[2])}</span>` +
         `<span class="text-sm text-[var(--color-muted)]">${esc(copy.perMin)}</span>` +
         `</p>` +
         `<p class="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">${esc(copy.note)}</p>`;
