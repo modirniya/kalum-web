@@ -60,12 +60,17 @@ const subhead = priceLed
   : "Fijos y celulares. Sin app, sin smartphone y sin internet de su lado.";
 const heroRateLine = `Actualmente ${fromEs}${rate} el minuto a cualquier número de ${copy.name}.`;
 
+// Mirrors the English retitle in src/pages/call/[slug].astro, and for a
+// stronger reason: in Spanish the number-format intent is not a slice of the
+// tail, it is nearly the whole page. Every named query /es/call/honduras/ held
+// over the three months to 2026-08-30 was a format question, three of the four
+// in the top eleven, all of them at zero clicks.
 const title = priceLed
-  ? `Llamar a ${copy.name} — ${fromEs}${rate}/min a Cualquier Teléfono | Kalum`
-  : `Llamar a ${copy.name} — Tarifas y Cómo Marcar | Kalum`;
+  ? `Llamar a ${copy.name} desde ${rate}/min — Marca +${d.dialCode} | Kalum`
+  : `Llamar a ${copy.name} — Marca +${d.dialCode}, Sin App de Su Lado | Kalum`;
 const description = priceLed
-  ? `Llama a ${copy.name} ${preposition} ${rate} por minuto con Kalum — fijos y celulares. Sin app ni internet del lado de quien recibe. Saldo de prepago que nunca vence.`
-  : `Llama a cualquier fijo o celular de ${copy.name} con Kalum — sin app, sin smartphone y sin internet del lado de quien recibe. Ves la tarifa por minuto antes de marcar. Saldo de prepago que nunca vence.`;
+  ? `${copy.numberFormatShort} Llama a ${copy.name} ${preposition} ${rate} por minuto con Kalum — sin app ni internet de su lado.`
+  : `${copy.numberFormatShort} Llama a cualquier fijo o celular de ${copy.name} con Kalum — sin app ni internet de su lado.`;
 
 const faqs = [
   {

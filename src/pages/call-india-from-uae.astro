@@ -20,6 +20,20 @@ const from = fromPrefix(card.basis);
 const canonical = "https://kalum.app/call-india-from-uae/";
 const priceUsd = india ? (india.rateCents / 100).toFixed(2) : null;
 
+/**
+ * This page ranks #1 for "how to call india from uae", 7 for "uae to india
+ * call code", 8 for "how to call kerala landline from uae" and 11 for "uae to
+ * india landline code" — and turned 453 impressions into one click over the
+ * three months to 2026-08-30. Every named query it holds is a dialing
+ * question; the title answered a different one.
+ *
+ * So it leads with the code and the format. The restriction story stays in the
+ * body, where the reader meets it after the click is already won.
+ */
+const title = "Call India from the UAE — How to Dial +91 | Kalum";
+const description =
+  "Indian mobiles are 10 digits starting with 6, 7, 8, or 9 — drop any leading 0 and dial +91. Kalum calls Indian landlines and mobiles from the UAE, with nothing to install on their end.";
+
 const faqs = [
   {
     q: "Why can't I make WhatsApp calls to India from the UAE?",
@@ -89,8 +103,8 @@ const structuredData = {
 ---
 
 <BaseLayout
-  title="Call India from the UAE — When WhatsApp Calls Won't Connect | Kalum"
-  description="Voice calls on many internet apps are restricted in the UAE. Kalum dials Indian landlines and mobiles directly — nothing to install on their end. See the per-minute rate before you call."
+  title={title}
+  description={description}
   canonical={canonical}
 >
   <!-- Hero -->

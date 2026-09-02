@@ -47,6 +47,19 @@ export interface DestinationCopyEs {
   numberFormat: { title: string; body: string };
   /** Answer to "¿cuál es el formato de los números?" — mirrors numberFormat. */
   numberFormatFaq: string;
+  /**
+   * The same fact in one clause, for the meta description. Mirrors
+   * `numberFormat` in `src/lib/destinations.ts` and exists for the same reason:
+   * the full block runs past where Google cuts a description, and the useful
+   * half is the one that gets clipped.
+   *
+   * This is the highest-value string on the Spanish pages. /es/call/honduras/
+   * ranks #1 for "código para llamar a teléfono fijo", #2 for "teléfono fijo",
+   * 8 for "honduras numeros de celular" and 11 for "honduras indicativo" — the
+   * whole page is found on number-format questions, and answered none of them
+   * in its snippet.
+   */
+  numberFormatShort: string;
 }
 
 /**
@@ -119,6 +132,8 @@ export const DESTINATION_COPY_ES: Record<string, DestinationCopyEs> = {
     },
     numberFormatFaq:
       "Los celulares colombianos son de 10 dígitos y empiezan con 3. Los fijos también se marcan con 10 dígitos, anteponiendo 60 al indicativo de la ciudad. En Kalum eliges Colombia (+57) y escribes el número — el código de país ya está puesto.",
+    numberFormatShort:
+      "Los celulares en Colombia son de 10 dígitos y empiezan con 3 — marca +57 y el número completo.",
   },
   guatemala: {
     name: "Guatemala",
@@ -132,6 +147,8 @@ export const DESTINATION_COPY_ES: Record<string, DestinationCopyEs> = {
     },
     numberFormatFaq:
       "Los números de Guatemala son de 8 dígitos y no llevan indicativo de ciudad. Los celulares suelen empezar con 3, 4 o 5 y los fijos con 2, 6 o 7. En Kalum eliges Guatemala (+502) y escribes los 8 dígitos.",
+    numberFormatShort:
+      "Los números de Guatemala son de 8 dígitos, sin cero inicial — marca +502 y los 8 dígitos.",
   },
   honduras: {
     name: "Honduras",
@@ -145,6 +162,8 @@ export const DESTINATION_COPY_ES: Record<string, DestinationCopyEs> = {
     },
     numberFormatFaq:
       "Los números de Honduras son de 8 dígitos y no llevan indicativo de ciudad. Los celulares suelen empezar con 3, 7, 8 o 9 y los fijos con 2. En Kalum eliges Honduras (+504) y escribes los 8 dígitos.",
+    numberFormatShort:
+      "Los números de Honduras son de 8 dígitos, sin cero inicial — marca +504 y los 8 dígitos.",
   },
   "el-salvador": {
     name: "El Salvador",
@@ -158,5 +177,7 @@ export const DESTINATION_COPY_ES: Record<string, DestinationCopyEs> = {
     },
     numberFormatFaq:
       "Los números de El Salvador son de 8 dígitos y no llevan indicativo de ciudad. Los celulares suelen empezar con 6 o 7 y los fijos con 2. En Kalum eliges El Salvador (+503) y escribes los 8 dígitos.",
+    numberFormatShort:
+      "Los números de El Salvador son de 8 dígitos, sin cero inicial — marca +503 y los 8 dígitos.",
   },
 };

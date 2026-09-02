@@ -42,6 +42,24 @@ const faqs = [
   },
 ];
 
+/**
+ * Titled for what Search Console says this page is actually found on, not for
+ * the topic it was written about. Over the three months to 2026-08-30 it took
+ * 46 named-query impressions: 43 were "gulf calling app" and "gulf call app"
+ * at position 8.5, and 3 were about WhatsApp. Every one earned zero clicks.
+ * A reader searching for a calling app was being handed a question they
+ * already knew the answer to.
+ *
+ * The restriction copy stays in the body — it is true, it is why this page
+ * exists, and it is the differentiator. It just stops being the headline.
+ * The URL does not move: it is indexed and it is what holds the position.
+ */
+// "gulf calling app" is the exact phrase this page is found on, so it leads
+// verbatim. The UAE and Qatar move to the description, which has the room.
+const title = "Gulf Calling App for the UAE & Qatar | Kalum";
+const description =
+  "A calling app for the Gulf that dials a regular phone number instead of an internet call — so it connects where app calls are restricted, with no app or internet needed on their end.";
+
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -54,8 +72,8 @@ const structuredData = {
 ---
 
 <BaseLayout
-  title="WhatsApp Calls Blocked in the Gulf? Call Any Phone Instead | Kalum"
-  description="In the UAE and Qatar, voice calls on many internet apps are often restricted. Kalum dials a regular phone number instead — so it rings, with no app needed on their end."
+  title={title}
+  description={description}
   canonical="https://kalum.app/whatsapp-calls-blocked/"
 >
   <!-- Hero -->
@@ -66,13 +84,13 @@ const structuredData = {
     </div>
 
     <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
-      <Breadcrumb items={[{ name: "Home", href: "/" }, { name: "WhatsApp calls blocked" }]} />
+      <Breadcrumb items={[{ name: "Home", href: "/" }, { name: "Calling in the Gulf" }]} />
       <p class="eyebrow text-[var(--color-teal-light)]">
         When internet calls won't connect
       </p>
       <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-display sm:text-5xl lg:text-6xl">
-        WhatsApp calls blocked where they are?
-        <span class="block text-white/85">Their phone still rings.</span>
+        A calling app for the Gulf that dials real numbers.
+        <span class="block text-white/85">So it rings, even when app calls don't.</span>
       </h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
         In several Gulf countries, voice and video calls on many internet apps

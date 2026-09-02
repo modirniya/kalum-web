@@ -132,13 +132,40 @@ const subhead = priceLed
   : valueSubline;
 const heroRateLine = `Currently ${from}${rate} a minute to any ${d.demonym} number.`;
 
+/**
+ * Both titles lead with "Call {country}" because that is what these pages are
+ * actually found on. Over the three months to 2026-08-30 the biggest queries
+ * on the whole destination tree were `call turkey` (60 impressions, position
+ * 13.2), `call omani` (47, 9.1), `call jordan` (43, 24.9) and `call egypt`
+ * (34, 28.6) — and the page-one ones took zero clicks: `call bahrain` at 7.3,
+ * `call ethiopia` at 6.2, `call omani` at 9.1, all nil.
+ *
+ * The old value-led title spent the rest of the line on "Rates and How to
+ * Dial" — 26 pages sharing one generic string, leading with the word for the
+ * intent this site loses (a rate comparison) ahead of the one it wins.
+ *
+ * What replaces it is the dial code plus the differentiator. The dial code
+ * because a thin but real slice of the tail asks what a number there looks
+ * like, and we rank for it already with nothing in the snippet that answers:
+ * `turkey mobile number digits` at position 1, `010 egypt number` at 8.8,
+ * `jordan phone number format` at 11, `oman mobile number digits` at 16. "No
+ * app on their end" because it is the one claim a rival rate page cannot copy.
+ *
+ * Longest render is 60 characters (the Philippines), inside Google's cut.
+ */
 const title = priceLed
-  ? `Call ${d.name} — ${from}${rate}/min to Any Phone | Kalum`
-  : `Call ${d.name} — Rates and How to Dial | Kalum`;
+  ? `Call ${d.name} from ${rate}/min — Dial +${d.dialCode} | Kalum`
+  : `Call ${d.name} — Dial +${d.dialCode}, No App on Their End | Kalum`;
 
+/**
+ * The description leads with the number-format fact rather than the pitch.
+ * `numberFormat` is a one-clause restatement of `dialingNote`, so the snippet
+ * answers the dialing question in the SERP instead of promising a rate the
+ * reader can already see beaten in the result above ours.
+ */
 const description = priceLed
-  ? `Call ${d.name} ${preposition} ${rate} a minute with Kalum — landlines and mobiles, no app, smartphone, or internet needed on their end. Prepaid credit that never expires.`
-  : `Call any ${d.demonym} landline or mobile with Kalum — no app, smartphone, or internet needed on their end. See the current per-minute rate before you dial. Prepaid credit that never expires.`;
+  ? `${d.numberFormat} Call ${d.name} ${preposition} ${rate} a minute with Kalum — no app or internet on their end.`
+  : `${d.numberFormat} Call any ${d.demonym} landline or mobile with Kalum — no app or internet on their end.`;
 
 const canonical = `https://kalum.app/call/${d.slug}/`;
 /** Dollars-per-minute, the form schema.org wants. */
@@ -300,6 +327,44 @@ const structuredData = {
     </div>
   </section>
 
+  <!--
+    Number format.
+
+    This used to be an h3 in the card stack below, roughly 29% down the page,
+    and it was the only thing on the page answering questions we already rank
+    for: "turkey mobile number digits" (position 1), "010 egypt number" (8.8),
+    "jordan phone number format" (11), "oman mobile number digits" (16). All of
+    them earned zero clicks, because nothing above the fold — and nothing in
+    the snippet — said we had the answer.
+
+    So it leads now, before the product pitch: someone who looked up the format
+    wants the format, and the three steps for buying credit are what they read
+    after they have it. Same words as before, promoted to an h2 and given the
+    dial code as a display element.
+  -->
+  <section class="bg-[var(--color-cream)] py-16 md:py-20">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <div class="rounded-2xl border border-black/5 bg-white p-8 shadow-sm md:p-10">
+        <div class="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+          <h2 class="text-2xl font-extrabold tracking-display text-[var(--color-text)] sm:text-3xl">
+            The {d.demonym} number format
+          </h2>
+          <span
+            class="rounded-full bg-[var(--color-cream)] px-3 py-1 font-mono text-sm font-bold text-[var(--color-maroon)]"
+            >+{d.dialCode}</span
+          >
+        </div>
+        <p class="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
+          {d.dialingNote}
+        </p>
+        <p class="mt-4 max-w-2xl text-base leading-relaxed text-[var(--color-muted)]">
+          In the Kalum dialer you just pick {d.name} (+{d.dialCode}) and type the
+          local number — the country code is set for you.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <!-- How to call -->
   <section class="bg-white py-20 md:py-28">
     <div class="mx-auto max-w-4xl px-5 md:px-8">
@@ -333,16 +398,6 @@ const structuredData = {
           </p>
         </li>
       </ol>
-
-      <div class="mt-8 rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
-        <h3 class="text-xl font-bold text-[var(--color-text)]">
-          The {d.demonym} number format
-        </h3>
-        <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
-          {d.dialingNote} In the Kalum dialer you just pick {d.name} (+{d.dialCode})
-          and type the local number — the country code is set for you.
-        </p>
-      </div>
 
       <div class="mt-12 text-center">
         <a

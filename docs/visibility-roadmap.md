@@ -367,6 +367,116 @@ sells. Two fixes:
 
 ---
 
+## Phase 8 — Snippet rewrite from Search Console evidence — DONE (2026-09-01)
+
+First phase driven by measured search data rather than by audit. Source: the
+GSC export for 2026-06-23 → 2026-08-30 (62 clicks, 6,707 impressions, 0.92%
+CTR, average position 14.9), plus the Search Analytics API for the page↔query
+join the CSV export cannot give. **The API join is what made this phase
+possible** — it turned two guesses into two measurements, and killed a third
+recommendation outright.
+
+What the window showed:
+
+- Impressions grew 10.6× (19/day → 202/day) and average position improved 11
+  places, entirely off the 2026-07-20 content push and the 2026-08-08 retitle.
+  Clicks did not follow. **Reach is compounding; conversion is flat.**
+- Only 2,129 of 6,707 impressions (32%) attach to a named query. The query data
+  describes shape, not volume — treat single-query rows as direction, not size.
+- Strip brand out and the site earned **4 clicks from 814 non-brand named
+  impressions (0.49%)**. Brand volume is not an asset: much of `kalum` is Kalum
+  in British Columbia, Callum the given name, and 25 impressions of outright
+  wrong-entity queries.
+
+Shipped:
+
+- [x] **Destination pages retitled and restructured (31 pages).** Titles now
+      lead with the query they are found on and carry the dial code:
+      `Call Egypt — Dial +20, No App on Their End` (value-led) and
+      `Call Turkey from 9¢/min — Dial +90` (price-led). The old value-led title
+      was one generic string shared by 26 pages that led with "Rates" — the
+      intent this site loses — ahead of "How to Dial", the one it wins.
+- [x] **New `numberFormat` field on `Destination`** — a one-clause restatement
+      of `dialingNote`, used to lead the meta description with the dialing fact
+      instead of the pitch. Separate field because `dialingNote` runs 140-180
+      characters and Google cuts a description near 160, clipping exactly the
+      useful half. Strictly a restatement: it must never assert anything
+      `dialingNote` does not already say.
+- [x] **Number format promoted to an H2 above "How to call".** It was an `<h3>`
+      about 29% down the page; it now opens the body, and `010` first appears at
+      character 933 instead of 1309. The pages already ranked 8.8 for
+      `010 egypt number`, 11 for `jordan phone number format`, 16 for
+      `oman mobile number digits` and 1 for `turkey mobile number digits`, all
+      at zero clicks.
+- [x] **`/whatsapp-calls-blocked/` → "Gulf Calling App for the UAE & Qatar".**
+      The API join settled this: **43 of its 46 named-query impressions were
+      `gulf calling app` / `gulf call app` at position 8.5**, and three were
+      about WhatsApp. Every one earned zero clicks. Title, description, H1 and
+      breadcrumb label now match what the page is found on; the restriction copy
+      stays in the body, where it is the differentiator rather than the headline.
+      URL unchanged — it is what holds the position.
+- [x] **The from-UAE corridor cluster retitled.** `/call-india-from-uae/` took
+      453 impressions at position 8.3 and returned one click. Every named query
+      it holds is dialing logistics — `how to call india from uae` (#1),
+      `uae to india call code` (7), `how to call kerala landline from uae` (8),
+      `uae to india landline code` (11) — and the title promised a WhatsApp
+      story. Now `Call India from the UAE — How to Dial +91`. Same treatment for
+      `/call-pakistan-from-uae/` and `/call-from-uae/`.
+- [x] **Both `/call/` hubs repointed off rate comparison.** English is now
+      `Country Codes & Calling Rates — 31 Destinations`, Spanish
+      `Códigos de País y Tarifas — 31 Destinos`, H1s to match. The English hub
+      held 33 rate-comparison queries for 95 impressions, **zero clicks, average
+      position 43** — `international calling rates`, `cheap calls to iraq`,
+      `cheapest local call rates sudan`. Phase 7b's code comment already
+      recorded why we lose those; the title was still bidding on them.
+- [x] **Spanish destination pages retitled**, with a `numberFormatShort` field
+      mirroring the English one. The evidence here is stronger than in English:
+      *every* named query `/es/call/honduras/` held was a number-format
+      question — `código para llamar a teléfono fijo` (#1),
+      `teléfono fijo` (#2), `honduras numeros de celular` (8),
+      `honduras indicativo` (11) — all at zero clicks.
+- [x] **Sitemap `lastmod` restamped for the 42 pages that actually changed**,
+      and only those. The 8 untouched pages keep their old dates. The retired
+      `COPY_CHANGE` (2026-08-08) stamp was deleted as its own note instructed,
+      along with two constants it left unreferenced.
+
+Deliberately NOT done:
+
+- [~] **Homepage title.** The plan was to drop "Cheap" for the no-internet
+      differentiator. The API join killed it: `/` takes **981 of its 1,010
+      named-query impressions on brand terms**, and the entire non-brand
+      remainder is 29 impressions of junk (`kallmobile`, `lakum`, `caloom`).
+      There is no non-brand upside to win and a live brand ranking to risk.
+      Revisit only if non-brand homepage impressions become material.
+      `/es/` is the same story — 189 of its 199 impressions are `kalum` — so its
+      title was left alone too, over-long though it is.
+- [~] **Expanding `/es/call/` to more countries.** The recommendation assumed
+      the Spanish tree was starved. It is not: Mexico, Colombia, Guatemala,
+      Honduras and El Salvador are *every* Spanish-speaking destination in
+      `destinations.ts`. The gap was snippet quality, not page count, and that
+      is what got fixed. Adding Spanish pages for Egypt or Vietnam would be
+      publishing for an audience that is not searching.
+
+**Corrections to the analysis this phase was built on** (recorded because the
+first read was made without the page↔query join):
+
+- Number-format queries are ~10% of named destination-page impressions, not the
+  dominant intent. The dominant intent is plain `call {country}` — `call turkey`
+  (60 impr, pos 13.2), `call omani` (47, pos 9.1), `call jordan` (43, pos 24.9),
+  all at zero clicks. That is why the new titles keep `Call {Country}` first and
+  *add* the format hook rather than replacing it.
+- "Spanish and no-internet are the only intents beating site-average CTR" was
+  wrong — brand beats it too, at 1.14%. They are the only *non-brand* intents
+  above the line.
+
+**Verify in 4-6 weeks:** destination-page CTR against the 0.82% baseline;
+`/whatsapp-calls-blocked/` against 0.25%; `/call-india-from-uae/` against 0.22%;
+whether the number-format queries convert at all. The trap to avoid is reading
+sitewide CTR — impressions are still growing into worse positions, which dilutes
+it regardless of whether these pages improved. Compare per-page, per-query.
+
+---
+
 ## Explicitly not planned (verifier-rejected — do not resurrect)
 
 - HowTo, new FAQ rich-result work, SearchAction, Speakable markup —
@@ -378,6 +488,13 @@ sells. Two fixes:
 - `llms.txt` — no major AI engine documents consuming it; robots.txt
   already allows all crawlers.
 - Any geo/UA/device-based content switching — permanently off the table.
+- Retitling the homepage or `/es/` around a non-brand hook — both are ~97%
+  brand-query impressions (Phase 8). No upside to win, a live ranking to risk.
+- Spanish pages for non-Spanish-speaking destinations — the Americas set is
+  already complete; the rest would be publishing at an absent audience.
+- Chasing "free calling" queries — 21 queries, 33 impressions, zero clicks,
+  average position 55 over the three months to 2026-08-30. Kalum is prepaid;
+  this traffic cannot convert.
 
 ---
 

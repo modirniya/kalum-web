@@ -19,14 +19,6 @@ const SITE = "https://kalum.app";
 // format blocks on destination pages, evergreen pages, and the /es/ locale.
 const SEO_CONTENT_UPDATE = "2026-07-20";
 
-// The outbound-from-UAE cluster's own publication date. Kept separate from
-// SEO_CONTENT_UPDATE so adding pages never restamps the pages that did not
-// change — the cry-wolf this file exists to avoid.
-const VOIP_CLUSTER_ADDED = "2026-08-08";
-
-// Publication date of the Spanish expansion, for the same reason.
-const ES_EXPANSION = "2026-08-08";
-
 /**
  * Rate pages get a later lastmod than SEO_CONTENT_UPDATE only when their own
  * rate actually moved — the dates come from src/data/rate-changes.json, which
@@ -41,20 +33,24 @@ const ES_EXPANSION = "2026-08-08";
 const changeDates = rateChanges as Record<string, string>;
 
 /**
- * 2026-08-08: the destination pages' own copy changed, not just their rate.
- * Lowering PRICE_LED_MAX_CENTS from 50 to 10 rewrote the title, H1 and meta
- * description of 26 of the 31 pages — they stopped leading with a price and
- * started leading with the no-app-on-their-end hook.
+ * 2026-09-01: the snippet rewrite.
  *
- * That is a genuine content change and it needs to outrank the rate-derived
- * date, which sat at 2026-08-05 and would have told Google nothing happened.
- * This is NOT the cry-wolf case this file warns about: that is bumping every
- * URL because one corridor repriced. Here the pages themselves were rewritten.
+ * Supersedes the 2026-08-08 copy-change stamp, whose own note said to delete
+ * it once the affected pages had been recrawled. They were — the Search
+ * Console window ending 2026-08-30 is measuring those titles.
  *
- * Delete this once the affected pages have been recrawled — leaving it pinned
- * forever would make the date meaningless.
+ * What changed, and why it is a real content change rather than the cry-wolf
+ * this file exists to prevent: every destination page got a new title, a new
+ * meta description built from a new `numberFormat` field, and a new H2 section
+ * lifted above "How to call" so the dialing format leads the page. That window
+ * showed these pages holding positions 6-13 on `call turkey`, `call omani`,
+ * `call bahrain` and `call ethiopia` and taking zero clicks, while ranking
+ * top-ten on `010 egypt number`, `jordan phone number format` and `turkey
+ * mobile number digits` with nothing in the snippet that answered them.
+ *
+ * Delete this once these pages have been recrawled.
  */
-const COPY_CHANGE = "2026-08-08";
+const SNIPPET_REWRITE = "2026-09-01";
 
 /**
  * 2026-08-16: the rate finder shipped onto both homepages and both /call/
@@ -80,7 +76,7 @@ const later = (a: string, b: string) => (a > b ? a : b);
 function rateLastmod(dialCode: string): string {
   const changed = changeDates[dialCode];
   const rateDate = changed && changed > SEO_CONTENT_UPDATE ? changed : SEO_CONTENT_UPDATE;
-  return rateDate > COPY_CHANGE ? rateDate : COPY_CHANGE;
+  return rateDate > SNIPPET_REWRITE ? rateDate : SNIPPET_REWRITE;
 }
 
 export const GET: APIRoute = async () => {
@@ -96,23 +92,26 @@ export const GET: APIRoute = async () => {
 
   const pages: { path: string; lastmod: string }[] = [
     { path: "/", lastmod: FINDER_AND_COUNT },
-    // Was COPY_CHANGE for the hreflang pairing with /es/how-it-works/; now
+    // Was 2026-08-08 for the hreflang pairing with /es/how-it-works/; now
     // later still, because its FAQ answer and that answer's FAQPage schema
     // both changed with the count correction.
     { path: "/how-it-works/", lastmod: FINDER_AND_COUNT },
     { path: "/support/", lastmod: "2026-07-02" },
     { path: "/call-without-internet/", lastmod: FINDER_AND_COUNT },
     { path: "/calling-app-vs-internet-calling/", lastmod: FINDER_AND_COUNT },
-    { path: "/whatsapp-calls-blocked/", lastmod: SEO_CONTENT_UPDATE },
+    // Retitled 2026-09-01: 43 of its 46 named-query impressions were "gulf
+    // calling app" at position 8.5, and the title answered a WhatsApp question
+    // instead. New title, description, H1 and breadcrumb label.
+    { path: "/whatsapp-calls-blocked/", lastmod: SNIPPET_REWRITE },
     // Outbound-from-the-Gulf cluster (2026-08-08). /whatsapp-calls-blocked/
     // serves calling INTO a restricted market; these serve calling OUT of one,
     // which is the corridor shape competitors own and we had none of. Kept to
     // three deliberately — the 29 templated /call/ pages already show what
     // happens when this shape is mass-produced.
-    { path: "/call-from-uae/", lastmod: VOIP_CLUSTER_ADDED },
-    { path: "/call-india-from-uae/", lastmod: VOIP_CLUSTER_ADDED },
-    { path: "/call-pakistan-from-uae/", lastmod: VOIP_CLUSTER_ADDED },
-    { path: "/call/", lastmod: later(hubLastmod, FINDER_AND_COUNT) },
+    { path: "/call-from-uae/", lastmod: SNIPPET_REWRITE },
+    { path: "/call-india-from-uae/", lastmod: SNIPPET_REWRITE },
+    { path: "/call-pakistan-from-uae/", lastmod: SNIPPET_REWRITE },
+    { path: "/call/", lastmod: later(hubLastmod, SNIPPET_REWRITE) },
     ...priced.map((d) => ({
       path: `/call/${d.slug}/`,
       lastmod: rateLastmod(d.dialCode),
@@ -130,13 +129,13 @@ export const GET: APIRoute = async () => {
     },
     { path: "/es/call-without-internet/", lastmod: FINDER_AND_COUNT },
     { path: "/es/how-it-works/", lastmod: FINDER_AND_COUNT },
-    { path: "/es/call/", lastmod: FINDER_AND_COUNT },
+    { path: "/es/call/", lastmod: SNIPPET_REWRITE },
     ...(["colombia", "guatemala", "honduras", "el-salvador"] as const).map(
       (slug) => {
         const d = priced.find((p) => p.slug === slug);
         return {
           path: `/es/call/${slug}/`,
-          lastmod: d ? rateLastmod(d.dialCode) : ES_EXPANSION,
+          lastmod: d ? rateLastmod(d.dialCode) : SNIPPET_REWRITE,
         };
       },
     ),

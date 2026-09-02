@@ -18,6 +18,17 @@ export interface Destination {
    */
   dialingNote: string;
   /**
+   * The same fact as `dialingNote`, compressed to one clause for the meta
+   * description — digit count, the prefixes a number is written with, and the
+   * dial. Kept separate rather than truncating `dialingNote` because that note
+   * runs 140-180 characters and Google cuts a description near 160, which
+   * would clip mid-sentence exactly where the useful part is.
+   *
+   * Strictly a restatement: never assert here anything `dialingNote` does not
+   * already say, or the page and its snippet start making different claims.
+   */
+  numberFormat: string;
+  /**
    * True where voice calls on many internet apps are commonly restricted
    * (the Gulf). Drives the /whatsapp-calls-blocked/ explainer's country list,
    * the /call-from-uae/ cluster, and a cross-link callout on the destination
@@ -68,6 +79,8 @@ export const destinations: Destination[] = [
       "A landline in Guadalajara or a cell phone in Mexico City — Kalum dials Mexican numbers directly, so whoever you call just answers their phone.",
     dialingNote:
       "Mexican numbers are 10 digits, landlines and mobiles alike. Dial +52 followed by the full 10-digit number — there are no extra prefixes to add or drop.",
+    numberFormat:
+      "Mexican numbers are 10 digits — dial +52 and the full number.",
   },
   {
     slug: "egypt",
@@ -79,6 +92,8 @@ export const destinations: Destination[] = [
       "Family in Cairo, Alexandria, or anywhere in between — reach any Egyptian landline or mobile straight from your own phone.",
     dialingNote:
       "Egyptian mobiles are 10 digits starting with 1 (written locally as 010, 011, 012, or 015); landlines add a city code like 2 for Cairo. Drop the leading 0 and dial +20, then the rest of the number.",
+    numberFormat:
+      "Egyptian mobiles are 10 digits (written 010, 011, 012, or 015) — drop the 0 and dial +20.",
   },
   {
     slug: "lebanon",
@@ -90,6 +105,8 @@ export const destinations: Destination[] = [
       "Beirut, Tripoli, or up in the mountains — Kalum calls regular Lebanese phone numbers, so even when the internet over there is out, their phone still rings.",
     dialingNote:
       "Lebanese numbers are short — usually 7 or 8 digits including the prefix. If the number is written with a leading 0 (like 03 or 070), drop that 0 and dial +961, then the rest.",
+    numberFormat:
+      "Lebanese numbers are 7 or 8 digits — drop any leading 0 and dial +961.",
   },
   {
     slug: "jordan",
@@ -101,6 +118,8 @@ export const destinations: Destination[] = [
       "Amman, Irbid, Zarqa — call any Jordanian landline or mobile and it rings like any normal call.",
     dialingNote:
       "Jordanian mobiles are 9 digits starting with 7 (written locally as 077, 078, or 079). Drop the leading 0 and dial +962, then the rest of the number.",
+    numberFormat:
+      "Jordanian mobiles are 9 digits (written 077, 078, or 079) — drop the 0 and dial +962.",
   },
   {
     slug: "palestine",
@@ -112,6 +131,8 @@ export const destinations: Destination[] = [
       "Call landlines and mobiles across the West Bank and Gaza — no app, no smartphone, and no internet needed on their side.",
     dialingNote:
       "Palestinian mobiles are 9 digits starting with 5 (written locally as 059 or 056). Drop the leading 0 and dial +970, then the rest of the number.",
+    numberFormat:
+      "Palestinian mobiles are 9 digits (written 059 or 056) — drop the 0 and dial +970.",
   },
   {
     slug: "iraq",
@@ -123,6 +144,8 @@ export const destinations: Destination[] = [
       "Baghdad, Basra, Erbil — reach any Iraqi landline or mobile without asking anyone to install anything.",
     dialingNote:
       "Iraqi mobiles are 10 digits starting with 7 (written locally as 07…). Drop the leading 0 and dial +964, then the rest of the number.",
+    numberFormat:
+      "Iraqi mobiles are 10 digits written 07… — drop the 0 and dial +964.",
   },
   {
     slug: "saudi-arabia",
@@ -134,6 +157,8 @@ export const destinations: Destination[] = [
       "Riyadh, Jeddah, Dammam — call any Saudi number, landline or mobile, and it rings the way a local call does.",
     dialingNote:
       "Saudi mobiles are 9 digits starting with 5 and landlines are 9 digits starting with 1 (written locally with a leading 0). Drop that 0 and dial +966, then the rest of the number.",
+    numberFormat:
+      "Saudi mobiles are 9 digits starting with 5 — drop the leading 0 and dial +966.",
   },
   {
     slug: "uae",
@@ -145,6 +170,8 @@ export const destinations: Destination[] = [
       "Dubai, Abu Dhabi, Sharjah — voice calls on many internet apps are restricted in the UAE, so Kalum dials regular UAE phone numbers instead.",
     dialingNote:
       "UAE mobiles are 9 digits starting with 5 (written locally as 050, 052, 054, 055, 056, or 058). Drop the leading 0 and dial +971, then the rest of the number.",
+    numberFormat:
+      "UAE mobiles are 9 digits (written 050, 052, 054, 055, 056, or 058) — drop the 0 and dial +971.",
     voipRestricted: true,
   },
   {
@@ -157,6 +184,8 @@ export const destinations: Destination[] = [
       "Sanaa, Aden, Taiz — call any Yemeni landline or mobile; there is nothing to download or set up on their end.",
     dialingNote:
       "Yemeni mobiles are 9 digits starting with 7 (written locally with a leading 0). Drop that 0 and dial +967, then the rest of the number.",
+    numberFormat:
+      "Yemeni mobiles are 9 digits starting with 7 — drop the leading 0 and dial +967.",
   },
   {
     slug: "turkey",
@@ -168,6 +197,8 @@ export const destinations: Destination[] = [
       "Istanbul, Ankara, Izmir — any Turkish number, landline or mobile, dialed straight from the phone in your hand.",
     dialingNote:
       "Turkish numbers are 10 digits — mobiles start with 5, landlines with a city code like 212 or 216 in Istanbul. Drop the leading 0 and dial +90, then the full 10-digit number.",
+    numberFormat:
+      "Turkish numbers are 10 digits, mobiles starting with 5 — drop the leading 0 and dial +90.",
   },
   {
     slug: "kuwait",
@@ -179,6 +210,8 @@ export const destinations: Destination[] = [
       "Kuwait City, Hawalli, Salmiya — call any Kuwaiti landline or mobile, with nothing to install or sign up for on their end.",
     dialingNote:
       "Kuwaiti numbers are 8 digits with no leading zero — mobiles start with 5, 6, or 9. Dial +965 and then the full 8-digit number.",
+    numberFormat:
+      "Kuwaiti numbers are 8 digits with no leading zero — dial +965 and the full number.",
   },
   {
     slug: "qatar",
@@ -190,6 +223,8 @@ export const destinations: Destination[] = [
       "Doha, Al Rayyan, Al Wakrah — voice calls on many internet apps are restricted in Qatar, so Kalum dials regular Qatari phone numbers instead.",
     dialingNote:
       "Qatari numbers are 8 digits with no leading zero — mobiles start with 3, 5, 6, or 7. Dial +974 and then the full 8-digit number.",
+    numberFormat:
+      "Qatari numbers are 8 digits with no leading zero — dial +974 and the full number.",
     voipRestricted: true,
   },
   {
@@ -202,6 +237,8 @@ export const destinations: Destination[] = [
       "Muscat, Salalah, Sohar — call any Omani landline or mobile, with nothing to install or sign up for on their end.",
     dialingNote:
       "Omani numbers are 8 digits with no leading zero — mobiles start with 7 or 9. Dial +968 and then the full 8-digit number.",
+    numberFormat:
+      "Omani numbers are 8 digits with no leading zero — dial +968 and the full number.",
     // voipRestricted removed 2026-08: Oman's long-standing WhatsApp-calling
     // block was widely reported lifted in December 2024, and users have since
     // reported calls connecting without a VPN. The TRA never announced a
@@ -219,6 +256,8 @@ export const destinations: Destination[] = [
       "Manama, Riffa, Muharraq — reach any Bahraini landline or mobile; there's nothing for them to download or set up.",
     dialingNote:
       "Bahraini numbers are 8 digits with no leading zero — mobiles start with 3. Dial +973 and then the full 8-digit number.",
+    numberFormat:
+      "Bahraini numbers are 8 digits with no leading zero — dial +973 and the full number.",
   },
   {
     slug: "sudan",
@@ -230,6 +269,8 @@ export const destinations: Destination[] = [
       "Khartoum, Omdurman, Port Sudan — Kalum calls regular Sudanese phone numbers, so even when the internet over there is out, their phone still rings.",
     dialingNote:
       "Sudanese mobiles are nine digits starting with 9, written locally with a leading 0 (09…). Drop the leading 0 and dial +249, then the rest of the number.",
+    numberFormat:
+      "Sudanese mobiles are 9 digits written 09… — drop the leading 0 and dial +249.",
   },
   {
     slug: "guatemala",
@@ -241,6 +282,8 @@ export const destinations: Destination[] = [
       "Guatemala City, Quetzaltenango, Escuintla — call any Guatemalan landline or mobile, no app or internet needed on their end.",
     dialingNote:
       "Guatemalan numbers are 8 digits with no leading zero — mobiles start with 3, 4, or 5. Dial +502 and then the full 8-digit number.",
+    numberFormat:
+      "Guatemalan numbers are 8 digits with no leading zero — dial +502 and the full number.",
   },
   {
     slug: "el-salvador",
@@ -252,6 +295,8 @@ export const destinations: Destination[] = [
       "San Salvador, Santa Ana, San Miguel — reach any Salvadoran landline or mobile, with nothing to set up on their side.",
     dialingNote:
       "Salvadoran numbers are 8 digits with no leading zero — mobiles start with 6 or 7. Dial +503 and then the full 8-digit number.",
+    numberFormat:
+      "Salvadoran numbers are 8 digits with no leading zero — dial +503 and the full number.",
   },
   {
     slug: "honduras",
@@ -263,6 +308,8 @@ export const destinations: Destination[] = [
       "Tegucigalpa, San Pedro Sula, La Ceiba — call any Honduran landline or mobile, no app or internet needed on their end.",
     dialingNote:
       "Honduran numbers are 8 digits with no leading zero — mobiles usually start with 3, 8, or 9. Dial +504 and then the full 8-digit number.",
+    numberFormat:
+      "Honduran numbers are 8 digits with no leading zero — dial +504 and the full number.",
   },
   {
     slug: "colombia",
@@ -274,6 +321,8 @@ export const destinations: Destination[] = [
       "Bogotá, Medellín, Cali — call any Colombian landline or mobile, no app or internet needed on their end.",
     dialingNote:
       "Colombian mobiles are 10 digits starting with 3. Dial +57 and then the full 10-digit number; landlines add a city code like 1 for Bogotá.",
+    numberFormat:
+      "Colombian mobiles are 10 digits starting with 3 — dial +57 and the full number.",
   },
   {
     slug: "india",
@@ -285,6 +334,8 @@ export const destinations: Destination[] = [
       "Delhi, Mumbai, Chennai, or a village landline — reach any Indian number, with nothing to install on their end.",
     dialingNote:
       "Indian mobiles are 10 digits starting with 6, 7, 8, or 9. Drop any leading 0 and dial +91, then the full 10-digit number.",
+    numberFormat:
+      "Indian mobiles are 10 digits starting with 6, 7, 8, or 9 — drop any leading 0 and dial +91.",
   },
   {
     slug: "pakistan",
@@ -296,6 +347,8 @@ export const destinations: Destination[] = [
       "Karachi, Lahore, Islamabad — call any Pakistani landline or mobile; there's nothing for them to download.",
     dialingNote:
       "Pakistani mobiles are 10 digits starting with 3 (written locally as 03…). Drop the leading 0 and dial +92, then the rest of the number.",
+    numberFormat:
+      "Pakistani mobiles are 10 digits written 03… — drop the 0 and dial +92.",
   },
   {
     slug: "bangladesh",
@@ -307,6 +360,8 @@ export const destinations: Destination[] = [
       "Dhaka, Chattogram, Sylhet — reach any Bangladeshi landline or mobile, no app or internet needed on their end.",
     dialingNote:
       "Bangladeshi mobiles are 10 digits starting with 1 (written locally as 01…). Drop the leading 0 and dial +880, then the rest of the number.",
+    numberFormat:
+      "Bangladeshi mobiles are 10 digits written 01… — drop the 0 and dial +880.",
   },
   {
     slug: "nepal",
@@ -318,6 +373,8 @@ export const destinations: Destination[] = [
       "Kathmandu, Pokhara, or a hillside village — call any Nepali landline or mobile, with nothing to set up on their side.",
     dialingNote:
       "Nepali mobiles are 10 digits starting with 98 or 97. Dial +977 and then the full 10-digit number.",
+    numberFormat:
+      "Nepali mobiles are 10 digits starting with 98 or 97 — dial +977 and the full number.",
   },
   {
     slug: "sri-lanka",
@@ -329,6 +386,8 @@ export const destinations: Destination[] = [
       "Colombo, Kandy, Jaffna — reach any Sri Lankan landline or mobile, no app or internet needed on their end.",
     dialingNote:
       "Sri Lankan mobiles are 9 digits starting with 7 (written locally as 07…). Drop the leading 0 and dial +94, then the rest of the number.",
+    numberFormat:
+      "Sri Lankan mobiles are 9 digits written 07… — drop the 0 and dial +94.",
   },
   {
     slug: "philippines",
@@ -340,6 +399,8 @@ export const destinations: Destination[] = [
       "Manila, Cebu, Davao — call any Philippine landline or mobile; they just answer their phone, no app needed.",
     dialingNote:
       "Philippine mobiles are 10 digits starting with 9 (written locally as 09…). Drop the leading 0 and dial +63, then the rest of the number.",
+    numberFormat:
+      "Philippine mobiles are 10 digits written 09… — drop the 0 and dial +63.",
   },
   {
     slug: "vietnam",
@@ -351,6 +412,8 @@ export const destinations: Destination[] = [
       "Hanoi, Ho Chi Minh City, Da Nang — reach any Vietnamese landline or mobile, no app or internet needed on their end.",
     dialingNote:
       "Vietnamese mobiles are 9 digits starting with 3, 5, 7, 8, or 9 (written locally with a leading 0). Drop the leading 0 and dial +84, then the rest of the number.",
+    numberFormat:
+      "Vietnamese mobiles are 9 digits — drop the leading 0 and dial +84.",
   },
   {
     slug: "afghanistan",
@@ -362,6 +425,8 @@ export const destinations: Destination[] = [
       "Kabul, Herat, Mazar-i-Sharif — Kalum calls regular Afghan phone numbers, so even when the internet over there is down, their phone still rings.",
     dialingNote:
       "Afghan mobiles are 9 digits starting with 7 (written locally as 07…). Drop the leading 0 and dial +93, then the rest of the number.",
+    numberFormat:
+      "Afghan mobiles are 9 digits written 07… — drop the 0 and dial +93.",
   },
   {
     slug: "nigeria",
@@ -373,6 +438,8 @@ export const destinations: Destination[] = [
       "Lagos, Abuja, Kano — call any Nigerian landline or mobile, with nothing to install or sign up for on their end.",
     dialingNote:
       "Nigerian mobiles are 10 digits starting with 7, 8, or 9 (written locally with a leading 0). Drop the leading 0 and dial +234, then the rest of the number.",
+    numberFormat:
+      "Nigerian mobiles are 10 digits starting with 7, 8, or 9 — drop the leading 0 and dial +234.",
   },
   {
     slug: "ghana",
@@ -384,6 +451,8 @@ export const destinations: Destination[] = [
       "Accra, Kumasi, Tamale — reach any Ghanaian landline or mobile; there's nothing for them to download or set up.",
     dialingNote:
       "Ghanaian mobiles are 9 digits starting with 2 or 5 (written locally with a leading 0). Drop the leading 0 and dial +233, then the rest of the number.",
+    numberFormat:
+      "Ghanaian mobiles are 9 digits starting with 2 or 5 — drop the leading 0 and dial +233.",
   },
   {
     slug: "kenya",
@@ -395,6 +464,8 @@ export const destinations: Destination[] = [
       "Nairobi, Mombasa, Kisumu — call any Kenyan landline or mobile, no app or internet needed on their end.",
     dialingNote:
       "Kenyan mobiles are 9 digits starting with 7 or 1 (written locally as 07… or 01…). Drop the leading 0 and dial +254, then the rest of the number.",
+    numberFormat:
+      "Kenyan mobiles are 9 digits written 07… or 01… — drop the 0 and dial +254.",
   },
   {
     slug: "ethiopia",
@@ -406,6 +477,8 @@ export const destinations: Destination[] = [
       "Addis Ababa, Dire Dawa, Bahir Dar — Kalum calls regular Ethiopian phone numbers, so even when the internet over there is out, their phone still rings.",
     dialingNote:
       "Ethiopian mobiles are 9 digits starting with 9 (written locally as 09…). Drop the leading 0 and dial +251, then the rest of the number.",
+    numberFormat:
+      "Ethiopian mobiles are 9 digits written 09… — drop the 0 and dial +251.",
   },
 ];
 

@@ -15,8 +15,14 @@ const countries = await coverage();
 const { card, priced } = await pricedDestinations();
 const from = fromPrefix(card.basis);
 
-// Lead the title with the cheapest listed rate so the hook self-updates with
-// the rate card — no hardcoded figure to drift.
+// Kept for the hero copy, not for the title. The title used to lead with this
+// figure and it was a bid on a SERP this site loses: over the three months to
+// 2026-08-30 the hub took 33 rate-comparison queries — "international calling
+// rates", "cheap calls to iraq", "cheapest local call rates sudan" — for 95
+// impressions, zero clicks, at an average position of 43. Rivals' retail beats
+// our cost on those corridors, so leading with a number hands the reader the
+// comparison before the click. The dial-code framing below targets the intent
+// the destination pages actually rank for instead.
 const minRate = Math.min(...priced.map((d) => d.rateCents));
 
 // Group destinations by region for a scannable index. Fixed display order;
@@ -33,8 +39,8 @@ const grouped = regionOrder
 ---
 
 <BaseLayout
-  title={`International Calling Rates by Country — from ${minRate}¢/min | Kalum`}
-  description="Per-minute rates for cheap international calls with Kalum — Mexico, India, the Philippines, Egypt, Nigeria, and more. Landlines and mobiles, no app needed on their end."
+  title={`Country Codes & Calling Rates — ${priced.length} Destinations | Kalum`}
+  description={`Country dialing codes, number formats, and per-minute rates for ${priced.length} destinations — Mexico, India, the Philippines, Egypt, Nigeria, and more. No app or internet needed on their end.`}
   canonical="https://kalum.app/call/"
   alternates={alternatesFor("/call/")}
 >
@@ -44,7 +50,7 @@ const grouped = regionOrder
         Destinations
       </p>
       <h1 class="mt-4 text-4xl font-extrabold leading-[1.05] tracking-display text-[var(--color-text)] sm:text-5xl">
-        Cheap international calls, by destination.
+        Country codes and calling rates, by destination.
       </h1>
       <p class="mt-5 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
         Per-minute rates to landlines and mobiles, and the person you call
