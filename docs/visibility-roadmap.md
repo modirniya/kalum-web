@@ -477,6 +477,77 @@ it regardless of whether these pages improved. Compare per-page, per-query.
 
 ---
 
+## Phase 8b — Crawl audit and the internal-link fix — DONE (2026-09-02)
+
+Phase 8 rewrote what the snippets say. This is about whether Google ever sees
+them. Method: the Search Console **URL Inspection API** over all 50 sitemap
+URLs, joined against inbound internal-link counts computed from `dist/`.
+Reproduce it with the service account — see the memory note on GSC API access.
+
+**Four pages had never been crawled.** All four return 200, self-canonical,
+carry no `noindex`, and have been in the sitemap for weeks:
+
+| URL | inbound links | live since |
+|---|---|---|
+| `/call-pakistan-from-uae/` | 1 | 2026-08-08 |
+| `/es/call/el-salvador/` | 2 | 2026-08-08 |
+| `/es/call/guatemala/` | 2 | 2026-08-08 |
+| `/es/call/mexico/` | 9 | 2026-07-20 |
+
+Three of those are Spanish, on the site's best-converting surface (5.56% CTR
+against a 0.88% site average). Three of the eight `/es/` pages had never been
+seen. That is the largest single piece of unrealised work the audit found, and
+it was invisible from the GSC UI export, which can only show pages that have
+impressions — a page Google has never fetched has none, so it is absent from
+the very report you would go looking in.
+
+**What link count explains, and what it does not.** It explains the orphans and
+only the orphans: every page with ≤4 inbound links was 23 days stale or never
+crawled. Above ~7 links it stops predicting — `/call/india/` and
+`/call/nigeria/` carry 43 inbound links and sit at 40 and 35 days, while
+`/call/turkey/` carries the same 43 and is crawled daily. An earlier draft of
+this said links "predict crawl age almost perfectly"; that was written off an
+18-URL sample and the full sweep does not support it. The narrow claim is the
+true one: **a page almost nothing links to does not get crawled.**
+
+Shipped:
+
+- [x] **`src/lib/corridors.ts`** — one table for the from-UAE cluster, so its
+      cross-links are generated rather than hand-written per page (which is how
+      they were missed). Each corridor now gets a link from its origin
+      destination page, its target destination page, and the Gulf explainer:
+      1-2 inbound each → 4. The explainer link is the one that counts, since it
+      is footer-linked sitewide and crawled daily, and discovery follows links
+      from frequently-crawled pages.
+- [x] **Corridor headings split by reader.** `/call/uae/` asks "In the UAE and
+      your app calls won't connect?"; `/call/india/` asks "Calling India from a
+      country that restricts app calls?". One shared string was wrong on one.
+- [x] **Footer label** still read "WhatsApp calls blocked?" after that page was
+      retitled in Phase 8.
+- [x] **Sitemap stamp corrected to UTC.** Phase 8 was stamped 2026-09-01 from a
+      local clock while the deploy landed 2026-09-02T04:14Z. Beyond being
+      wrong, it would have hidden the change from the scheduled IndexNow run:
+      that path in `deploy.yml` matches `lastmod` against the UTC date.
+
+Deliberately not done:
+
+- [~] **Footer links for the corridor cluster.** Would take them to ~43 inbound
+      each, and three UAE-specific links on every Spanish page about Honduras
+      is precisely the diaspora-first drift the positioning note rejects. The
+      hub that is already footer-linked carries them instead.
+
+**Owner action — request indexing** (URL Inspection → Request Indexing, ~10/day).
+Tier 1 is the four never-crawled URLs above; they do not exist in Google and
+the link fix only helps once the linking pages are themselves recrawled. Tier 2,
+by impressions × staleness: `/call/jordan/` (67 impr, 24d), `/call/oman/`
+(51, 29d), `/call/saudi-arabia/` (36, 60d), `/call/sudan/` (22, 32d),
+`/call-india-from-uae/` (23, 23d), `/call/lebanon/` (14, 40d).
+
+**Re-run the sweep** whenever a page cluster is added — it is cheap, and it is
+the only way to catch a page that was published, linked once, and never seen.
+
+---
+
 ## Explicitly not planned (verifier-rejected — do not resurrect)
 
 - HowTo, new FAQ rich-result work, SearchAction, Speakable markup —

@@ -10,12 +10,19 @@
  *   /call-india-from-uae/      1 inbound link    last crawled 23 days ago
  *   /call-from-uae/            2 inbound links   last crawled 23 days ago
  *
- * Against the rest of the site, where inbound links predict crawl age almost
- * perfectly: /call/turkey/ and /whatsapp-calls-blocked/ carry 42-43 inbound
- * links and are crawled daily. /call-pakistan-from-uae/ hung off exactly one
- * link, from a page that is itself crawled monthly, and Googlebot never
- * arrived — it is a 200, it self-canonicals, it is in the sitemap, and it does
- * not exist as far as Search is concerned.
+ * A full sweep of all 50 sitemap URLs the same day found what link count does
+ * and does not explain. It explains the orphans, and only the orphans: every
+ * page carrying four inbound links or fewer was 23 days stale or had never
+ * been crawled at all. Above roughly seven links it stops predicting anything
+ * — /call/india/ and /call/nigeria/ both carry 43 inbound links and sit at 40
+ * and 35 days, while /call/turkey/ carries the same 43 and is crawled daily.
+ * Whatever sets cadence up there, it is not internal links.
+ *
+ * So the rule this file encodes is narrow and worth stating narrowly: a page
+ * that almost nothing links to does not get crawled. /call-pakistan-from-uae/
+ * hung off exactly one link, from a page itself crawled monthly, and Googlebot
+ * never arrived — it is a 200, it self-canonicals, it is in the sitemap, and
+ * it does not exist as far as Search is concerned.
  *
  * This table exists so the cross-links are generated from one place instead of
  * hand-written per page, which is how they got missed the first time. Adding a
