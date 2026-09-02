@@ -5,6 +5,7 @@ import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import RateDisclosure from "../components/RateDisclosure.astro";
 import { coverage } from "../lib/rates";
+import { corridors } from "../lib/corridors";
 
 const countries = await coverage();
 import {
@@ -192,6 +193,50 @@ const structuredData = {
           class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
         >Calling app vs internet calling apps &rarr;</a>
       </p>
+    </div>
+  </section>
+
+  <!--
+    Calling OUT of a restricted market.
+
+    The cards above serve calling INTO the Gulf; these serve being there and
+    calling home, which is the more common version of the problem and the one
+    the corridor pages were written for. They belong here on the merits, and
+    this page is also the best link source on the site for them: it is
+    footer-linked sitewide, carries 42 inbound links, and Google crawls it
+    daily. The corridor pages had one inbound link each and one of them had
+    never been crawled at all. See src/lib/corridors.ts.
+  -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+        Calling home from the Gulf
+      </h2>
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
+        If you are the one in a country where app calls are restricted, these
+        pages cover dialling out — the codes, the number formats, and what each
+        route costs.
+      </p>
+
+      <ul class="mt-10 grid gap-4 sm:grid-cols-2">
+        {
+          corridors.map((c) => (
+            <li>
+              <a
+                href={c.path}
+                class="block h-full rounded-2xl border border-black/5 bg-[var(--color-cream)] p-6 transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
+              >
+                <span class="block text-lg font-bold text-[var(--color-text)]">
+                  {c.label} &rarr;
+                </span>
+                <span class="mt-2 block text-base leading-relaxed text-[var(--color-muted)]">
+                  {c.blurb}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 

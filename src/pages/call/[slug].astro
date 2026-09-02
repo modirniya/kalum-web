@@ -4,6 +4,7 @@ import AppStoreBadge from "../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
 import RateDisclosure from "../../components/RateDisclosure.astro";
 import { featuredSlugs, nameAtSentenceStart } from "../../lib/destinations";
+import { corridorsFrom, corridorsTo } from "../../lib/corridors";
 import {
   pricedDestinations,
   formatRate,
@@ -166,6 +167,21 @@ const title = priceLed
 const description = priceLed
   ? `${d.numberFormat} Call ${d.name} ${preposition} ${rate} a minute with Kalum — no app or internet on their end.`
   : `${d.numberFormat} Call any ${d.demonym} landline or mobile with Kalum — no app or internet on their end.`;
+
+/**
+ * Corridor cross-links, kept as two lists because they address opposite
+ * readers and cannot share a heading. On `/call/uae/` the corridors START
+ * there — that reader may be the caller, in the Gulf, dialling out. On
+ * `/call/india/` and `/call/pakistan/` the corridor ENDS there, and the reader
+ * is the one being called from the Gulf. Most destinations have neither and
+ * render nothing.
+ *
+ * This is half of the fix for the corridor cluster being effectively orphaned
+ * — see src/lib/corridors.ts. It is also just correct on its own terms: a
+ * reader on /call/india/ who happens to be in Dubai wants that page.
+ */
+const corridorsOut = corridorsFrom(d.slug);
+const corridorsIn = corridorsTo(d.slug);
 
 const canonical = `https://kalum.app/call/${d.slug}/`;
 /** Dollars-per-minute, the form schema.org wants. */
@@ -364,6 +380,37 @@ const structuredData = {
       </div>
     </div>
   </section>
+
+  {
+    (corridorsOut.length > 0 || corridorsIn.length > 0) && (
+      <section class="bg-white pt-16 md:pt-20">
+        <div class="mx-auto max-w-4xl px-5 md:px-8">
+          <h2 class="text-2xl font-extrabold tracking-display text-[var(--color-text)] sm:text-3xl">
+            {corridorsOut.length > 0
+              ? `In ${d.name} and your app calls won't connect?`
+              : `Calling ${d.name} from a country that restricts app calls?`}
+          </h2>
+          <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+            {[...corridorsOut, ...corridorsIn].map((c) => (
+              <li>
+                <a
+                  href={c.path}
+                  class="block h-full rounded-2xl border border-black/5 bg-[var(--color-cream)] p-6 transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
+                >
+                  <span class="block text-lg font-bold text-[var(--color-text)]">
+                    {c.label} &rarr;
+                  </span>
+                  <span class="mt-2 block text-base leading-relaxed text-[var(--color-muted)]">
+                    {c.blurb}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
 
   <!-- How to call -->
   <section class="bg-white py-20 md:py-28">

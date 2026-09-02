@@ -48,9 +48,20 @@ const changeDates = rateChanges as Record<string, string>;
  * top-ten on `010 egypt number`, `jordan phone number format` and `turkey
  * mobile number digits` with nothing in the snippet that answered them.
  *
+ * 2026-09-02 covers a second pass the same UTC day: the from-UAE corridor
+ * cluster was effectively orphaned — one inbound link each, and URL Inspection
+ * showed /call-pakistan-from-uae/ had never been crawled at all — so it is now
+ * cross-linked from its origin and target destination pages and from the Gulf
+ * explainer. See src/lib/corridors.ts.
+ *
+ * Dates here are UTC, not local. The first pass was stamped 2026-09-01 from a
+ * local clock while the deploy actually landed at 2026-09-02T04:14Z, which
+ * would also have hidden it from the scheduled IndexNow run — that path
+ * compares lastmod against the UTC date and would never have matched.
+ *
  * Delete this once these pages have been recrawled.
  */
-const SNIPPET_REWRITE = "2026-09-01";
+const SNIPPET_REWRITE = "2026-09-02";
 
 /**
  * 2026-08-16: the rate finder shipped onto both homepages and both /call/
@@ -99,7 +110,7 @@ export const GET: APIRoute = async () => {
     { path: "/support/", lastmod: "2026-07-02" },
     { path: "/call-without-internet/", lastmod: FINDER_AND_COUNT },
     { path: "/calling-app-vs-internet-calling/", lastmod: FINDER_AND_COUNT },
-    // Retitled 2026-09-01: 43 of its 46 named-query impressions were "gulf
+    // Retitled 2026-09-02: 43 of its 46 named-query impressions were "gulf
     // calling app" at position 8.5, and the title answered a WhatsApp question
     // instead. New title, description, H1 and breadcrumb label.
     { path: "/whatsapp-calls-blocked/", lastmod: SNIPPET_REWRITE },
