@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import AppStoreBadge from "../../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
+import LanguageBar from "../../components/LanguageBar.astro";
 import { alternatesFor } from "../../lib/i18n";
 import { coverage } from "../../lib/rates";
 
@@ -92,6 +93,8 @@ const structuredData = {
       <p class="mt-5 text-sm text-white/70">
         Empieza con $4.99. Sin suscripción. Tu saldo nunca vence.
       </p>
+
+      <LanguageBar path="/es/call-without-internet/" label="También en:" tone="light" class="mt-8" />
     </div>
   </section>
 
@@ -174,7 +177,7 @@ const structuredData = {
                     +
                   </span>
                 </summary>
-                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
+                <p class="mt-3 pe-10 text-base leading-relaxed text-[var(--color-muted)]">
                   {faq.a}
                 </p>
               </details>

@@ -1,0 +1,208 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AppStoreBadge from "./AppStoreBadge.astro";
+import GooglePlayBadge from "./GooglePlayBadge.astro";
+import Breadcrumb from "./Breadcrumb.astro";
+import LanguageBar from "./LanguageBar.astro";
+import { alternatesFor, LOCALES, type Locale } from "../lib/i18n";
+import { NO_INTERNET_COPY } from "../lib/no-internet-copy";
+import { coverage } from "../lib/rates";
+
+/**
+ * Shared body for the single-page locales of /call-without-internet/.
+ *
+ * Structure mirrors the English and Spanish pages section for section — hero,
+ * "you need internet, they don't", who it's for, links to destination pages,
+ * FAQ, CTA — so the three pages remain the same page in different languages
+ * rather than three products. Prose comes from src/lib/no-internet-copy.ts,
+ * the destination count from the live rate card, exactly as the originals.
+ *
+ * Direction and font come from LOCALES; the layout uses logical properties
+ * (ms-/me-/ps-/pe-/text-start) so the same markup flips correctly for Arabic
+ * and Urdu with no per-direction branches.
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const copy = NO_INTERNET_COPY[locale];
+if (!copy) {
+  throw new Error(`NoInternetPage: no copy for locale "${locale}" in no-internet-copy.ts`);
+}
+const meta = LOCALES[locale];
+const countries = await coverage();
+
+const path = `/${locale}/call-without-internet/`;
+const canonical = `https://kalum.app${path}`;
+const faqs = copy.faqs(countries);
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+
+// Label before the language list, in this page's language. Kept in the copy
+// table's spirit — short, and not a claim.
+const alsoIn: Record<Locale, string> = {
+  en: "Also in:",
+  es: "También en:",
+  ar: "بلغات أخرى:",
+  tr: "Diğer diller:",
+  hi: "अन्य भाषाएँ:",
+  ur: "دیگر زبانیں:",
+  bn: "অন্য ভাষায়:",
+  tl: "Sa ibang wika:",
+  vi: "Ngôn ngữ khác:",
+};
+---
+
+<BaseLayout
+  title={copy.title}
+  description={copy.description(countries)}
+  canonical={canonical}
+  lang={locale}
+  dir={meta.dir}
+  alternates={alternatesFor(path)}
+>
+  <!-- Hero -->
+  <section class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -start-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 end-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <Breadcrumb items={[{ name: copy.crumbHome, href: "/" }, { name: copy.crumbSelf }]} />
+      <p class="eyebrow text-[var(--color-teal-light)]">{copy.eyebrow}</p>
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.15] tracking-display sm:text-5xl lg:text-6xl">
+        {copy.h1[0]}
+        <span class="block text-white/85">{copy.h1[1]}</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        {copy.intro(countries)}
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm={copy.utm} />
+        <GooglePlayBadge size="lg" utm={copy.utm} />
+      </div>
+
+      <p class="mt-5 text-sm text-white/70">{copy.finePrint}</p>
+
+      <LanguageBar path={path} label={alsoIn[locale]} tone="light" class="mt-8" />
+    </div>
+  </section>
+
+  <!-- Explainer -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+        {copy.explainerH2}
+      </h2>
+      <div class="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-muted)]">
+        {copy.explainer.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Who this is for -->
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-6xl px-5 md:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+          {copy.reasonsH2}
+        </h2>
+      </div>
+
+      <div class="mt-14 grid gap-6 md:grid-cols-3">
+        {
+          copy.reasons.map((reason) => (
+            <div class="rounded-2xl border border-black/5 bg-white p-8 shadow-sm">
+              <h3 class="text-xl font-bold text-[var(--color-text)]">{reason.title}</h3>
+              <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">{reason.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Destination links (English pages, and says so) -->
+  <section class="bg-white py-16 md:py-20">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <h2 class="text-2xl font-extrabold tracking-display text-[var(--color-text)] sm:text-3xl">
+        {copy.destinationsH2}
+      </h2>
+      <ul class="mt-6 flex flex-wrap gap-3">
+        {
+          copy.destinations.map((d) => (
+            <li>
+              <a
+                href={d.href}
+                hreflang="en"
+                class="inline-block rounded-full border border-black/10 bg-[var(--color-cream)] px-4 py-2 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-maroon)] hover:text-[var(--color-maroon)] transition"
+              >
+                {d.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-4 text-sm text-[var(--color-muted)]">{copy.destinationsNote}</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+        {copy.faqH2}
+      </h2>
+
+      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
+        {
+          faqs.map((faq) => (
+            <li>
+              <details class="group py-5">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
+                  <span>{faq.q}</span>
+                  <span
+                    aria-hidden="true"
+                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p class="mt-3 pe-10 text-base leading-relaxed text-[var(--color-muted)]">
+                  {faq.a}
+                </p>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl">{copy.ctaH2}</h2>
+      <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
+        {copy.ctaBody(countries)}
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm={copy.utm} />
+        <GooglePlayBadge size="lg" utm={copy.utm} />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</BaseLayout>

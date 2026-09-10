@@ -265,14 +265,13 @@ switcher only.
       positive signal. When scaling Spanish past Mexico, move destination
       strings into a per-locale table beside `destinations.ts` and add
       `/es/call/` with Spanish country names.
-- [ ] **Step 4 — Arabic `/ar/` (conditional on Step 3):** homepage +
-      `/ar/call/{egypt,iraq,lebanon,jordan,saudi-arabia}/`. Real RTL work:
-      `dir="rtl"` via BaseLayout prop; self-hosted
-      `@fontsource/noto-sans-arabic` (Inter has no Arabic glyphs); replace
-      physical Tailwind utilities (`pr-10`, `right-5`, `text-left`) with
-      logical ones; drop `tracking-[...]` letter-spacing on Arabic text.
-      Seed English source from `docs/mena-copy-archive.md`. Do not start
-      without a native Arabic reviewer lined up.
+- [~] **Step 4 — Arabic `/ar/`: SUPERSEDED by Phase 9 (2026-09-10).** The
+      plan here was a homepage plus five Arabic destination pages — six
+      rate-led pages in the intent the site loses. Phase 9 ships one Arabic
+      page in the intent it wins instead, and six other languages alongside
+      it, for less than this step would have cost. The RTL groundwork this
+      step scoped (Noto face, `dir` prop, logical utilities, no letter-spacing
+      on Arabic) all landed there. Do not build the tree.
 
 **Done when (per step):** Step 1 emits nothing until alternates exist;
 Step 2 pages fully translated + hreflang validates; Step 3 documented in
@@ -548,12 +547,117 @@ the only way to catch a page that was published, linked once, and never seen.
 
 ---
 
+## Phase 9 — Seven single-page locales — DONE (2026-09-10)
+
+`/call-without-internet/` now exists in nine languages. The seven new ones are
+**single-page locales**: one URL each, no tree.
+
+| locale | URL | script | why this corridor |
+|---|---|---|---|
+| ar | `/ar/call-without-internet/` | Arabic, RTL | 13 of 31 destinations are MENA; the UAE is the #3 country by impressions |
+| tr | `/tr/call-without-internet/` | Latin | Turkey #6, and Germany (141 impr) + Netherlands (80) are Turkish-diaspora countries; a Dutch `turkije bellen` query already leaked through |
+| hi | `/hi/call-without-internet/` | Devanagari | India #2 (730 impr) |
+| ur | `/ur/call-without-internet/` | Nastaliq, RTL | Pakistan #5, with the best CTR on the site (3.08%) |
+| bn | `/bn/call-without-internet/` | Bengali | Bangladesh (87 impr) |
+| tl | `/tl/call-without-internet/` | Latin | Philippines (139 impr) |
+| vi | `/vi/call-without-internet/` | Latin (Jakarta's Vietnamese subset) | Vietnam (89 impr) |
+
+**Why this page and not the destinations.** Over the three months to
+2026-08-30 the no-internet page was the only non-brand intent beating the
+site-average CTR, and it did so in both languages it existed in: English 1.58%
+at position 13.1, Spanish 1.52% at position 7.6, the query cluster itself 3.7%
+against 0.88%. It is the one claim a rival rate page cannot copy, and it reads
+the same to a Cairo landline as to a Manila keypad phone. Translating the
+destination tree would have been 31 rate-led pages per language in the intent
+the site loses. One page per language in the intent it wins is the bet.
+
+**Why the searcher's language, not the destination's.** The person searching
+is in the US, the Gulf or Europe, not in Egypt. The languages are diaspora
+languages, ranked by corridor weight from the country export — the query data
+cannot rank them, because you cannot get impressions in a language you have no
+page in. What leaked through (8 Arabic-script impressions, one Dutch query, one
+Russian) confirms demand exists; it does not size it. Each language gets the
+Spanish treatment: an 8–12 week checkpoint before anything is built on it.
+
+Shipped:
+
+- [x] **`src/lib/i18n.ts` generalised** from EN↔ES pairs to N-language groups.
+      `LOCALES` carries endonym, direction, og:locale and font per locale;
+      `localizedGroups` lists every language a page exists in;
+      `alternatesFor()` emits the full set plus x-default. Header keeps a single
+      language link (EN from any locale, ES from English); pages with many
+      languages carry `LanguageBar.astro` instead.
+- [x] **`src/lib/chrome.ts`** — header and footer strings for all nine
+      locales. The roadmap's gating rule names nav explicitly, so no locale
+      ships in an English frame. Single-page locales link "Destinations" and
+      "Support" to the English pages with a translated label that says so —
+      the same honesty the Spanish hub applies to destinations it lacks.
+- [x] **`src/lib/no-internet-copy.ts`** — the seven pages' copy, purpose-
+      written per corridor (Cairo landlines and the Gulf for Arabic; Berlin
+      and Rotterdam for Turkish; an OFW in Riyadh for Tagalog) and held to the
+      English page's exact claim set, which the file's header enumerates. A
+      translation that reads better by adding a claim is wrong.
+- [x] **`NoInternetPage.astro`** — one shared body, section-for-section the
+      same page as the originals, on logical properties (`ms-`/`pe-`/`end-`)
+      so RTL needs no branches. English and Spanish stay hand-written: both
+      are indexed and earning, and churning them to prove a pattern is the
+      call `_destinations-es.ts` already declined for Mexico.
+- [x] **Script faces**: Noto Sans Arabic, Noto Nastaliq Urdu, Noto Sans
+      Devanagari, Noto Sans Bengali, self-hosted via fontsource, declared
+      globally behind `unicode-range` (no font bytes on pages without the
+      script), preloaded only on the page that paints with them. Jakarta
+      stays first in every stack so "Kalum", "$4.99" and "Wi-Fi" keep the
+      house letterforms. Urdu gets Nastaliq rather than Naskh because Naskh
+      Urdu reads as "typed in Arabic".
+- [x] **Leading and tracking per script**, declared *outside* `@layer` so they
+      beat Tailwind's `leading-[…]`, `tracking-display` and `.eyebrow`. Inside
+      `@layer base` they silently lost: the Urdu hero rendered at Latin leading
+      and its two lines collided, and the Bengali eyebrow's letter-spacing
+      broke its conjuncts.
+- [x] **Inbound links on day one** (the Phase 8b lesson). A `LanguageBar` on
+      all nine pages links every sibling; the English original — crawled every
+      few days, 50 inbound links — is one hop from each new page. Nineteen
+      destination pages carry a "read this in …" link in the reader's likely
+      language via `LOCALE_FOR_DESTINATION`. Arabic lands with 21 inbound
+      links, the rest with 9; nothing near the ≤4 orphan band.
+- [x] **Sitemap**: 57 URLs. The seven new pages plus the English and Spanish
+      originals (which gained the language bar) stamped 2026-09-10 UTC. The
+      19 destination pages that gained one navigational line are not.
+
+Deliberately not done:
+
+- [~] **Restamping the destination pages** for the read-here link. One line in
+      the hero, recrawled eight days ago. Same judgement as the footer label
+      in Phase 8b.
+- [~] **Locale homes.** `/ar/` does not exist and should not: a home page in a
+      language with one content page behind it is a door to an empty room.
+      The header's home link on these pages goes to the page itself.
+- [~] **Translated destination names in the footer.** The popular-destinations
+      row renders English country names and is English-only, as the Spanish
+      footer always was.
+
+**Authorship caveat, same as Spanish:** LLM-written to native register,
+claims-checked line by line. Arabic and the Indic languages carry more register
+risk than Spanish did — a native reader's pass is recommended and applies as
+plain content edits to `no-internet-copy.ts`, nothing structural.
+
+**Checkpoint — early November 2026 (8 weeks):** per-locale impressions,
+position and CTR from the Search Analytics API with `["page","country"]`. The
+Spanish bar to clear was "an incremental slice"; Spanish reached position 7.6
+in six weeks. Read each language on its own — a language that never surfaces
+is a finding, not a failure, and should be recorded rather than propped up.
+Only build beyond a single page in a language that has earned it.
+
+---
+
 ## Explicitly not planned (verifier-rejected — do not resurrect)
 
 - HowTo, new FAQ rich-result work, SearchAction, Speakable markup —
   deprecated or news-only as of 2026; existing FAQPage JSON-LD stays as-is.
 - aggregateRating in app schema — verified-claims violation.
-- Turkish locale — one destination page doesn't justify a locale tree.
+- Turkish locale *tree* — one destination page doesn't justify one. A single
+  Turkish page in the winning intent is a different proposition and shipped
+  in Phase 9; the tree is still not planned.
 - Separate `/how-to-call-X/` pages — would cannibalize `/call/X/`.
 - Iran/Syria/Maghreb destination pages — unroutable / excluded.
 - `llms.txt` — no major AI engine documents consuming it; robots.txt

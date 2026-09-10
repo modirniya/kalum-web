@@ -43,6 +43,71 @@
     background: var(--color-maroon);
     color: white;
   }
+
+}
+
+/* Script faces for the single-page locales (src/lib/i18n.ts). Deliberately
+   OUTSIDE @layer: these must override Tailwind's leading-[…] and the
+   tracking-display utility on the same elements, and unlayered rules beat
+   every layer. Inside @layer base they silently lost — the Urdu hero
+   rendered at Latin leading and its two lines collided.
+
+   Plus Jakarta Sans carries Latin and Vietnamese only, so Arabic, Urdu, Devanagari and Plus Jakarta
+   Sans carries Latin and Vietnamese only, so Arabic, Urdu, Devanagari and
+   Bengali pages swap the body face. Jakarta stays first in each stack so
+   any Latin that appears — "Kalum", "$4.99", "Wi-Fi" — keeps the house
+   letterforms; the Noto face only picks up the glyphs Jakarta lacks. The
+   @font-face rules come from the fontsource imports in BaseLayout.
+
+   Line-height goes up with the script. Arabic and Devanagari carry marks
+   above and below the x-height that Latin leading clips; Nastaliq Urdu
+   hangs its words diagonally and needs nearly double. */
+html[lang="ar"] body {
+  font-family: "Plus Jakarta Sans Variable", "Noto Sans Arabic Variable", "Noto Sans Arabic", system-ui, sans-serif;
+  line-height: 1.75;
+}
+html[lang="ur"] body {
+  font-family: "Plus Jakarta Sans Variable", "Noto Nastaliq Urdu Variable", "Noto Nastaliq Urdu", system-ui, sans-serif;
+  line-height: 2.1;
+}
+html[lang="hi"] body {
+  font-family: "Plus Jakarta Sans Variable", "Noto Sans Devanagari Variable", "Noto Sans Devanagari", system-ui, sans-serif;
+  line-height: 1.7;
+}
+html[lang="bn"] body {
+  font-family: "Plus Jakarta Sans Variable", "Noto Sans Bengali Variable", "Noto Sans Bengali", system-ui, sans-serif;
+  line-height: 1.7;
+}
+
+/* Display tracking is a Latin correction (see @utility tracking-display
+   below) and it damages connected scripts: negative letter-spacing breaks
+   the joins between Arabic letters, and Nastaliq stops shaping entirely.
+   Indic scripts do not join but their conjuncts mis-space. Reset it, and
+   open the tight hero leading up to where these scripts' ascenders fit. */
+html[lang="ar"] .tracking-display,
+html[lang="ur"] .tracking-display,
+html[lang="hi"] .tracking-display,
+html[lang="bn"] .tracking-display,
+html[lang="ar"] .eyebrow,
+html[lang="ur"] .eyebrow,
+html[lang="hi"] .eyebrow,
+html[lang="bn"] .eyebrow,
+html[lang="ar"] .micro-label,
+html[lang="ur"] .micro-label,
+html[lang="hi"] .micro-label,
+html[lang="bn"] .micro-label {
+  letter-spacing: 0;
+  word-spacing: normal;
+}
+html[lang="ar"] h1,
+html[lang="hi"] h1,
+html[lang="bn"] h1 {
+  line-height: 1.3;
+}
+html[lang="ur"] h1,
+html[lang="ur"] h2,
+html[lang="ur"] h3 {
+  line-height: 1.9;
 }
 
 /* Display tracking. Plus Jakarta Sans sets its word space at 0.170em against

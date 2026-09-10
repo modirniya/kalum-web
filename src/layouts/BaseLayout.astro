@@ -8,10 +8,25 @@ import "../styles/global.css";
 // Non-Latin subsets stay on demand behind their unicode-range.
 import jakartaLatin from "@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url";
 
+// Faces for the scripts Plus Jakarta Sans does not carry. Importing all four
+// here costs a few hundred bytes of @font-face CSS on every page and no font
+// bytes at all: each declaration is fenced by unicode-range, so a browser only
+// fetches a file when the page actually contains that script. Which face a
+// page uses is set per <html lang> in global.css; the preload below is the
+// one exception, pulled forward on the page that will paint with it.
+import "@fontsource-variable/noto-sans-arabic";
+import "@fontsource-variable/noto-nastaliq-urdu";
+import "@fontsource-variable/noto-sans-devanagari";
+import "@fontsource-variable/noto-sans-bengali";
+import notoArabic from "@fontsource-variable/noto-sans-arabic/files/noto-sans-arabic-arabic-wght-normal.woff2?url";
+import notoNastaliq from "@fontsource-variable/noto-nastaliq-urdu/files/noto-nastaliq-urdu-arabic-wght-normal.woff2?url";
+import notoDevanagari from "@fontsource-variable/noto-sans-devanagari/files/noto-sans-devanagari-devanagari-wght-normal.woff2?url";
+import notoBengali from "@fontsource-variable/noto-sans-bengali/files/noto-sans-bengali-bengali-wght-normal.woff2?url";
+
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { storeUrls } from "../lib/stores";
-import type { Alternate } from "../lib/i18n";
+import { LOCALES, type Alternate, type Locale } from "../lib/i18n";
 import { coverage } from "../lib/rates";
 
 const countries = await coverage();
@@ -25,9 +40,9 @@ interface Props {
   noindex?: boolean;
   /** Omit the site-wide Header and Footer (focused landing pages). */
   bare?: boolean;
-  /** Page language (BCP-47). Drives <html lang>, og:locale, inLanguage. */
-  lang?: string;
-  /** Text direction — "rtl" for Arabic, when it lands. */
+  /** Page language. Drives <html lang>, og:locale, inLanguage, and the font. */
+  lang?: Locale;
+  /** Text direction. Pass LOCALES[lang].dir; defaults to ltr. */
   dir?: "ltr" | "rtl";
   /** hreflang alternates from alternatesFor(); omit for single-locale pages. */
   alternates?: Alternate[];
@@ -47,7 +62,19 @@ const {
 
 const siteUrl = "https://kalum.app";
 const absoluteOg = ogImage.startsWith("http") ? ogImage : `${siteUrl}${ogImage}`;
-const ogLocale = lang === "es" ? "es_MX" : "en_US";
+const ogLocale = LOCALES[lang].ogLocale;
+
+// The locale's script font, preloaded so the hero paints in it rather than in
+// a fallback that then swaps. Null for Latin-script locales, which are already
+// covered by the Jakarta preload above.
+const scriptFonts = {
+  arabic: notoArabic,
+  nastaliq: notoNastaliq,
+  devanagari: notoDevanagari,
+  bengali: notoBengali,
+};
+const face = LOCALES[lang].font;
+const scriptFont = face ? scriptFonts[face] : null;
 
 // storeUrls (clean canonical listing URLs) come from src/lib/stores.ts —
 // the same source the download badges use, so the two never drift apart.
@@ -114,6 +141,7 @@ const structuredData = {
     }
 
     <link rel="preload" href={jakartaLatin} as="font" type="font/woff2" crossorigin />
+    {scriptFont && <link rel="preload" href={scriptFont} as="font" type="font/woff2" crossorigin />}
 
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

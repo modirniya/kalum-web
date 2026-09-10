@@ -5,52 +5,20 @@ import GooglePlayBadge from "./GooglePlayBadge.astro";
 import AppStoreBadge from "./AppStoreBadge.astro";
 import { featuredDestinations } from "../lib/destinations";
 import { coverage } from "../lib/rates";
+import { localeOf } from "../lib/i18n";
+import { CHROME } from "../lib/chrome";
 
 const countries = await coverage();
 
 const year = new Date().getFullYear();
 const popular = featuredDestinations();
 
-const path = Astro.url.pathname;
-const isES = path === "/es/" || path.startsWith("/es/");
-
-const t = isES
-  ? {
-      blurb:
-        `Llamadas económicas a teléfonos fijos y celulares en más de ${countries} países. Solo contestan su teléfono.`,
-      product: "Producto",
-      legal: "Legal",
-      getApp: "Descargar la app",
-      productLinks: [
-        { href: "/es/call/mexico/", label: "Llamar a México" },
-        { href: "/es/call-without-internet/", label: "Llamar sin internet" },
-      ],
-      legalLinks: [
-        { href: "/privacy/", label: "Privacidad" },
-        { href: "/terms/", label: "Términos" },
-      ],
-      madeBy: "Kalum es un producto de Neuera",
-    }
-  : {
-      blurb:
-        `Cheap calls to landlines and mobiles in ${countries}+ countries. They just pick up the phone.`,
-      product: "Product",
-      legal: "Legal",
-      getApp: "Get the app",
-      productLinks: [
-        { href: "/how-it-works/", label: "How it works" },
-        { href: "/call/", label: "Destinations" },
-        { href: "/call-without-internet/", label: "Call without internet" },
-        { href: "/calling-app-vs-internet-calling/", label: "App vs internet calling" },
-        { href: "/whatsapp-calls-blocked/", label: "Gulf calling app" },
-        { href: "/support/", label: "Support" },
-      ],
-      legalLinks: [
-        { href: "/privacy/", label: "Privacy policy" },
-        { href: "/terms/", label: "Terms of service" },
-      ],
-      madeBy: "Kalum is a product of Neuera",
-    };
+// Chrome strings from src/lib/chrome.ts. The popular-destinations row renders
+// English country names, so it is English-only — the Spanish footer has always
+// declined it, and the single-page locales follow suit.
+const locale = localeOf(Astro.url.pathname);
+const t = CHROME[locale];
+const isEN = locale === "en";
 ---
 
 <footer class="bg-[var(--color-navy)] text-white/80">
@@ -67,7 +35,7 @@ const t = isES
         />
         <span class="text-lg font-extrabold tracking-[0.18em] text-white">KALUM</span>
       </div>
-      <p class="mt-4 max-w-xs text-sm leading-relaxed">{t.blurb}</p>
+      <p class="mt-4 max-w-xs text-sm leading-relaxed">{t.blurb(countries)}</p>
     </div>
 
     <div>
@@ -98,7 +66,7 @@ const t = isES
   </div>
 
   {
-    !isES && (
+    isEN && (
       <div class="border-t border-white/10">
         <div class="mx-auto max-w-6xl px-5 py-6 md:px-8">
           <h4 class="micro-label text-white">

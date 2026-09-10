@@ -81,6 +81,23 @@ const SNIPPET_REWRITE = "2026-09-02";
  */
 const FINDER_AND_COUNT = "2026-08-16";
 
+/**
+ * 2026-09-10 (UTC): /call-without-internet/ shipped in seven more languages —
+ * Arabic, Turkish, Hindi, Urdu, Bengali, Tagalog, Vietnamese — one page each,
+ * as single-page locales (src/lib/i18n.ts). The English and Spanish originals
+ * gained a language bar linking all nine, which is a content change to those
+ * two pages and is why they move to this date as well.
+ *
+ * The 19 destination pages that gained a "read this in …" link are NOT
+ * restamped. That is one navigational line in the hero; the pages are still
+ * about what they were about, and they were recrawled eight days ago. Same
+ * judgement as the footer-label change in Phase 8b.
+ */
+const LANGUAGES_ADDED = "2026-09-10";
+
+/** The single-page locales, in the order the language bar lists them. */
+const SINGLE_PAGE_LOCALES = ["ar", "tr", "hi", "ur", "bn", "tl", "vi"] as const;
+
 /** The later of two ISO dates. */
 const later = (a: string, b: string) => (a > b ? a : b);
 
@@ -108,7 +125,7 @@ export const GET: APIRoute = async () => {
     // both changed with the count correction.
     { path: "/how-it-works/", lastmod: FINDER_AND_COUNT },
     { path: "/support/", lastmod: "2026-07-02" },
-    { path: "/call-without-internet/", lastmod: FINDER_AND_COUNT },
+    { path: "/call-without-internet/", lastmod: LANGUAGES_ADDED },
     { path: "/calling-app-vs-internet-calling/", lastmod: FINDER_AND_COUNT },
     // Retitled 2026-09-02: 43 of its 46 named-query impressions were "gulf
     // calling app" at position 8.5, and the title answered a WhatsApp question
@@ -138,7 +155,7 @@ export const GET: APIRoute = async () => {
       path: "/es/call/mexico/",
       lastmod: mexico ? rateLastmod(mexico.dialCode) : SEO_CONTENT_UPDATE,
     },
-    { path: "/es/call-without-internet/", lastmod: FINDER_AND_COUNT },
+    { path: "/es/call-without-internet/", lastmod: LANGUAGES_ADDED },
     { path: "/es/how-it-works/", lastmod: FINDER_AND_COUNT },
     { path: "/es/call/", lastmod: SNIPPET_REWRITE },
     ...(["colombia", "guatemala", "honduras", "el-salvador"] as const).map(
@@ -150,6 +167,12 @@ export const GET: APIRoute = async () => {
         };
       },
     ),
+    // Single-page locales. Each is one URL; alternatesFor() emits the full
+    // nine-language hreflang set on every member of the group.
+    ...SINGLE_PAGE_LOCALES.map((l) => ({
+      path: `/${l}/call-without-internet/`,
+      lastmod: LANGUAGES_ADDED,
+    })),
   ];
 
   const urls = pages

@@ -1,0 +1,60 @@
+---
+import { groupFor, LOCALES, LOCALE_ORDER, localeOf, type Locale } from "../lib/i18n";
+
+/**
+ * "Also in: English · Español · العربية · …" for a page that exists in several
+ * languages. Every language it exists in, current one marked, each link with
+ * its hreflang.
+ *
+ * This is a reader feature first — someone who landed on the wrong language
+ * from a search result gets out in one tap — and an indexing feature second.
+ * Each link here is an inbound internal link to a sibling page from a page
+ * Google already crawls, which is what the Phase 8b audit found the from-UAE
+ * pages were missing. Ships on the English no-internet page, which is crawled
+ * every few days and carries 43 inbound links of its own, so every new locale
+ * is one hop from a well-crawled page on the day it lands.
+ *
+ * Header stays at one language link; this bar is for pages with many.
+ */
+interface Props {
+  /** Path of the current page, in whatever language it is in. */
+  path: string;
+  /** Label before the list, in the current page's language. */
+  label: string;
+  /** Light text for dark heroes, dark text for cream sections. */
+  tone?: "light" | "dark";
+  class?: string;
+}
+const { path, label, tone = "dark", class: cls = "" } = Astro.props;
+
+const group = groupFor(path);
+const here = localeOf(path);
+const langs: Locale[] = group ? LOCALE_ORDER.filter((l) => group[l]) : [];
+
+const textMuted = tone === "light" ? "text-white/70" : "text-[var(--color-muted)]";
+const textLink = tone === "light" ? "text-white/90 hover:text-white" : "text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)]";
+const textHere = tone === "light" ? "text-white" : "text-[var(--color-text)]";
+---
+
+{
+  langs.length > 1 && (
+    <nav aria-label={label} class={`text-sm ${textMuted} ${cls}`}>
+      <span class="me-2">{label}</span>
+      <ul class="inline-flex flex-wrap gap-x-3 gap-y-1">
+        {langs.map((l) => (
+          <li>
+            {l === here ? (
+              <span aria-current="page" class={`font-semibold ${textHere}`} lang={l}>
+                {LOCALES[l].name}
+              </span>
+            ) : (
+              <a href={group![l]} hreflang={l} lang={l} class={`font-medium transition ${textLink}`}>
+                {LOCALES[l].name}
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}

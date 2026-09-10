@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import AppStoreBadge from "../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
+import LanguageBar from "../components/LanguageBar.astro";
 import RateDisclosure from "../components/RateDisclosure.astro";
 import { pricedDestinations, formatRate, fromPrefix } from "../lib/rates";
 import { alternatesFor } from "../lib/i18n";
@@ -98,6 +99,8 @@ const reasons = [
       <p class="mt-5 text-sm text-white/70">
         Start with $4.99. No subscription. Credit never expires.
       </p>
+
+      <LanguageBar path="/call-without-internet/" label="Also in:" tone="light" class="mt-8" />
     </div>
   </section>
 

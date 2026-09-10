@@ -1,35 +1,28 @@
 ---
 import { Image } from "astro:assets";
 import icon from "../assets/kalum-icon.jpg";
-import { languageSwitch } from "../lib/i18n";
+import { languageSwitch, localeOf } from "../lib/i18n";
+import { CHROME } from "../lib/chrome";
 
+// Chrome strings come from src/lib/chrome.ts, keyed by the page's locale.
+// The language link is a single link — English from any localized page,
+// Spanish from English. Pages that exist in many languages carry their own
+// LanguageBar; see the note on languageSwitch() in src/lib/i18n.ts.
 const path = Astro.url.pathname;
-const isES = path === "/es/" || path.startsWith("/es/");
+const locale = localeOf(path);
+const t = CHROME[locale];
 const sw = languageSwitch(path);
+const switchLabel = t.switchTo(sw.hreflang === "es" ? "es" : "en");
 
-const home = isES ? "/es/" : "/";
-const homeLabel = isES ? "Inicio de Kalum" : "Kalum home";
-const downloadHref = isES ? "/es/" : "/#download";
-const downloadLabel = isES ? "Descargar" : "Get the app";
-const menuLabel = isES ? "Abrir menú" : "Open menu";
-const switchLabel = sw.label === "ES" ? "Cambiar a español" : "Switch to English";
-const switchHreflang = sw.label === "ES" ? "es" : "en";
-
-const nav = isES
-  ? [
-      { label: "Llamar a México", href: "/es/call/mexico/" },
-      { label: "Llamar sin internet", href: "/es/call-without-internet/" },
-    ]
-  : [
-      { label: "How it works", href: "/how-it-works/" },
-      { label: "Destinations", href: "/call/" },
-      { label: "Support", href: "/support/" },
-    ];
+// The download link on the English home is an in-page anchor; every other
+// locale points at its own home so the reader lands on a page that speaks
+// their language.
+const downloadHref = locale === "en" ? "/#download" : t.home;
 ---
 
 <header class="sticky top-0 z-30 bg-[var(--color-maroon)]/95 backdrop-blur-sm">
   <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 md:px-8">
-    <a href={home} class="flex items-center gap-3 text-white" aria-label={homeLabel}>
+    <a href={t.home} class="flex items-center gap-3 text-white" aria-label={t.homeLabel}>
       <Image
         src={icon}
         alt="Kalum"
@@ -42,12 +35,12 @@ const nav = isES
     </a>
 
     <nav class="hidden items-center gap-7 text-sm font-medium text-white/90 md:flex">
-      {nav.map((item) => (
+      {t.nav.map((item) => (
         <a href={item.href} class="hover:text-white transition">{item.label}</a>
       ))}
       <a
         href={sw.href}
-        hreflang={switchHreflang}
+        hreflang={sw.hreflang}
         aria-label={switchLabel}
         class="font-semibold text-white/70 hover:text-white transition"
       >
@@ -58,25 +51,25 @@ const nav = isES
         rel="noopener"
         class="rounded-md bg-white px-4 py-2 font-semibold text-[var(--color-maroon)] hover:bg-[var(--color-cream)] transition"
       >
-        {downloadLabel}
+        {t.download}
       </a>
     </nav>
 
     <details class="md:hidden text-white">
-      <summary class="cursor-pointer list-none p-2 -mr-2" aria-label={menuLabel}>
+      <summary class="cursor-pointer list-none p-2 -me-2" aria-label={t.menu}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="12" x2="21" y2="12"></line>
           <line x1="3" y1="18" x2="21" y2="18"></line>
         </svg>
       </summary>
-      <div class="absolute right-5 top-full mt-2 w-56 rounded-lg bg-[var(--color-navy)] p-4 shadow-xl">
-        {nav.map((item) => (
+      <div class="absolute end-5 top-full mt-2 w-56 rounded-lg bg-[var(--color-navy)] p-4 shadow-xl">
+        {t.nav.map((item) => (
           <a href={item.href} class="block py-2 text-white/90 hover:text-white">{item.label}</a>
         ))}
         <a
           href={sw.href}
-          hreflang={switchHreflang}
+          hreflang={sw.hreflang}
           aria-label={switchLabel}
           class="block py-2 font-semibold text-white/70 hover:text-white"
         >
@@ -87,7 +80,7 @@ const nav = isES
           rel="noopener"
           class="mt-2 block rounded-md bg-white px-4 py-2 text-center font-semibold text-[var(--color-maroon)]"
         >
-          {downloadLabel}
+          {t.download}
         </a>
       </div>
     </details>
