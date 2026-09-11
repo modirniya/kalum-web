@@ -36,9 +36,10 @@ export function appleHref(utm: string): string {
 
 /**
  * Google Play link with an install referrer. Play Console attributes the
- * install to these utm values (Acquisition reports), and the app's native
- * firebase-analytics SDK auto-collects the same referrer as campaign
- * attribution on first open — no app-side code required.
+ * install to these utm values (Store listing acquisition report). Nothing in
+ * the app reads the referrer: Kalum ships no analytics SDK (Crashlytics and
+ * App Check only), so the console report is the only place these values
+ * surface. The API's /yt/click emits the same form for off-site placements.
  */
 export function playHref(utm: string): string {
   const referrer = `utm_source=kalum-web&utm_medium=web&utm_campaign=${utm}`;
