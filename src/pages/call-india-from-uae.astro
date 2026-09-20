@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import rateChanges from "../data/rate-changes.json";
 import AppStoreBadge from "../components/AppStoreBadge.astro";
 import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
@@ -57,6 +58,11 @@ const faqs = [
   },
 ];
 
+// The date this corridor's rate last MOVED, from the same source the
+// sitemap's lastmod uses. card.fetchedAt is the build time, so the weekly
+// rates cron rewrote validFrom whether or not the price had changed.
+const changedOn = (rateChanges as Record<string, string>)["91"];
+
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -92,7 +98,7 @@ const structuredData = {
                   value: 1,
                   unitCode: "MIN",
                 },
-                validFrom: card.fetchedAt,
+                ...(changedOn ? { validFrom: changedOn } : {}),
               },
             },
           }

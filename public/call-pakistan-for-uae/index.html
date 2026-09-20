@@ -1,0 +1,30 @@
+<!doctype html>
+<!--
+  Soft redirect for a typo'd inbound link.
+
+  Search Console reports impressions for /call-pakistan-for-uae/ ("for" rather
+  than "from"). Nothing in this repo or on the site links to it — the source is
+  external — and GitHub Pages cannot issue a 301, so an instant meta refresh
+  plus a canonical is the redirect available to us. Google treats it as a
+  permanent redirect and passes the signal to the real page.
+
+  Deliberately NOT in the sitemap, and noindex so the typo URL cannot compete
+  with the page it points at. Delete this once Search Console stops reporting
+  impressions for it.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content="0; url=https://kalum.app/call-pakistan-from-uae/" />
+    <link rel="canonical" href="https://kalum.app/call-pakistan-from-uae/" />
+    <meta name="robots" content="noindex, follow" />
+    <title>Call Pakistan from the UAE — Kalum</title>
+  </head>
+  <body>
+    <p>
+      This page has moved to
+      <a href="https://kalum.app/call-pakistan-from-uae/">Call Pakistan from the UAE</a>.
+    </p>
+  </body>
+</html>

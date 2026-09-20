@@ -16,6 +16,7 @@ import {
   type RateCard,
 } from "../../lib/rates";
 import { alternatesFor } from "../../lib/i18n";
+import rateChanges from "../../data/rate-changes.json";
 import { coverage } from "../../lib/rates";
 
 const countries = await coverage();
@@ -248,6 +249,7 @@ const readHref = readLocale ? `/${readLocale}/call-without-internet/` : undefine
 const corridorsOut = corridorsFrom(d.slug);
 const corridorsIn = corridorsTo(d.slug);
 
+const changedOn = (rateChanges as Record<string, string>)[d.dialCode];
 const canonical = `https://kalum.app/call/${d.slug}/`;
 /** Dollars-per-minute, the form schema.org wants. */
 const priceUsd = (d.rateCents / 100).toFixed(2);
@@ -334,7 +336,15 @@ const structuredData = {
             value: 1,
             unitCode: "MIN",
           },
-          validFrom: card.fetchedAt,
+          /*
+           * The date this destination's rate last MOVED, not the build time.
+           * card.fetchedAt is stamped on every build, so the Monday rates
+           * cron rewrote validFrom on all 33 schema blocks whether or not a
+           * price had changed — the same cry-wolf the sitemap's lastmod
+           * deliberately avoids, from the same source of truth. Omitted
+           * entirely when the date is unknown rather than invented.
+           */
+          ...(changedOn ? { validFrom: changedOn } : {}),
         },
       },
     },
