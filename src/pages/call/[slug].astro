@@ -58,12 +58,31 @@ export async function getStaticPaths() {
 
   return priced.map((destination) => {
     const rest = priced.filter((o) => o.slug !== destination.slug);
-    const sameRegion = rest.filter((o) => o.region === destination.region);
     const topUp = rest.filter(
       (o) => o.region !== destination.region && featured.has(o.slug),
     );
-    // Region-mates first, then featured from elsewhere; dedupe by slug and cap.
-    const others = [...sameRegion, ...topUp].slice(0, RELATED_LIMIT);
+
+    /**
+     * Region-mates in CYCLIC order starting after this destination, not data
+     * order. The Middle East holds 13 destinations and the cap is 8, so a flat
+     * `sameRegion.slice(0, 8)` handed every one of those 13 pages the same
+     * first eight — and the five that sort last (Turkey, Kuwait, Qatar, Oman,
+     * Bahrain) were never anybody's sibling. The 2026-09-19 audit found them
+     * on 3-4 inbound links each, under the ~7 that src/lib/corridors.ts
+     * records as the crawl cutoff.
+     *
+     * Rotating makes in-degree uniform: inside a region every page now appears
+     * in exactly min(cap, regionSize - 1) sibling lists, with no page starved
+     * and none of them carrying more links than before.
+     */
+    const regionMates = priced.filter((o) => o.region === destination.region);
+    const self = regionMates.findIndex((o) => o.slug === destination.slug);
+    const rotated = [
+      ...regionMates.slice(self + 1),
+      ...regionMates.slice(0, self),
+    ];
+
+    const others = [...rotated, ...topUp].slice(0, RELATED_LIMIT);
 
     return {
       params: { slug: destination.slug },

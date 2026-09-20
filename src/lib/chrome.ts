@@ -76,8 +76,14 @@ export const CHROME: Record<Locale, Chrome> = {
     homeLabel: "Inicio de Kalum",
     download: "Descargar",
     menu: "Abrir menú",
+    // The Spanish header and footer listed only Mexico and the no-internet
+    // page, so /es/how-it-works/ hung on a single inbound link (the English
+    // page's language switch) and the four Spanish corridors on two each —
+    // the thinnest pages on the site per the 2026-09-19 audit, and the
+    // section that already converts at nearly twice the English rate.
     nav: [
-      { label: "Llamar a México", href: "/es/call/mexico/" },
+      { label: "Cómo funciona", href: "/es/how-it-works/" },
+      { label: "Destinos", href: "/es/call/" },
       { label: "Llamar sin internet", href: "/es/call-without-internet/" },
     ],
     blurb: (n) => `Llamadas económicas a teléfonos fijos y celulares en más de ${n} países. Solo contestan su teléfono.`,
@@ -85,8 +91,14 @@ export const CHROME: Record<Locale, Chrome> = {
     legal: "Legal",
     getApp: "Descargar la app",
     productLinks: [
-      { href: "/es/call/mexico/", label: "Llamar a México" },
+      { href: "/es/how-it-works/", label: "Cómo funciona" },
+      { href: "/es/call/", label: "Todos los destinos" },
       { href: "/es/call-without-internet/", label: "Llamar sin internet" },
+      { href: "/es/call/mexico/", label: "Llamar a México" },
+      { href: "/es/call/colombia/", label: "Llamar a Colombia" },
+      { href: "/es/call/guatemala/", label: "Llamar a Guatemala" },
+      { href: "/es/call/honduras/", label: "Llamar a Honduras" },
+      { href: "/es/call/el-salvador/", label: "Llamar a El Salvador" },
     ],
     legalLinks: [
       { href: "/privacy/", label: "Privacidad" },

@@ -1,4 +1,5 @@
 ---
+import Breadcrumb from "../Breadcrumb.astro";
 const steps = [
   {
     n: "1",
@@ -23,6 +24,7 @@ const steps = [
 
 <section class="bg-white py-20 md:py-28">
   <div class="mx-auto max-w-4xl px-5 md:px-8">
+    <Breadcrumb tone="light" items={[{ name: "Home", href: "/" }, { name: "How it works" }]} />
     <header class="text-center">
       <h1 class="text-4xl font-extrabold leading-[1.05] tracking-display text-[var(--color-text)] sm:text-5xl">
         How Kalum works

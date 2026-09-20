@@ -9,8 +9,26 @@ interface Item {
 }
 interface Props {
   items: Item[];
+  /**
+   * Which ground the trail sits on. The default is the brand-gradient hero
+   * this was written for; `light` is for the cream sections (the /call/ and
+   * /how-it-works/ hubs), where the white variant would be invisible. Never
+   * render the JSON-LD without its visible counterpart — one array feeds
+   * both precisely so they cannot disagree.
+   */
+  tone?: "dark" | "light";
 }
-const { items } = Astro.props;
+const { items, tone = "dark" } = Astro.props;
+
+const ink =
+  tone === "dark"
+    ? { base: "text-white/70", sep: "text-white/40", here: "text-white/90", hover: "hover:text-white" }
+    : {
+        base: "text-[var(--color-muted)]",
+        sep: "text-[var(--color-muted)]/50",
+        here: "text-[var(--color-text)]",
+        hover: "hover:text-[var(--color-maroon)]",
+      };
 
 const SITE = "https://kalum.app";
 const jsonld = {
@@ -25,17 +43,17 @@ const jsonld = {
 };
 ---
 
-<nav aria-label="Breadcrumb" class="mb-6 text-sm text-white/70">
+<nav aria-label="Breadcrumb" class:list={["mb-6 text-sm", ink.base]}>
   <ol class="flex flex-wrap items-center gap-x-2">
     {
       items.map((it, i) => (
         <>
-          {i > 0 && <li aria-hidden="true" class="text-white/40">/</li>}
+          {i > 0 && <li aria-hidden="true" class={ink.sep}>/</li>}
           <li>
             {it.href ? (
-              <a href={it.href} class="hover:text-white transition">{it.name}</a>
+              <a href={it.href} class:list={[ink.hover, "transition"]}>{it.name}</a>
             ) : (
-              <span aria-current="page" class="text-white/90">{it.name}</span>
+              <span aria-current="page" class={ink.here}>{it.name}</span>
             )}
           </li>
         </>
