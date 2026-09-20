@@ -4,11 +4,19 @@ import heroScreen from "../../assets/screenshots/home.png";
 import GooglePlayBadge from "../GooglePlayBadge.astro";
 import AppStoreBadge from "../AppStoreBadge.astro";
 import { coverage } from "../../lib/rates";
+import { HOME_COPY, fill, type HomeLocale } from "../../lib/home-copy";
 
+interface Props {
+  locale?: HomeLocale;
+}
+
+const { locale = "en" } = Astro.props;
+const c = HOME_COPY[locale].hero;
+const utm = HOME_COPY[locale].utmPrefix;
 const countries = await coverage();
 ---
 
-<section class="brand-gradient relative overflow-hidden text-white">
+<section data-section="hero" class="brand-gradient relative overflow-hidden text-white">
   <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
     <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
     <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
@@ -17,25 +25,23 @@ const countries = await coverage();
   <div class="relative mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-[1.15fr_1fr] md:gap-10 md:px-8 md:py-28 lg:py-32">
     <div class="flex flex-col justify-center">
       <p class="eyebrow text-[var(--color-teal-light)]">
-        Pay-as-you-go international calling app
+        {c.eyebrow}
       </p>
       <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-display sm:text-5xl lg:text-6xl">
-        Cheap international calls to any phone, anywhere.
-        <span class="block text-white/85">They just pick up.</span>
+        {c.headline}
+        <span class="block text-white/85">{c.headlineAccent}</span>
       </h1>
       <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/85 sm:text-xl">
-        Cheap calls to landlines and mobiles in {countries}+ countries.
-        No app on their side. No internet on their side.
-        Just a regular phone call.
+        {fill(c.body, countries)}
       </p>
 
       <div class="mt-9 flex flex-wrap items-center gap-4">
-        <AppStoreBadge size="lg" utm="kalum-web-hero" />
-        <GooglePlayBadge size="lg" utm="kalum-web-hero" />
+        <AppStoreBadge size="lg" utm={`${utm}-hero`} />
+        <GooglePlayBadge size="lg" utm={`${utm}-hero`} />
       </div>
 
       <p class="mt-5 text-sm text-white/70">
-        Start with $4.99. No subscription. Credit never expires.
+        {c.note}
       </p>
     </div>
 
@@ -48,7 +54,7 @@ const countries = await coverage();
         <div class="relative rounded-[2.2rem] border-[10px] border-black/80 bg-black shadow-2xl ring-1 ring-white/10">
           <Image
             src={heroScreen}
-            alt="Kalum dialer showing the per-minute rate before placing a call"
+            alt={c.imageAlt}
             widths={[260, 300, 600]}
             sizes="(min-width: 640px) 300px, 260px"
             class="h-auto w-[260px] rounded-[1.6rem] sm:w-[300px]"

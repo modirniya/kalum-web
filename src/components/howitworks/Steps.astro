@@ -25,7 +25,7 @@ const steps = [
 <section class="bg-white py-20 md:py-28">
   <div class="mx-auto max-w-4xl px-5 md:px-8">
     <Breadcrumb tone="light" items={[{ name: "Home", href: "/" }, { name: "How it works" }]} />
-    <header class="text-center">
+    <header data-section="hero" class="text-center">
       <h1 class="text-4xl font-extrabold leading-[1.05] tracking-display text-[var(--color-text)] sm:text-5xl">
         How Kalum works
       </h1>
@@ -35,7 +35,7 @@ const steps = [
       </p>
     </header>
 
-    <ol class="mt-16 space-y-12">
+    <ol data-section="steps" class="mt-16 space-y-12">
       {
         steps.map((step) => (
           <li class="grid gap-6 md:grid-cols-[auto_1fr] md:gap-10">

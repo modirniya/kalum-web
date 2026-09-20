@@ -36,7 +36,7 @@ const esName = (slug: string, fallback: string) => ES_NAMES[slug] ?? fallback;
 // links to its English page, which is honest about where the reader lands and
 // avoids advertising a Spanish URL that does not exist.
 const hasEsPage = (slug: string) =>
-  slug === "mexico" || slug in DESTINATION_COPY_ES;
+  slug in DESTINATION_COPY_ES;
 
 // Same fixed grouping order as the English hub. This is a grouping order, not
 // a ranking — América leads because this is the Spanish subtree and that is
@@ -68,7 +68,7 @@ const grouped = regionOrder
       <p class="eyebrow text-[var(--color-teal-light)]">
         Destinos
       </p>
-      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-display sm:text-5xl lg:text-6xl">
+      <h1 data-section="hero" class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-display sm:text-5xl lg:text-6xl">
         Llama a cualquier teléfono, en cualquier país.
         <span class="block text-white/85">Fijos y celulares.</span>
       </h1>
@@ -88,9 +88,9 @@ const grouped = regionOrder
 
   <section class="bg-[var(--color-cream)] py-16 md:py-24">
     <div class="mx-auto max-w-4xl px-5 md:px-8">
-      <RateFinder card={card} locale="es" localNames={finderNamesEs} class="mb-12" />
+      <div data-section="finder"><RateFinder card={card} locale="es" localNames={finderNamesEs} class="mb-12" /></div>
 
-      <div class="space-y-12">
+      <div data-section="destinations" class="space-y-12">
         {
           grouped.map((group) => (
             <div>
@@ -135,7 +135,7 @@ const grouped = regionOrder
     </div>
   </section>
 
-  <section class="bg-white py-16 md:py-24">
+  <section data-section="explainer" class="bg-white py-16 md:py-24">
     <div class="mx-auto max-w-3xl px-5 md:px-8">
       <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
         Cómo funcionan las tarifas internacionales
@@ -169,7 +169,7 @@ const grouped = regionOrder
     </div>
   </section>
 
-  <section class="brand-gradient text-white">
+  <section data-section="cta" class="brand-gradient text-white">
     <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
       <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl">
         ¿No ves tu país?

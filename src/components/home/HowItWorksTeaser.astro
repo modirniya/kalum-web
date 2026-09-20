@@ -1,34 +1,25 @@
 ---
-const steps = [
-  {
-    n: "1",
-    title: "Sign up with your phone number",
-    body: "One verification code. No email, no password to remember.",
-  },
-  {
-    n: "2",
-    title: "Add $4.99 in credit",
-    body: "Pay through the App Store on iPhone or with any card on Android. Top up more anytime. Your credit never expires.",
-  },
-  {
-    n: "3",
-    title: "Dial like any phone",
-    body: "Pick a country, type the number, hit call. Their phone rings like normal.",
-  },
-];
+import { HOME_COPY, type HomeLocale } from "../../lib/home-copy";
+
+interface Props {
+  locale?: HomeLocale;
+}
+
+const { locale = "en" } = Astro.props;
+const c = HOME_COPY[locale].steps;
 ---
 
-<section class="bg-white py-20 md:py-28">
+<section data-section="steps" class="bg-white py-20 md:py-28">
   <div class="mx-auto max-w-6xl px-5 md:px-8">
     <div class="mx-auto max-w-2xl text-center">
       <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl lg:text-5xl">
-        Three steps. Then you're calling.
+        {c.heading}
       </h2>
     </div>
 
     <ol class="mt-14 grid gap-6 md:grid-cols-3">
       {
-        steps.map((step) => (
+        c.items.map((step) => (
           <li class="relative rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
             <span
               aria-hidden="true"
@@ -47,14 +38,18 @@ const steps = [
       }
     </ol>
 
-    <div class="mt-12 text-center">
-      <a
-        href="/how-it-works/"
-        class="inline-flex items-center gap-2 text-base font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
-      >
-        See the full how-it-works
-        <span aria-hidden="true">&rarr;</span>
-      </a>
-    </div>
+    {
+      c.more && (
+        <div class="mt-12 text-center">
+          <a
+            href={c.more.href}
+            class="inline-flex items-center gap-2 text-base font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+          >
+            {c.more.label}
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+      )
+    }
   </div>
 </section>

@@ -3,11 +3,18 @@ import type { Locale } from "./i18n";
 /**
  * Copy for the single-page locales of /call-without-internet/.
  *
- * English and Spanish are NOT in this table. Both are hand-written pages that
- * are indexed and earning — the Spanish one holds position 7.6 — and there is
- * no reason to churn either to prove a pattern (the same call
- * src/pages/es/_destinations-es.ts makes about Mexico). Everything else
- * renders through src/components/NoInternetPage.astro from a row here.
+ * English is not in this table; its page is the original and still stands on
+ * its own. Spanish was not either, on the grounds that it was indexed and
+ * earning at position 7.6 and there was no reason to churn it — the same
+ * exemption src/pages/es/_destinations-es.ts once made for Mexico, and it
+ * failed the same way: the destination-links block every other locale had was
+ * missing from Spanish for months because the page was hand-written. Since
+ * 2026-09-19 Spanish renders from a row here like everyone else.
+ *
+ * A locale with a tree of its own (Spanish has one: a home, a how-it-works,
+ * five destination pages) sets `homeHref` and `destinationsHreflang` so its
+ * breadcrumb and its rate links stay in-language. A single-page locale leaves
+ * both unset and links the English pages, saying so in `destinationsNote`.
  *
  * Each row is purpose-written for the corridor that language actually calls
  * on, not translated from the English: the Arabic page talks about a landline
@@ -39,8 +46,10 @@ export interface NoInternetCopy {
   /** <title>. Keep the brand suffix so the tab reads as Kalum. */
   title: string;
   description: (countries: number) => string;
-  /** Breadcrumb: the home crumb links to the English home. */
+  /** Breadcrumb: the home crumb links to the English home unless `homeHref`. */
   crumbHome: string;
+  /** Home-crumb target. Default "/" — set only by a locale with its own tree. */
+  homeHref?: string;
   crumbSelf: string;
   eyebrow: string;
   /** Two-line hero headline. */
@@ -51,11 +60,28 @@ export interface NoInternetCopy {
   explainer: string[];
   reasonsH2: string;
   reasons: { title: string; body: string }[];
-  /** Heading over the links to English destination pages, and the links. */
+  /** Optional link under the reason tiles, to this locale's lead corridor. */
+  reasonsMore?: { label: string; href: string };
+  /** Heading over the links to destination rate pages, and the links. */
   destinationsH2: string;
-  destinations: { label: string; href: string }[];
-  /** Small note under the destination links saying those pages are in English. */
-  destinationsNote: string;
+  /** Optional paragraph between that heading and the links. */
+  destinationsIntro?: (countries: number) => string;
+  /**
+   * `slug` is optional and opts a link into the live per-minute rate, rendered
+   * after the label exactly as the destination pages render their siblings.
+   * Only a locale linking its own rate pages should set it: the price shown
+   * must be on a page in the same language as the chip.
+   */
+  destinations: { label: string; href: string; slug?: string }[];
+  /** hreflang on those links. Default "en". */
+  destinationsHreflang?: Locale;
+  /** Optional "see every destination" link under the chips. */
+  destinationsMore?: { label: string; href: string };
+  /**
+   * Small note under the destination links saying those pages are in English.
+   * Omitted by a locale whose links are already in its own language.
+   */
+  destinationsNote?: string;
   faqH2: string;
   faqs: (countries: number) => { q: string; a: string }[];
   ctaH2: string;
@@ -71,6 +97,91 @@ export interface NoInternetCopy {
 }
 
 export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
+  /* ------------------------------------------------------------------ */
+  // Spanish. Unlike the single-page locales this one sits inside a full
+  // Spanish tree, so its breadcrumb goes to /es/ and its destination links go
+  // to the Spanish rate pages, priced, rather than to the English ones.
+  // Every string below is the hand-written page's own, lifted unchanged.
+  es: {
+    title: "Llamar a Alguien Sin Internet — Su Teléfono Suena | Kalum",
+    description: (n) =>
+      `Llama a quien no tiene internet ni smartphone. Kalum usa las redes telefónicas reales, así que cualquier fijo o teléfono básico en más de ${n} países suena.`,
+    crumbHome: "Inicio",
+    homeHref: "/es/",
+    crumbSelf: "Llamar sin internet",
+    eyebrow: "Sin internet de su lado",
+    h1: ["Llama a quien no tiene internet.", "Su teléfono suena igual."],
+    intro: (n) =>
+      `Kalum es una app de llamadas internacionales que marca a números de teléfono reales — fijos y celulares en más de ${n} países. La persona a la que llamas no necesita app, ni smartphone, ni internet.`,
+    finePrint: "Empieza con $4.99. Sin suscripción. Tu saldo nunca vence.",
+    explainerH2: "Tú necesitas internet. Ellos no.",
+    explainer: [
+      "Las apps de llamadas por internet solo funcionan cuando ambos lados están en línea con la misma app instalada. Kalum funciona distinto: la app usa tus datos o Wi-Fi para iniciar la llamada y luego la pasa por las redes telefónicas normales hasta el número que marcaste.",
+      "Del otro lado, nada cambia. Su teléfono suena como cualquier llamada — ya sea un fijo en la pared de la cocina o un teléfono básico de hace quince años. Contestan, y hablas.",
+      "Ves la tarifa por minuto de su país antes de marcar, y las llamadas se cobran por minuto con un mínimo de 60 segundos.",
+    ],
+    reasonsH2: "Hecho para los teléfonos que las apps olvidaron.",
+    reasons: [
+      {
+        title: "Casas con teléfono fijo",
+        body: "Papás y abuelos que nunca dejaron el teléfono de casa. Un fijo no puede instalar una app — con Kalum no hace falta.",
+      },
+      {
+        title: "Teléfonos básicos",
+        body: "Buena parte del mundo llama desde teléfonos de botones. Cualquier número, en cualquier compañía, suena — sin necesidad de smartphone.",
+      },
+      {
+        title: "Internet poco confiable",
+        body: "Cortes de luz, mala señal, datos caros. Cuando el internet de su lado falla, una llamada telefónica normal igual entra.",
+      },
+    ],
+    reasonsMore: {
+      label: "Ver tarifas para llamar a México",
+      href: "/es/call/mexico/",
+    },
+    destinationsH2: "Tarifas a destinos en español",
+    destinationsIntro: (n) =>
+      `Kalum llama a fijos y celulares en más de ${n} países. Estos destinos tienen página en español:`,
+    destinations: [
+      { label: "México", href: "/es/call/mexico/", slug: "mexico" },
+      { label: "Colombia", href: "/es/call/colombia/", slug: "colombia" },
+      { label: "Guatemala", href: "/es/call/guatemala/", slug: "guatemala" },
+      { label: "Honduras", href: "/es/call/honduras/", slug: "honduras" },
+      { label: "El Salvador", href: "/es/call/el-salvador/", slug: "el-salvador" },
+    ],
+    destinationsHreflang: "es",
+    destinationsMore: {
+      label: "Ver todos los destinos y tarifas",
+      href: "/es/call/",
+    },
+    faqH2: "Llamar sin internet, sin dudas.",
+    faqs: (n) => [
+      {
+        q: "¿Puedo llamar a alguien que no tiene internet?",
+        a: "Sí. Kalum pasa la llamada por las redes telefónicas reales, así que la persona a la que llamas no necesita internet, ni app, ni smartphone. Un fijo viejo o un teléfono básico suena como en cualquier llamada normal.",
+      },
+      {
+        q: "¿Necesito internet para hacer la llamada?",
+        a: "Sí, pero solo de tu lado. La app de Kalum usa tus datos o Wi-Fi para iniciar la llamada y luego la pasa a las redes telefónicas normales. La persona a la que llamas nunca necesita conexión.",
+      },
+      {
+        q: "¿Puedo llamar a teléfonos fijos?",
+        a: `Sí. Kalum llama a fijos y celulares en más de ${n} países. A quien llames contesta en el teléfono que ya tiene — nada que descargar, nada que configurar de su lado.`,
+      },
+      {
+        q: "¿Cuánto cuesta?",
+        a: "Las tarifas son por país, y la app te muestra la tarifa exacta por minuto antes de marcar. Agregas saldo de prepago desde $4.99 — sin suscripción, y tu saldo nunca vence.",
+      },
+    ],
+    ctaH2: "¿Listo para llamar?",
+    ctaBody: (n) =>
+      `Descarga Kalum, agrega $4.99 de saldo y marca a cualquier fijo o celular en más de ${n} países. Pagas solo los minutos que usas.`,
+    utm: "kalum-web-es-sin-internet",
+    // Unused today: no destination in LOCALE_FOR_DESTINATION maps to "es",
+    // because the Spanish corridors have Spanish destination pages of their
+    // own and the English page links those directly.
+    readHere: "En español: llama a quien no tiene internet",
+  },
   /* ------------------------------------------------------------------ */
   ar: {
     title: "اتصل بشخص ليس لديه إنترنت — هاتفه يرنّ كالمعتاد | Kalum",

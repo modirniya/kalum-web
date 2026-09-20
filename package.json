@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && npm run check:parity",
+    "check:parity": "node scripts/check-parity.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

@@ -2,11 +2,24 @@
 import GooglePlayBadge from "../GooglePlayBadge.astro";
 import AppStoreBadge from "../AppStoreBadge.astro";
 import { coverage } from "../../lib/rates";
+import { HOME_COPY, fill, type HomeLocale } from "../../lib/home-copy";
 
+interface Props {
+  locale?: HomeLocale;
+}
+
+const { locale = "en" } = Astro.props;
+const c = HOME_COPY[locale].finalCta;
+const utm = HOME_COPY[locale].utmPrefix;
 const countries = await coverage();
 ---
 
-<section id="download" class="brand-gradient relative overflow-hidden text-white">
+<!-- Also the target of the header's download link. -->
+<section
+  id="download"
+  data-section="cta"
+  class="brand-gradient relative overflow-hidden text-white"
+>
   <div class="absolute inset-0 opacity-[0.06]" aria-hidden="true">
     <div class="absolute top-0 right-0 h-96 w-96 rounded-full bg-white blur-3xl"></div>
     <div class="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
@@ -14,16 +27,15 @@ const countries = await coverage();
 
   <div class="relative mx-auto max-w-3xl px-5 py-20 text-center md:px-8 md:py-28">
     <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl lg:text-5xl">
-      Try Kalum for $4.99.
+      {c.heading}
     </h2>
     <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
-      No commitment. Add more anytime. Cheap calls to landlines and
-      mobiles in {countries}+ countries &mdash; on iPhone and Android.
+      {fill(c.body, countries)}
     </p>
 
     <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-      <AppStoreBadge size="lg" utm="kalum-web-final" />
-      <GooglePlayBadge size="lg" utm="kalum-web-final" />
+      <AppStoreBadge size="lg" utm={`${utm}-final`} />
+      <GooglePlayBadge size="lg" utm={`${utm}-final`} />
     </div>
   </div>
 </section>

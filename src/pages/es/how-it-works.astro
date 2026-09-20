@@ -80,7 +80,7 @@ const structuredData = {
   alternates={alternatesFor("/es/how-it-works/")}
 >
   <!-- Hero + steps -->
-  <section class="brand-gradient relative overflow-hidden text-white">
+  <section data-section="hero" class="brand-gradient relative overflow-hidden text-white">
     <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
       <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
       <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
@@ -105,7 +105,7 @@ const structuredData = {
 
   <section class="bg-white py-20 md:py-28">
     <div class="mx-auto max-w-4xl px-5 md:px-8">
-      <ol class="space-y-12">
+      <ol data-section="steps" class="space-y-12">
         {
           steps.map((step) => (
             <li class="grid gap-6 md:grid-cols-[auto_1fr] md:gap-10">
@@ -142,7 +142,7 @@ const structuredData = {
   </section>
 
   <!-- FAQ -->
-  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+  <section data-section="faq" class="bg-[var(--color-cream)] py-20 md:py-28">
     <div class="mx-auto max-w-3xl px-5 md:px-8">
       <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
         Preguntas frecuentes
@@ -174,7 +174,7 @@ const structuredData = {
   </section>
 
   <!-- Final CTA -->
-  <section class="brand-gradient text-white">
+  <section data-section="cta" class="brand-gradient text-white">
     <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
       <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl">
         ¿Listo para tu primera llamada?
@@ -192,7 +192,7 @@ const structuredData = {
 
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
-  <section class="bg-[var(--color-cream)] py-16 md:py-20">
+  <section data-section="origins" class="bg-[var(--color-cream)] py-16 md:py-20">
     <div class="mx-auto max-w-4xl px-5 md:px-8">
       <SignupOrigins locale="es" />
     </div>

@@ -1,12 +1,14 @@
 /**
  * Spanish copy table for the /es/ subtree.
  *
- * `src/pages/es/call/mexico.astro` says it plainly: "Scaling Spanish to more
+ * `src/pages/es/call/mexico.astro` said it plainly: "Scaling Spanish to more
  * countries later should move these strings into a per-locale table rather
- * than copy this file." This is that table. Mexico itself is deliberately left
- * on its hand-written page — it is indexed and earning impressions, and there
- * is no reason to churn it to prove a pattern. Migrate it here only if it needs
- * editing anyway.
+ * than copy this file." This is that table, and since 2026-09-19 Mexico is in
+ * it too. It had been left on its hand-written page on the grounds that it was
+ * indexed and earning impressions and there was no reason to churn it — but
+ * the exemption is what cost us: the number-format promotion and the sibling
+ * links had to be applied to Mexico a second time, by hand, after the template
+ * already had them. Every page in this subtree now renders from here.
  *
  * Underscore prefix keeps Astro from treating this as a route.
  *
@@ -120,6 +122,23 @@ export const ES_REGIONS: Record<string, string> = {
  * or on a restriction that could be lifted next quarter.
  */
 export const DESTINATION_COPY_ES: Record<string, DestinationCopyEs> = {
+  // The primary Spanish corridor. Its strings are the ones the hand-written
+  // page carried; they were lifted here unchanged on 2026-09-19.
+  mexico: {
+    name: "México",
+    adjective: "mexicanos",
+    linkLabel: "Llamar a México",
+    heroSubline:
+      "Un fijo en Guadalajara o un celular en la Ciudad de México — Kalum marca números mexicanos de verdad, así que quien contesta solo levanta su teléfono.",
+    numberFormat: {
+      title: "El formato de los números mexicanos",
+      body: "Los números de México son de 10 dígitos, tanto fijos como celulares. En el marcador de Kalum solo eliges México (+52) y escribes los 10 dígitos — el código de país ya está puesto.",
+    },
+    numberFormatFaq:
+      "Los números de México son de 10 dígitos, tanto fijos como celulares. En el marcador de Kalum solo eliges México (+52) y escribes los 10 dígitos — el código de país ya está puesto.",
+    numberFormatShort:
+      "Los números en México son de 10 dígitos, fijos y celulares — marca +52 y el número completo.",
+  },
   colombia: {
     name: "Colombia",
     adjective: "colombianos",

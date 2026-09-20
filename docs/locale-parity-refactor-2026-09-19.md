@@ -79,3 +79,58 @@ build, deploy, verify live.
 ## Out of scope
 Retranslating anything. Touching the seven non-Spanish locales, which already share their component.
 Changing what any page says.
+
+## Outcome
+
+All four tasks shipped. Verification method and results:
+
+**Copy integrity.** The pass condition was an empty text diff. Rendered text was
+extracted from the built HTML for each page, before and after, and compared as a
+word multiset — a comparison immune to the source-line rewrapping the refactor
+causes when a hard-wrapped JSX text node becomes one string in a copy object.
+
+| Page | Result |
+| --- | --- |
+| `/` | every word preserved, none added |
+| `/es/` | every word preserved, none added |
+| `/es/call-without-internet/` | every word preserved, none added |
+| `/es/call/colombia/` (control) | identical line for line |
+| `/ar` `/tr` `/hi` `/ur` `/bn` `/tl` `/vi` no-internet | identical line for line |
+
+A site-wide sweep of all 61 built pages against the pre-refactor build found
+exactly one page with changed text: `/es/call/mexico/`, which is the page that
+moved onto the shared template and therefore gained the template's blocks.
+
+**What `/es/call/mexico/` gained**, all of it copy the other four Spanish
+destination pages already carried: a `Destinos` breadcrumb level, the
+"¿Llamas a alguien sin internet?" link under the steps, and the coverage
+sentence above the sibling chips. One phrase changed rather than moved: the
+first FAQ answer now says "a cualquier número de México" where the hand-written
+page said "a cualquier número mexicano", because the shared template builds that
+sentence from the country name. Everything else is verbatim.
+
+**The guard.** `scripts/check-parity.mjs` runs on the built HTML and is chained
+into `npm run build`, which is what `withastro/action@v6` invokes, so a
+regression fails the deploy rather than shipping. It covers 25 pages in 9
+hreflang groups across five page families. Proven to fail, not just to pass:
+
+- Removing `<TrustStrip locale="es" />` from the Spanish home →
+  `/es/ — missing [trust] which / renders`, exit 1.
+- Removing the `number-format` marker from the Spanish destination template →
+  five failures, one per Spanish destination page, exit 1.
+
+The check is union-based rather than measured against English, because this bug
+ran in both directions: the English rates hub was the page missing a section its
+Spanish counterpart had.
+
+**Caught by the regression sweep, not by hand.** Adding Mexico to
+`DESTINATION_COPY_ES` silently duplicated its card in the Spanish home page's
+destinations grid, because three call sites wrote `["mexico", ...Object.keys(…)]`
+to work around Mexico's absence from that table. All three are now plain
+`Object.keys(DESTINATION_COPY_ES)`. The exemption cost more than it saved, twice.
+
+**Still hand-written per locale:** `/how-it-works/` and `/call/`. Both were
+audited during this sprint and both render matching sections today, so they are
+under the guard even though they are not under a shared component. Folding them
+onto shared components is the obvious follow-up and is not urgent while the
+guard holds.

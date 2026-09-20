@@ -1,88 +1,25 @@
 ---
-import { Image } from "astro:assets";
-import heroScreen from "../../assets/screenshots/home.png";
+// The Spanish home page is the English home page with locale="es" — same
+// eight sections, same order, same components. Every word it shows lives in
+// HOME_COPY.es (src/lib/home-copy.ts). Nothing but the head metadata is
+// written here, and that is the point: this file used to be hand-written
+// markup, which is how it ended up without the hero screenshot, the trust
+// strip and the destinations grid while the English page had all three.
+// scripts/check-parity.mjs now fails the build if the two pages stop
+// rendering the same set of sections.
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import AppStoreBadge from "../../components/AppStoreBadge.astro";
-import GooglePlayBadge from "../../components/GooglePlayBadge.astro";
-import { coverage } from "../../lib/rates";
-import { alternatesFor } from "../../lib/i18n";
+import Hero from "../../components/home/Hero.astro";
 import RateFinderSection from "../../components/home/RateFinderSection.astro";
-import TrustStrip from "../../components/home/TrustStrip.astro";
+import NoInternet from "../../components/home/NoInternet.astro";
+import HowItWorksTeaser from "../../components/home/HowItWorksTeaser.astro";
 import PopularDestinations from "../../components/home/PopularDestinations.astro";
+import TrustStrip from "../../components/home/TrustStrip.astro";
+import HomeFAQ from "../../components/home/HomeFAQ.astro";
+import FinalCTA from "../../components/home/FinalCTA.astro";
+import { alternatesFor } from "../../lib/i18n";
+import { coverage } from "../../lib/rates";
 
 const countries = await coverage();
-
-// Spanish homepage (Mexico corridor). Purpose-written Spanish, not a literal
-// translation — Mexican conventions (celular, saldo, marcar) and keyword
-// intent ("llamadas internacionales baratas", "app de llamadas
-// internacionales"). Claims held to the same verified facts as the English
-// site. LLM-authored; a native review pass is welcome and applies as plain
-// content edits.
-const tiles = [
-  {
-    title: "Teléfonos fijos",
-    body: "Perfecto para los papás y abuelos que nunca cambiaron.",
-  },
-  {
-    title: "Celulares viejos",
-    body: "Cualquier número. Cualquier compañía. Cualquier país.",
-  },
-  {
-    title: "Sin internet",
-    body: "No descargan nada. No se registran. Solo contestan.",
-  },
-];
-
-const steps = [
-  {
-    n: "1",
-    title: "Regístrate con tu número",
-    body: "Un código de verificación. Sin correo ni contraseña que recordar.",
-  },
-  {
-    n: "2",
-    title: "Agrega $4.99 de saldo",
-    body: "Paga por el App Store en iPhone o con cualquier tarjeta en Android. Recarga cuando quieras. Tu saldo nunca vence.",
-  },
-  {
-    n: "3",
-    title: "Marca como cualquier teléfono",
-    body: "Elige el país, escribe el número y llama. Su teléfono suena como siempre.",
-  },
-];
-
-const faqs = [
-  {
-    q: "¿Qué es Kalum?",
-    a: `Kalum es una app de llamadas internacionales baratas a cualquier teléfono. Llamas a fijos y celulares en más de ${countries} países desde tu iPhone o Android, y la persona contesta en el teléfono que ya tiene.`,
-  },
-  {
-    q: "¿La persona a la que llamo necesita la app o internet?",
-    a: "No. No necesita app, ni smartphone, ni internet. Kalum pasa por las redes telefónicas reales, así que su teléfono suena como cualquier llamada normal — hasta un fijo o un teléfono básico funciona.",
-  },
-  {
-    q: "¿Qué tan baratas son las llamadas?",
-    a: "Puedes empezar con $4.99 de saldo y ves la tarifa por minuto de cada país antes de marcar. Las tarifas varían según el destino, así que siempre sabes el precio de antemano.",
-  },
-  {
-    q: "¿Hay suscripción o contrato?",
-    a: "No hay suscripciones ni contratos. Agregas saldo cuando quieras, recargas cuando quieras, y tu saldo nunca vence.",
-  },
-  {
-    q: "¿A qué países puedo llamar?",
-    a: `Más de ${countries} destinos en todo el mundo — fijos y celulares en África, América, Asia, Europa y el Medio Oriente.`,
-  },
-];
-
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((faq) => ({
-    "@type": "Question",
-    name: faq.q,
-    acceptedAnswer: { "@type": "Answer", text: faq.a },
-  })),
-};
 ---
 
 <BaseLayout
@@ -92,182 +29,12 @@ const faqSchema = {
   lang="es"
   alternates={alternatesFor("/es/")}
 >
-  <!-- Hero -->
-  <section class="brand-gradient relative overflow-hidden text-white">
-    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
-      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
-      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
-    </div>
-
-    <div class="relative mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-[1.15fr_1fr] md:gap-10 md:px-8 md:py-28 lg:py-32">
-      <div class="flex flex-col justify-center">
-        <p class="eyebrow text-[var(--color-teal-light)]">
-          Llamadas internacionales de prepago
-        </p>
-        <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-display sm:text-5xl lg:text-6xl">
-          Llamadas internacionales baratas a cualquier teléfono.
-          <span class="block text-white/85">Solo contestan.</span>
-        </h1>
-        <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/85 sm:text-xl">
-          Llama a teléfonos fijos y celulares en más de {countries} países. Sin app de su
-          lado. Sin internet de su lado. Es una llamada telefónica normal.
-        </p>
-
-        <div class="mt-9 flex flex-wrap items-center gap-4">
-          <AppStoreBadge size="lg" utm="kalum-web-es-hero" />
-          <GooglePlayBadge size="lg" utm="kalum-web-es-hero" />
-        </div>
-
-        <p class="mt-5 text-sm text-white/70">
-          Empieza con $4.99. Sin suscripción. Tu saldo nunca vence.
-        </p>
-      </div>
-
-      {/*
-        The same app screenshot the English hero carries. Until 2026-09-19 this
-        page was the only home page without it — a consequence of being written
-        by hand instead of from components/home/, which is also why it had no
-        trust strip and no destinations grid.
-      */}
-      <div class="relative flex items-center justify-center md:justify-end">
-        <div class="relative">
-          <div
-            class="absolute -inset-4 rounded-[2.5rem] bg-black/30 blur-2xl"
-            aria-hidden="true"
-          ></div>
-          <div class="relative rounded-[2.2rem] border-[10px] border-black/80 bg-black shadow-2xl ring-1 ring-white/10">
-            <Image
-              src={heroScreen}
-              alt="Marcador de Kalum mostrando la tarifa por minuto antes de llamar"
-              widths={[260, 300, 600]}
-              sizes="(min-width: 640px) 300px, 260px"
-              class="h-auto w-[260px] rounded-[1.6rem] sm:w-[300px]"
-              loading="eager"
-              fetchpriority="high"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <TrustStrip locale="es" />
-
+  <Hero locale="es" />
   <RateFinderSection locale="es" />
-
-  <!-- No internet needed -->
-  <section class="bg-[var(--color-cream)] py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-5 md:px-8">
-      <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl lg:text-5xl">
-          Funciona con el teléfono que ya tienen.
-        </h2>
-        <p class="mt-5 text-lg leading-relaxed text-[var(--color-muted)]">
-          Kalum se conecta a las redes telefónicas reales, no a otra app. A
-          quien llamas contesta en el teléfono que ya usa.
-        </p>
-      </div>
-
-      <div class="mt-14 grid gap-6 md:grid-cols-3">
-        {
-          tiles.map((tile) => (
-            <div class="rounded-2xl border border-black/5 bg-white p-8 shadow-sm">
-              <h3 class="text-xl font-bold text-[var(--color-text)]">{tile.title}</h3>
-              <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
-                {tile.body}
-              </p>
-            </div>
-          ))
-        }
-      </div>
-
-      <p class="mt-10 text-center">
-        <a
-          href="/es/call-without-internet/"
-          class="inline-flex items-center gap-2 text-base font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
-        >
-          Cómo funciona llamar sin internet
-          <span aria-hidden="true">&rarr;</span>
-        </a>
-      </p>
-    </div>
-  </section>
-
-  <!-- How it works -->
-  <section class="bg-white py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-5 md:px-8">
-      <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl lg:text-5xl">
-          Tres pasos. Y ya estás llamando.
-        </h2>
-      </div>
-
-      <ol class="mt-14 grid gap-6 md:grid-cols-3">
-        {
-          steps.map((step) => (
-            <li class="relative rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
-              <span aria-hidden="true" class="text-6xl font-extrabold leading-none text-[var(--color-teal-ink)]">
-                {step.n}
-              </span>
-              <h3 class="mt-4 text-xl font-bold text-[var(--color-text)]">{step.title}</h3>
-              <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">{step.body}</p>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
-
+  <NoInternet locale="es" />
+  <HowItWorksTeaser locale="es" />
   <PopularDestinations locale="es" />
-
-  <!-- FAQ -->
-  <section class="bg-white py-20 md:py-28">
-    <div class="mx-auto max-w-3xl px-5 md:px-8">
-      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl lg:text-5xl">
-        Preguntas frecuentes
-      </h2>
-
-      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
-        {
-          faqs.map((faq) => (
-            <li>
-              <details class="group py-5">
-                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
-                  <span>{faq.q}</span>
-                  <span
-                    aria-hidden="true"
-                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
-                  >
-                    +
-                  </span>
-                </summary>
-                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
-                  {faq.a}
-                </p>
-              </details>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  <!-- Final CTA — also the target of the header's "Descargar" link -->
-  <section id="download" class="brand-gradient relative overflow-hidden text-white">
-    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
-      <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl lg:text-5xl">
-        ¿Listo para tu primera llamada?
-      </h2>
-      <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
-        Descarga Kalum, agrega $4.99 de saldo y marca. Pagas solo los minutos
-        que usas.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <AppStoreBadge size="lg" utm="kalum-web-es-final" />
-        <GooglePlayBadge size="lg" utm="kalum-web-es-final" />
-      </div>
-    </div>
-  </section>
-
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <TrustStrip locale="es" />
+  <HomeFAQ locale="es" />
+  <FinalCTA locale="es" />
 </BaseLayout>

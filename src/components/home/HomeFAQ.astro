@@ -1,32 +1,15 @@
 ---
 import { coverage } from "../../lib/rates";
+import { HOME_COPY, fill, type HomeLocale } from "../../lib/home-copy";
 
+interface Props {
+  locale?: HomeLocale;
+}
+
+const { locale = "en" } = Astro.props;
 const countries = await coverage();
-// Homepage FAQ. Kept distinct from the longer /how-it-works FAQ to avoid
-// duplicate content. Doubles as keyword-rich body copy and emits FAQPage
-// structured data for rich results. Copy must stay within verified claims.
-const faqs = [
-  {
-    q: "What is Kalum?",
-    a: `Kalum is an international calling app for cheap calls to any phone abroad. You call landlines and mobiles in ${countries}+ countries straight from your iPhone or Android, and the person on the other end answers on whatever phone they already have.`,
-  },
-  {
-    q: "Does the person I call need the app or internet?",
-    a: "No. They need no app, no smartphone, and no internet. Kalum routes through real phone networks, so their phone simply rings like any normal call — even an old landline or feature phone works.",
-  },
-  {
-    q: "How cheap are international calls with Kalum?",
-    a: "You can start from $4.99 in credit, and you see the exact per-minute rate for each country before you dial. Rates vary by destination, so you always know the price up front.",
-  },
-  {
-    q: "Is there a subscription or contract?",
-    a: "No subscriptions and no contracts. You add credit when you want it, top up anytime, and your credit never expires.",
-  },
-  {
-    q: "Which countries can I call?",
-    a: `Over ${countries} destinations worldwide — landlines and mobiles across Africa, the Americas, Asia, Europe, and the Middle East.`,
-  },
-];
+const c = HOME_COPY[locale].faq;
+const faqs = c.items.map((faq) => ({ q: faq.q, a: fill(faq.a, countries) }));
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -39,14 +22,18 @@ const faqSchema = {
 };
 ---
 
-<section class="bg-[var(--color-cream)] py-20 md:py-28">
+<section data-section="faq" class="bg-[var(--color-cream)] py-20 md:py-28">
   <div class="mx-auto max-w-3xl px-5 md:px-8">
     <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl lg:text-5xl">
-      Cheap international calls, answered.
+      {c.heading}
     </h2>
-    <p class="mt-5 text-lg leading-relaxed text-[var(--color-muted)]">
-      The questions people ask before they call abroad with Kalum.
-    </p>
+    {
+      c.intro && (
+        <p class="mt-5 text-lg leading-relaxed text-[var(--color-muted)]">
+          {c.intro}
+        </p>
+      )
+    }
 
     <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
       {

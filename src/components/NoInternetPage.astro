@@ -6,16 +6,26 @@ import Breadcrumb from "./Breadcrumb.astro";
 import LanguageBar from "./LanguageBar.astro";
 import { alternatesFor, LOCALES, type Locale } from "../lib/i18n";
 import { NO_INTERNET_COPY } from "../lib/no-internet-copy";
-import { coverage } from "../lib/rates";
+import {
+  coverage,
+  pricedDestinations,
+  formatRate,
+  fromPrefix,
+} from "../lib/rates";
 
 /**
- * Shared body for the single-page locales of /call-without-internet/.
+ * Shared body for every non-English /call-without-internet/ page.
  *
- * Structure mirrors the English and Spanish pages section for section — hero,
- * "you need internet, they don't", who it's for, links to destination pages,
- * FAQ, CTA — so the three pages remain the same page in different languages
- * rather than three products. Prose comes from src/lib/no-internet-copy.ts,
- * the destination count from the live rate card, exactly as the originals.
+ * Structure mirrors the English page section for section — hero, "you need
+ * internet, they don't", who it's for, links to destination pages, FAQ, CTA —
+ * so every one of these stays the same page in a different language rather
+ * than a different product. Prose comes from src/lib/no-internet-copy.ts, the
+ * destination count from the live rate card, exactly as the originals.
+ *
+ * A locale with a tree of its own links its own pages: `homeHref` retargets
+ * the breadcrumb, `destinationsHreflang` labels the rate links, and a
+ * destination carrying a `slug` shows its live per-minute rate. A single-page
+ * locale sets none of those and links the English rate pages.
  *
  * Direction and font come from LOCALES; the layout uses logical properties
  * (ms-/me-/ps-/pe-/text-start) so the same markup flips correctly for Arabic
@@ -36,6 +46,18 @@ const countries = await coverage();
 const path = `/${locale}/call-without-internet/`;
 const canonical = `https://kalum.app${path}`;
 const faqs = copy.faqs(countries);
+
+// Live per-minute rates for any destination link that asked for one. Skipped
+// entirely when none did, so the single-page locales do no rate work.
+const wantsRates = copy.destinations.some((d) => d.slug);
+const { card, priced } = wantsRates
+  ? await pricedDestinations()
+  : { card: null, priced: [] };
+const from = card ? fromPrefix(card.basis, locale === "es" ? "es" : "en") : "";
+const destinations = copy.destinations.map((d) => {
+  const rate = d.slug ? priced.find((p) => p.slug === d.slug) : undefined;
+  return { ...d, rate: rate ? `${from}${formatRate(rate.rateCents)}/min` : null };
+});
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -71,14 +93,19 @@ const alsoIn: Record<Locale, string> = {
   alternates={alternatesFor(path)}
 >
   <!-- Hero -->
-  <section class="brand-gradient relative overflow-hidden text-white">
+  <section data-section="hero" class="brand-gradient relative overflow-hidden text-white">
     <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
       <div class="absolute -top-32 -start-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
       <div class="absolute bottom-0 end-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
     </div>
 
     <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
-      <Breadcrumb items={[{ name: copy.crumbHome, href: "/" }, { name: copy.crumbSelf }]} />
+      <Breadcrumb
+        items={[
+          { name: copy.crumbHome, href: copy.homeHref ?? "/" },
+          { name: copy.crumbSelf },
+        ]}
+      />
       <p class="eyebrow text-[var(--color-teal-light)]">{copy.eyebrow}</p>
       <h1 class="mt-5 text-4xl font-extrabold leading-[1.15] tracking-display sm:text-5xl lg:text-6xl">
         {copy.h1[0]}
@@ -100,7 +127,7 @@ const alsoIn: Record<Locale, string> = {
   </section>
 
   <!-- Explainer -->
-  <section class="bg-white py-20 md:py-28">
+  <section data-section="explainer" class="bg-white py-20 md:py-28">
     <div class="mx-auto max-w-3xl px-5 md:px-8">
       <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
         {copy.explainerH2}
@@ -112,7 +139,7 @@ const alsoIn: Record<Locale, string> = {
   </section>
 
   <!-- Who this is for -->
-  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+  <section data-section="reasons" class="bg-[var(--color-cream)] py-20 md:py-28">
     <div class="mx-auto max-w-6xl px-5 md:px-8">
       <div class="mx-auto max-w-2xl text-center">
         <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
@@ -130,36 +157,74 @@ const alsoIn: Record<Locale, string> = {
           ))
         }
       </div>
+
+      {
+        copy.reasonsMore && (
+          <p class="mt-10 text-center">
+            <a
+              href={copy.reasonsMore.href}
+              class="inline-flex items-center gap-2 text-base font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+            >
+              {copy.reasonsMore.label}
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          </p>
+        )
+      }
     </div>
   </section>
 
-  <!-- Destination links (English pages, and says so) -->
-  <section class="bg-white py-16 md:py-20">
+  <!-- Destination links. English rate pages unless the locale has its own. -->
+  <section data-section="destinations" class="bg-white py-16 md:py-20">
     <div class="mx-auto max-w-4xl px-5 md:px-8">
       <h2 class="text-2xl font-extrabold tracking-display text-[var(--color-text)] sm:text-3xl">
         {copy.destinationsH2}
       </h2>
+      {
+        copy.destinationsIntro && (
+          <p class="mt-3 text-base text-[var(--color-muted)]">
+            {copy.destinationsIntro(countries)}
+          </p>
+        )
+      }
       <ul class="mt-6 flex flex-wrap gap-3">
         {
-          copy.destinations.map((d) => (
+          destinations.map((d) => (
             <li>
               <a
                 href={d.href}
-                hreflang="en"
+                hreflang={copy.destinationsHreflang ?? "en"}
                 class="inline-block rounded-full border border-black/10 bg-[var(--color-cream)] px-4 py-2 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-maroon)] hover:text-[var(--color-maroon)] transition"
               >
-                {d.label}
+                {d.rate ? `${d.label} · ${d.rate}` : d.label}
               </a>
             </li>
           ))
         }
       </ul>
-      <p class="mt-4 text-sm text-[var(--color-muted)]">{copy.destinationsNote}</p>
+      {
+        copy.destinationsNote && (
+          <p class="mt-4 text-sm text-[var(--color-muted)]">{copy.destinationsNote}</p>
+        )
+      }
+      {
+        copy.destinationsMore && (
+          <p class="mt-6">
+            <a
+              href={copy.destinationsMore.href}
+              class="inline-flex items-center gap-2 text-base font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+            >
+              {copy.destinationsMore.label}
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          </p>
+        )
+      }
     </div>
   </section>
 
   <!-- FAQ -->
-  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+  <section data-section="faq" class="bg-[var(--color-cream)] py-20 md:py-28">
     <div class="mx-auto max-w-3xl px-5 md:px-8">
       <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
         {copy.faqH2}
@@ -191,7 +256,7 @@ const alsoIn: Record<Locale, string> = {
   </section>
 
   <!-- Final CTA -->
-  <section class="brand-gradient text-white">
+  <section data-section="cta" class="brand-gradient text-white">
     <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
       <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl">{copy.ctaH2}</h2>
       <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">

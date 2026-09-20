@@ -65,7 +65,7 @@ const canonical = `https://kalum.app${canonicalPath}`;
  */
 const countries = await coverage();
 const { priced: allPriced } = await pricedDestinations();
-const esSlugs = ["mexico", ...Object.keys(DESTINATION_COPY_ES)];
+const esSlugs = Object.keys(DESTINATION_COPY_ES);
 const others = esSlugs
   .filter((o) => o !== slug)
   .map((o) => allPriced.find((x) => x.slug === o))
@@ -182,7 +182,7 @@ const structuredData = {
   alternates={alternatesFor(canonicalPath)}
 >
   <!-- Hero -->
-  <section class="brand-gradient relative overflow-hidden text-white">
+  <section data-section="hero" class="brand-gradient relative overflow-hidden text-white">
     <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
       <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
       <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
@@ -230,7 +230,7 @@ const structuredData = {
     these pages hold is a format question ("numero de honduras", "número de
     guatemala"), all of them ranking 7-10 and taking no clicks.
   -->
-  <section class="bg-[var(--color-cream)] py-16 md:py-20">
+  <section data-section="number-format" class="bg-[var(--color-cream)] py-16 md:py-20">
     <div class="mx-auto max-w-4xl px-5 md:px-8">
       <div class="rounded-2xl border border-black/5 bg-white p-8 shadow-sm md:p-10">
         <div class="flex flex-wrap items-baseline gap-x-4 gap-y-2">
@@ -250,7 +250,7 @@ const structuredData = {
   </section>
 
   <!-- How to call -->
-  <section class="bg-white py-20 md:py-28">
+  <section data-section="steps" class="bg-white py-20 md:py-28">
     <div class="mx-auto max-w-4xl px-5 md:px-8">
       <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
         Cómo llamar a {copy.name}
@@ -294,7 +294,7 @@ const structuredData = {
   </section>
 
   <!-- FAQ -->
-  <section class="bg-[var(--color-cream)] py-20 md:py-28">
+  <section data-section="faq" class="bg-[var(--color-cream)] py-20 md:py-28">
     <div class="mx-auto max-w-3xl px-5 md:px-8">
       <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
         Llamar a {copy.name}, sin dudas.
@@ -326,7 +326,7 @@ const structuredData = {
   </section>
 
   <!-- More destinations -->
-  <section class="bg-white py-16 md:py-20">
+  <section data-section="destinations" class="bg-white py-16 md:py-20">
     <div class="mx-auto max-w-4xl px-5 md:px-8">
       <h2 class="text-2xl font-extrabold tracking-display text-[var(--color-text)] sm:text-3xl">
         Más destinos
@@ -362,7 +362,7 @@ const structuredData = {
   </section>
 
   <!-- Final CTA -->
-  <section class="brand-gradient text-white">
+  <section data-section="cta" class="brand-gradient text-white">
     <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
       <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl">
         ¿Listo para llamar a {copy.name}?
