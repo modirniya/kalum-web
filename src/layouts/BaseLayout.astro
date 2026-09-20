@@ -46,6 +46,14 @@ interface Props {
   dir?: "ltr" | "rtl";
   /** hreflang alternates from alternatesFor(); omit for single-locale pages. */
   alternates?: Alternate[];
+  /**
+   * Drop the app-marketing furniture: the Smart App Banner meta and the
+   * MobileApplication node. For pages that are not about the app and do not
+   * canonicalise to this site — /privacy/ and /terms/, whose canonical points
+   * at legal.neuera.app. Organization and WebSite stay: they describe the
+   * publisher, which is true on any page.
+   */
+  minimal?: boolean;
 }
 
 const {
@@ -58,6 +66,7 @@ const {
   lang = "en",
   dir = "ltr",
   alternates,
+  minimal = false,
 } = Astro.props;
 
 /**
@@ -129,7 +138,7 @@ const structuredData = {
       publisher: { "@id": `${siteUrl}/#organization` },
       inLanguage: lang,
     },
-    {
+    ...(minimal ? [] : [{
       "@type": "MobileApplication",
       name: "Kalum: Call Abroad over WiFi",
       operatingSystem: "iOS, Android",
@@ -144,7 +153,7 @@ const structuredData = {
         price: "0",
         priceCurrency: "USD",
       },
-    },
+    }]),
   ],
 };
 ---
@@ -174,7 +183,11 @@ const structuredData = {
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <meta name="apple-itunes-app" content={`app-id=6763210844, app-argument=${canonical}`} />
+    {
+      !minimal && (
+        <meta name="apple-itunes-app" content={`app-id=6763210844, app-argument=${canonical}`} />
+      )
+    }
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Kalum" />

@@ -1,15 +1,60 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SupportForm from "../components/SupportForm.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+
+/*
+ * Answers to the things people actually write in about, so the page is worth
+ * the 49 sitewide footer links pointing at it — the 2026-09-19 audit found it
+ * at 182 words with no H2, the thinnest page on the site.
+ *
+ * Every answer restates something the site already says elsewhere (the
+ * destination FAQs, the corridor pages, the privacy policy). Nothing new is
+ * claimed here, and the FAQPage schema below is built from this same array,
+ * so the markup and the structured data cannot disagree.
+ */
+const faqs = [
+  {
+    q: "Does my credit expire?",
+    a: "No. Credit you add stays on your account until you spend it. There is no subscription and no monthly fee.",
+  },
+  {
+    q: "How am I charged for a call?",
+    a: "Per minute, rounded up, with a one-minute minimum. The app shows the exact per-minute rate for the number you dialled before the call connects, and that is the rate you are charged.",
+  },
+  {
+    q: "Does the person I call need the app?",
+    a: "No. Kalum places a real telephone call, so any landline or mobile rings normally. They need no app, no smartphone and no internet.",
+  },
+  {
+    q: "A call did not connect. Was I charged?",
+    a: "A call that never connects is not billed. If you see a charge for a call that did not go through, write to us with the number and the approximate time and we will check it.",
+  },
+  {
+    q: "How do I delete my account?",
+    a: "In the app, open Settings and choose Delete Account. You can also ask us here and we will do it for you.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
 ---
 
 <BaseLayout
-  title="Support — Kalum"
-  description="Need help with Kalum? Send us a message and we'll get back to you. Questions about your account, calls, or billing welcome."
+  title="Kalum Support — Account, Calls and Billing Help"
+  description="Answers on credit, per-minute charging and account deletion, and a form that reaches us directly. We reply by email, usually within a day."
   canonical="https://kalum.app/support/"
 >
   <section class="bg-[var(--color-cream)] py-20 md:py-28">
     <div class="mx-auto max-w-2xl px-5 md:px-8">
+      <Breadcrumb tone="light" items={[{ name: "Home", href: "/" }, { name: "Support" }]} />
       <header>
         <p class="eyebrow text-[var(--color-maroon)]">
           We're here to help
@@ -27,6 +72,26 @@ import SupportForm from "../components/SupportForm.astro";
         <SupportForm />
       </div>
 
+      <div class="mt-16">
+        <h2 class="text-2xl font-extrabold tracking-display text-[var(--color-text)] sm:text-3xl">
+          Before you write
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-[var(--color-muted)]">
+          These come up most often, and the answer may be quicker than a reply
+          from us.
+        </p>
+        <dl class="mt-8 space-y-7">
+          {
+            faqs.map((faq) => (
+              <div>
+                <dt class="text-lg font-bold text-[var(--color-text)]">{faq.q}</dt>
+                <dd class="mt-2 text-lg leading-relaxed text-[var(--color-muted)]">{faq.a}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
       <p class="mt-6 text-sm text-[var(--color-muted)]">
         Prefer email? Write to
         <a
@@ -39,4 +104,5 @@ import SupportForm from "../components/SupportForm.astro";
       </p>
     </div>
   </section>
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 </BaseLayout>

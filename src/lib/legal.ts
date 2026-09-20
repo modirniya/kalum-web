@@ -68,5 +68,29 @@ export async function fetchLegal(url: string): Promise<FetchedLegal> {
       `href="https://legal.neuera.app/kalum/${doc.toLowerCase()}/archive.html"`,
   );
 
+  /**
+   * Promote every heading one level.
+   *
+   * legal.neuera.app renders the document title as <h2> because the site's own
+   * page furniture owns the <h1>. Lifted verbatim into a kalum.app page there
+   * is no <h1> at all — the 2026-09-19 audit found both legal pages with none,
+   * the only two on the site. The source hierarchy is a clean h2 -> h3 -> h4
+   * (title, section, subsection), so shifting it up one gives the normal
+   * h1 -> h2 -> h3 with no collisions: there is no h1 to clash with and no h5
+   * or h6 to fall off the end.
+   *
+   * Order matters. Each pass runs once, top level first, so a heading promoted
+   * by one pass is never re-promoted by the next.
+   */
+  for (const [from, to] of [
+    ["h2", "h1"],
+    ["h3", "h2"],
+    ["h4", "h3"],
+  ] as const) {
+    body = body
+      .replace(new RegExp(`<${from}(\\s|>)`, "gi"), `<${to}$1`)
+      .replace(new RegExp(`</${from}>`, "gi"), `</${to}>`);
+  }
+
   return { body, fetchedAt: new Date().toISOString() };
 }
