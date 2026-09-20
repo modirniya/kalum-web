@@ -1,14 +1,35 @@
 ---
 import { coverage } from "../../lib/rates";
 
+/**
+ * The one-line trust bar under the hero. Locale-driven rather than
+ * English-only: the Spanish home page had no trust strip at all until
+ * 2026-09-19, because it was written by hand instead of from these
+ * components. Adding a locale here is cheaper than a second component and
+ * keeps the two homes from drifting again.
+ */
+interface Props {
+  locale?: "en" | "es";
+}
+const { locale = "en" } = Astro.props;
+
 const countries = await coverage();
-const items = [
-  `${countries}+ countries`,
-  "No subscriptions",
-  "No contracts",
-  "Credit never expires",
-  "See the rate before you dial",
-];
+const items =
+  locale === "es"
+    ? [
+        `Más de ${countries} países`,
+        "Sin suscripciones",
+        "Sin contratos",
+        "Tu saldo nunca vence",
+        "Ves la tarifa antes de marcar",
+      ]
+    : [
+        `${countries}+ countries`,
+        "No subscriptions",
+        "No contracts",
+        "Credit never expires",
+        "See the rate before you dial",
+      ];
 ---
 
 <section class="bg-[var(--color-navy)] text-white">

@@ -2,26 +2,72 @@
 import RateDisclosure from "../RateDisclosure.astro";
 import {
   featuredPricedDestinations,
+  pricedDestinations,
   formatRate,
   fromPrefix,
 } from "../../lib/rates";
+import { ES_NAMES, DESTINATION_COPY_ES } from "../../pages/es/_destinations-es";
 
 // Links the top destination pages from the homepage — internal links that
 // help those pages rank. Cards mirror the /call/ index style; rates come from
 // the live rate card at build time so they never drift.
-const { card, priced: featured } = await featuredPricedDestinations();
-const from = fromPrefix(card.basis);
+//
+// Locale-aware since 2026-09-19. The Spanish home page previously showed ONE
+// destination (Mexico) where the English one shows six, because it was
+// hand-written rather than composed from these components. In Spanish the row
+// lists the destinations that have a Spanish page of their own, so every card
+// lands on Spanish — a reader is never sent to an English page from here.
+interface Props {
+  locale?: "en" | "es";
+}
+const { locale = "en" } = Astro.props;
+
+const ES_SLUGS = ["mexico", ...Object.keys(DESTINATION_COPY_ES)];
+
+const { card, priced } =
+  locale === "es" ? await pricedDestinations() : await featuredPricedDestinations();
+
+const featured =
+  locale === "es"
+    ? ES_SLUGS.map((slug) => priced.find((d) => d.slug === slug)).filter(
+        (d): d is NonNullable<typeof d> => Boolean(d),
+      )
+    : priced;
+
+const from = fromPrefix(card.basis, locale);
+
+const copy =
+  locale === "es"
+    ? {
+        h2: "Destinos populares",
+        blurb:
+          "Tarifas por minuto a fijos y celulares — y sin app ni internet del lado de quien recibe.",
+        call: (name: string) => `Llamar a ${name}`,
+        all: "Ver todos los destinos y tarifas",
+        allHref: "/es/call/",
+        href: (slug: string) => `/es/call/${slug}/`,
+        name: (slug: string, fallback: string) => ES_NAMES[slug] ?? fallback,
+      }
+    : {
+        h2: "Popular destinations",
+        blurb:
+          "Per-minute rates to landlines and mobiles — and no app or internet needed on their end.",
+        call: (name: string) => `Call ${name}`,
+        all: "See all destinations and rates",
+        allHref: "/call/",
+        href: (slug: string) => `/call/${slug}/`,
+        name: (_slug: string, fallback: string) => fallback,
+      };
 ---
 
 <section class="bg-[var(--color-cream)] py-20 md:py-28">
   <div class="mx-auto max-w-5xl px-5 md:px-8">
     <div class="max-w-2xl">
       <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl lg:text-5xl">
-        Popular destinations
+        {copy.h2}
       </h2>
       <p class="mt-5 text-lg leading-relaxed text-[var(--color-muted)]">
-        Per-minute rates to landlines and mobiles — and no app or internet
-        needed on their end.
+        {copy.blurb}
       </p>
     </div>
 
@@ -30,16 +76,16 @@ const from = fromPrefix(card.basis);
         featured.map((d) => (
           <li>
             <a
-              href={`/call/${d.slug}/`}
+              href={copy.href(d.slug)}
               class="flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white p-5 shadow-sm transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
             >
               <span class="text-lg font-bold text-[var(--color-text)]">
-                Call {d.name}
+                {copy.call(copy.name(d.slug, d.name))}
               </span>
               <span class="shrink-0 text-right">
                 {from && (
                   <span class="micro-label block text-[var(--color-muted)]">
-                    from
+                    {from.trim()}
                   </span>
                 )}
                 <span class="text-2xl font-extrabold tabular-nums text-[var(--color-maroon)]">
@@ -53,14 +99,14 @@ const from = fromPrefix(card.basis);
       }
     </ul>
 
-    <RateDisclosure card={card} class="mt-8 max-w-3xl" />
+    <RateDisclosure card={card} locale={locale} class="mt-8 max-w-3xl" />
 
     <div class="mt-10">
       <a
-        href="/call/"
+        href={copy.allHref}
         class="inline-flex items-center gap-2 text-base font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
       >
-        See all destinations and rates
+        {copy.all}
         <span aria-hidden="true">&rarr;</span>
       </a>
     </div>

@@ -85,6 +85,7 @@ export const CHROME: Record<Locale, Chrome> = {
       { label: "Cómo funciona", href: "/es/how-it-works/" },
       { label: "Destinos", href: "/es/call/" },
       { label: "Llamar sin internet", href: "/es/call-without-internet/" },
+      { label: "Soporte", href: "/support/" },
     ],
     blurb: (n) => `Llamadas económicas a teléfonos fijos y celulares en más de ${n} países. Solo contestan su teléfono.`,
     product: "Producto",
@@ -99,6 +100,10 @@ export const CHROME: Record<Locale, Chrome> = {
       { href: "/es/call/guatemala/", label: "Llamar a Guatemala" },
       { href: "/es/call/honduras/", label: "Llamar a Honduras" },
       { href: "/es/call/el-salvador/", label: "Llamar a El Salvador" },
+      // English page: there is no Spanish support page yet, and an unreachable
+      // support form is worse than one a reader has to read in English. Until
+      // 2026-09-19 no Spanish page linked to support at all.
+      { href: "/support/", label: "Soporte" },
     ],
     legalLinks: [
       { href: "/privacy/", label: "Privacidad" },
