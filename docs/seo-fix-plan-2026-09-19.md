@@ -1,5 +1,30 @@
 # SEO fix plan — kalum.app — 2026-09-19
 
+> **STATUS 2026-09-19, end of day — 8 of 10 tasks SHIPPED and live**
+> (`806093c` → `f4f7535`, six commits, Pages deploy verified against the live site).
+>
+> Done: 1 (privacy 404), 2 (snippets — 23 descriptions + 10 titles over budget → **0 of 61**),
+> 3 (internal links — /es/how-it-works/ 1→9 inbound, Spanish corridors 2→9, Gulf pages 3-4→11-12,
+> corridors 4-5→7), 4 (breadcrumbs on both hubs), 5 (validFrom no longer the build time;
+> consecutive builds are byte-identical), 6 (typo-URL soft redirect), 7 (legal pages: h1 added,
+> app schema and Smart App Banner dropped), 8 (/support/ 182→370 words with real answers).
+>
+> **Not done, deliberately — read the reason before picking these up:**
+> * **9 (Arabic font preload)** — the preload fires only on `/ar/call-without-internet/` and
+>   preloading the face that page paints with helps text LCP; removing it risks a FOUT on a
+>   ranking page, and the keyless PageSpeed quota is exhausted so neither direction could be
+>   measured. Get an API key, measure, then decide.
+> * **10 (destination de-duplication)** — the honest version needs per-country facts the repo
+>   does not hold (carriers, peak hours). The site's standing rule is verified claims only, and
+>   region-generic filler would be worse than the duplication. This needs content input, not code.
+> * **Owner item still open: Enforce HTTPS** in the GitHub Pages settings — no
+>   `Strict-Transport-Security` header is served.
+>
+> New guard worth knowing: `BaseLayout` now warns at build time on any title >60 or description
+> >155 (`npm run build 2>&1 | grep snippet`). Also note the audit's raw-HTML character counts
+> were entity-inflated (`&mdash;` counts as 8); the build-time string length is the real measure.
+
+
 > Handoff for the next AI session (Opus). Written by the session that ran the 2026-09-19 audit
 > (Search Console API + full crawl). The audit report (Farsi) is
 > https://claude.ai/code/artifact/9d063771-0514-499e-afa6-da75b1373f95 and the findings are
