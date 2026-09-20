@@ -17,8 +17,11 @@
 > * **10 (destination de-duplication)** — the honest version needs per-country facts the repo
 >   does not hold (carriers, peak hours). The site's standing rule is verified claims only, and
 >   region-generic filler would be worse than the duplication. This needs content input, not code.
-> * **Owner item still open: Enforce HTTPS** in the GitHub Pages settings — no
->   `Strict-Transport-Security` header is served.
+> * **Owner item CLOSED, and the finding was wrong.** "Enforce HTTPS" on this repo is already
+>   checked — clicking it would have disabled HTTPS enforcement. Per GitHub's docs the setting only
+>   "transparently redirect[s] all HTTP requests to HTTPS", which it does (`http://kalum.app/` 301s).
+>   GitHub Pages does not send `Strict-Transport-Security` on custom domains and offers no setting
+>   for it, so HSTS needs a CDN in front or a different host — a hosting decision, not repo work.
 >
 > New guard worth knowing: `BaseLayout` now warns at build time on any title >60 or description
 > >155 (`npm run build 2>&1 | grep snippet`). Also note the audit's raw-HTML character counts
@@ -259,9 +262,9 @@ rest templated.
 
 ## Owner-only items (cannot be done from the repo)
 
-- **Enforce HTTPS in GitHub Pages settings** for `kalum.app` (no `Strict-Transport-Security`
-  header is sent today). If it is already on, GitHub is not honouring it for the custom domain →
-  support ticket.
+- ~~Enforce HTTPS in GitHub Pages settings~~ — CHECKED 2026-09-19: already enabled. The setting is
+  only the HTTP->HTTPS redirect, which works. GitHub Pages serves no HSTS header on custom domains
+  and has no setting for it; getting HSTS means putting a CDN in front or changing host.
 - **Google Search Console:** nothing to submit; after the fixes deploy, request indexing for
   `/privacy/` and the 8 snippet-heavy pages via the URL Inspection UI to speed up re-crawl
   (API can inspect but not request indexing).
