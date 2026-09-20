@@ -145,9 +145,9 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
 
   /* ------------------------------------------------------------------ */
   tr: {
-    title: "İnterneti Olmayan Birini Arayın — Telefonu Normal Çalar | Kalum",
+    title: "İnterneti Olmayan Birini Arayın — Telefonu Normal Çalar",
     description: (n) =>
-      `İnterneti, akıllı telefonu ve uygulaması olmayan kişileri arayın. Kalum aramanızı gerçek telefon şebekeleri üzerinden geçirir; ${n}'den fazla ülkede her sabit hat ve tuşlu telefon normal şekilde çalar.`,
+      `İnterneti ve akıllı telefonu olmayan kişileri arayın. Kalum gerçek telefon şebekelerini kullanır; ${n}'den fazla ülkede sabit hat ve tuşlu telefon çalar.`,
     crumbHome: "Ana sayfa",
     crumbSelf: "İnternetsiz arama",
     eyebrow: "Karşı tarafta internet gerekmez",
@@ -210,9 +210,9 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
 
   /* ------------------------------------------------------------------ */
   hi: {
-    title: "बिना इंटरनेट वाले को कॉल करें — उनका फ़ोन वैसे ही बजता है | Kalum",
+    title: "बिना इंटरनेट वाले को कॉल करें — उनका फ़ोन वैसे ही बजता है",
     description: (n) =>
-      `जिनके पास इंटरनेट, स्मार्टफ़ोन या ऐप नहीं है, उन्हें कॉल करें। Kalum आपकी कॉल असली फ़ोन नेटवर्क से जोड़ता है, इसलिए ${n}+ देशों में कोई भी लैंडलाइन या बटन वाला फ़ोन बस बज उठता है।`,
+      `जिनके पास इंटरनेट या स्मार्टफ़ोन नहीं है, उन्हें कॉल करें। Kalum असली फ़ोन नेटवर्क से जोड़ता है, इसलिए ${n}+ देशों में लैंडलाइन या बटन फ़ोन बज उठता है।`,
     crumbHome: "होम",
     crumbSelf: "बिना इंटरनेट कॉल",
     eyebrow: "सामने वाले को इंटरनेट नहीं चाहिए",
@@ -276,9 +276,9 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
 
   /* ------------------------------------------------------------------ */
   ur: {
-    title: "انٹرنیٹ کے بغیر کسی کو کال کریں — فون ویسے ہی بجتا ہے | Kalum",
+    title: "انٹرنیٹ کے بغیر کسی کو کال کریں — فون ویسے ہی بجتا ہے",
     description: (n) =>
-      `جن کے پاس انٹرنیٹ، اسمارٹ فون یا ایپ نہیں، انہیں کال کریں۔ Kalum آپ کی کال اصل فون نیٹ ورک سے جوڑتا ہے، اس لیے ${n} سے زیادہ ممالک میں کوئی بھی لینڈ لائن یا سادہ فون بس بج اٹھتا ہے۔`,
+      `جن کے پاس انٹرنیٹ یا اسمارٹ فون نہیں، انہیں کال کریں۔ Kalum اصل فون نیٹ ورک استعمال کرتا ہے، اس لیے ${n} سے زیادہ ممالک میں لینڈ لائن اور سادہ فون بجتا ہے۔`,
     crumbHome: "ہوم",
     crumbSelf: "انٹرنیٹ کے بغیر کال",
     eyebrow: "دوسری طرف انٹرنیٹ کی ضرورت نہیں",
@@ -344,7 +344,7 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
   bn: {
     title: "ইন্টারনেট নেই এমন কাউকে কল করুন — ফোন ঠিকই বাজে | Kalum",
     description: (n) =>
-      `যাদের ইন্টারনেট, স্মার্টফোন বা অ্যাপ নেই, তাদের কল করুন। Kalum আপনার কল আসল ফোন নেটওয়ার্ক দিয়ে পৌঁছে দেয়, তাই ${n}+ দেশে যেকোনো ল্যান্ডলাইন বা বাটন ফোন ঠিকই বেজে ওঠে।`,
+      `যাদের ইন্টারনেট বা স্মার্টফোন নেই, তাদের কল করুন। Kalum আসল ফোন নেটওয়ার্ক ব্যবহার করে, তাই ${n}+ দেশে যেকোনো ল্যান্ডলাইন বা বাটন ফোন বেজে ওঠে।`,
     crumbHome: "হোম",
     crumbSelf: "ইন্টারনেট ছাড়া কল",
     eyebrow: "ওপাশে ইন্টারনেট লাগে না",
@@ -407,9 +407,9 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
 
   /* ------------------------------------------------------------------ */
   tl: {
-    title: "Tumawag sa Walang Internet — Tutunog Pa Rin ang Telepono | Kalum",
+    title: "Tumawag sa Walang Internet — Tutunog Pa Rin ang Telepono",
     description: (n) =>
-      `Tumawag sa mga taong walang internet, walang smartphone, at walang app. Dinadaan ng Kalum ang tawag mo sa totoong phone network, kaya tutunog ang kahit anong landline o keypad phone sa ${n}+ na bansa.`,
+      `Tumawag sa mga walang internet o smartphone. Totoong phone network ang gamit ng Kalum, kaya tutunog ang landline o keypad phone sa ${n}+ na bansa.`,
     crumbHome: "Home",
     crumbSelf: "Tumawag nang walang internet",
     eyebrow: "Hindi kailangan ng internet sa kabilang linya",
@@ -472,9 +472,9 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
 
   /* ------------------------------------------------------------------ */
   vi: {
-    title: "Gọi Cho Người Không Có Internet — Điện Thoại Vẫn Đổ Chuông | Kalum",
+    title: "Gọi Cho Người Không Có Internet — Điện Thoại Vẫn Đổ Chuông",
     description: (n) =>
-      `Gọi cho người không có internet, không có điện thoại thông minh, không có ứng dụng. Kalum chuyển cuộc gọi qua mạng điện thoại thật, nên mọi điện thoại bàn hay điện thoại phím bấm ở hơn ${n} quốc gia đều đổ chuông bình thường.`,
+      `Gọi cho người không có internet hay smartphone. Kalum dùng mạng điện thoại thật, nên máy bàn hay điện thoại phím bấm ở hơn ${n} quốc gia đều đổ chuông.`,
     crumbHome: "Trang chủ",
     crumbSelf: "Gọi không cần internet",
     eyebrow: "Đầu bên kia không cần internet",

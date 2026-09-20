@@ -156,19 +156,52 @@ const heroRateLine = `Currently ${from}${rate} a minute to any ${d.demonym} numb
  *
  * Longest render is 60 characters (the Philippines), inside Google's cut.
  */
-const title = priceLed
+const fullTitle = priceLed
   ? `Call ${d.name} from ${rate}/min — Dial +${d.dialCode} | Kalum`
   : `Call ${d.name} — Dial +${d.dialCode}, No App on Their End | Kalum`;
+// The longest render today is 60 (the Philippines), exactly at Google's cut.
+// A longer country name added later would push past it, so drop the brand
+// suffix rather than the differentiator — the brand is already in the H1,
+// og:site_name and the visible domain.
+const title =
+  fullTitle.length > 60 ? fullTitle.replace(/ \| Kalum$/, "") : fullTitle;
 
 /**
  * The description leads with the number-format fact rather than the pitch.
  * `numberFormat` is a one-clause restatement of `dialingNote`, so the snippet
  * answers the dialing question in the SERP instead of promising a rate the
  * reader can already see beaten in the result above ours.
+ *
+ * 2026-09-19 — the tail is now budgeted. Google cuts the description around
+ * 155 characters on mobile and the previous single sentence ran 156-174 on
+ * every destination, so the clause this page is actually found on ("961
+ * country code", "saudi number", "sudan phone number" — all ranking 8-10 with
+ * zero clicks) survived the cut while the reason to click did not.
+ *
+ * `numberFormat` is hand-written per destination and IS the answer, so it is
+ * never trimmed — the tail flexes instead, longest form that still fits. A
+ * short format clause keeps the full sentence; the UAE's 94-character one
+ * falls back a step and still lands inside the budget.
  */
-const description = priceLed
-  ? `${d.numberFormat} Call ${d.name} ${preposition} ${rate} a minute with Kalum — no app or internet on their end.`
-  : `${d.numberFormat} Call any ${d.demonym} landline or mobile with Kalum — no app or internet on their end.`;
+const DESCRIPTION_BUDGET = 150;
+
+const descriptionTails = priceLed
+  ? [
+      ` Call ${d.name} ${preposition} ${rate} a minute — no app or internet on their end.`,
+      ` Calls ${preposition} ${rate}/min — no app or internet on their end.`,
+      ` Calls ${preposition} ${rate}/min, no app on their end.`,
+    ]
+  : [
+      ` Call any ${d.demonym} landline or mobile — no app or internet on their end.`,
+      ` Call any ${d.demonym} phone — no app or internet on their end.`,
+      ` No app or internet needed on their end.`,
+    ];
+
+const description =
+  d.numberFormat +
+  (descriptionTails.find(
+    (tail) => d.numberFormat.length + tail.length <= DESCRIPTION_BUDGET,
+  ) ?? descriptionTails[descriptionTails.length - 1]);
 
 /**
  * Corridor cross-links, kept as two lists because they address opposite

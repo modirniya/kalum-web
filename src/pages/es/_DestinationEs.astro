@@ -65,12 +65,41 @@ const heroRateLine = `Actualmente ${fromEs}${rate} el minuto a cualquier número
 // tail, it is nearly the whole page. Every named query /es/call/honduras/ held
 // over the three months to 2026-08-30 was a format question, three of the four
 // in the top eleven, all of them at zero clicks.
-const title = priceLed
+const fullTitle = priceLed
   ? `Llamar a ${copy.name} desde ${rate}/min — Marca +${d.dialCode} | Kalum`
   : `Llamar a ${copy.name} — Marca +${d.dialCode}, Sin App de Su Lado | Kalum`;
-const description = priceLed
-  ? `${copy.numberFormatShort} Llama a ${copy.name} ${preposition} ${rate} por minuto con Kalum — sin app ni internet de su lado.`
-  : `${copy.numberFormatShort} Llama a cualquier fijo o celular de ${copy.name} con Kalum — sin app ni internet de su lado.`;
+// Spanish country names run longer than the English ones ("El Salvador" put
+// this line at 61), and Google cuts around 60. The brand suffix is the part
+// that can go: it is already in the H1, in og:site_name and in the visible
+// domain. Drop it only when the line would otherwise be cut.
+const title =
+  fullTitle.length > 60 ? fullTitle.replace(/ \| Kalum$/, "") : fullTitle;
+
+/**
+ * Budgeted like the English template — see src/pages/call/[slug].astro for the
+ * reasoning. It matters more here: in Spanish the number-format intent is
+ * nearly the whole page, and `numberFormatShort` runs to 94 characters, so the
+ * old single sentence pushed every one of these pages past the cut at 170-183.
+ */
+const DESCRIPTION_BUDGET = 150;
+
+const descriptionTails = priceLed
+  ? [
+      ` Llama a ${copy.name} ${preposition} ${rate} por minuto — sin app ni internet de su lado.`,
+      ` Llamadas ${preposition} ${rate}/min — sin app ni internet de su lado.`,
+      ` Llamadas ${preposition} ${rate}/min, sin app de su lado.`,
+    ]
+  : [
+      ` Llama a cualquier fijo o celular de ${copy.name} — sin app ni internet de su lado.`,
+      ` Llama a cualquier fijo o celular, sin app de su lado.`,
+      ` Sin app ni internet de su lado.`,
+    ];
+
+const description =
+  copy.numberFormatShort +
+  (descriptionTails.find(
+    (tail) => copy.numberFormatShort.length + tail.length <= DESCRIPTION_BUDGET,
+  ) ?? descriptionTails[descriptionTails.length - 1]);
 
 const faqs = [
   {

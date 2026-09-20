@@ -60,6 +60,34 @@ const {
   alternates,
 } = Astro.props;
 
+/**
+ * Snippet budget, checked at build time.
+ *
+ * Google cuts the title around 60 characters and the description around 155
+ * on mobile. The 2026-09-19 audit found 43 of 59 pages over the description
+ * limit and 10 over the title limit — and what fell past the cut was the
+ * clause each page had been written to be clicked on, while the pages sat at
+ * position 8-9 taking no clicks at all.
+ *
+ * Every page on the site renders through this layout, so one check here is
+ * the whole site's guard. It WARNS and never throws: an over-long snippet is
+ * a lost click, not a broken page, and failing the build over a typo would
+ * take the site down to fix a cosmetic regression. Read the warnings in the
+ * deploy log (or `npm run build 2>&1 | grep snippet`).
+ */
+const TITLE_BUDGET = 60;
+const DESCRIPTION_BUDGET = 155;
+if (title.length > TITLE_BUDGET) {
+  console.warn(
+    `[snippet] title ${title.length}/${TITLE_BUDGET} — ${canonical}`,
+  );
+}
+if (description.length > DESCRIPTION_BUDGET) {
+  console.warn(
+    `[snippet] description ${description.length}/${DESCRIPTION_BUDGET} — ${canonical}`,
+  );
+}
+
 const siteUrl = "https://kalum.app";
 const absoluteOg = ogImage.startsWith("http") ? ogImage : `${siteUrl}${ogImage}`;
 const ogLocale = LOCALES[lang].ogLocale;

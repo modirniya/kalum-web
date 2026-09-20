@@ -55,5 +55,18 @@ export async function fetchLegal(url: string): Promise<FetchedLegal> {
   const archiveUrl = url.replace(/\/$/, "") + "/archive.html";
   body = body.replace(/href="\.\/archive\.html"/gi, `href="${archiveUrl}"`);
 
+  // The same link also appears ROOT-relative on some documents (the privacy
+  // article carries `/kalum/privacy/archive.html`, terms carries only the
+  // relative form). Root-relative resolves against kalum.app, so it 404s —
+  // this was the site's only internal 404 until 2026-09-19. The `/kalum/...`
+  // rules above cannot catch it: they require the closing quote right after
+  // the trailing slash. Must stay AFTER those rules for the same reason the
+  // block above does.
+  body = body.replace(
+    /href="\/kalum\/(privacy|terms)\/archive\.html"/gi,
+    (_match, doc: string) =>
+      `href="https://legal.neuera.app/kalum/${doc.toLowerCase()}/archive.html"`,
+  );
+
   return { body, fetchedAt: new Date().toISOString() };
 }
