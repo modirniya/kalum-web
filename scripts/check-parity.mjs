@@ -41,38 +41,42 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const DIST = process.argv[2] ?? "dist";
+const I18N = "src/lib/i18n.ts";
 
 /**
- * Groups of pages that are translations of one another. Mirrors
- * `localizedGroups` in src/lib/i18n.ts — the same list that emits hreflang —
- * but is kept here as plain data because this script runs on the build output,
- * after TypeScript is gone.
+ * Groups of pages that are translations of one another, read straight out of
+ * `localizedGroups` in src/lib/i18n.ts — the same list that emits hreflang.
  *
- * If you add a row to localizedGroups, add it here. A group listed here whose
- * html is missing is a hard failure, not a skip: a missing file means a page
- * that hreflang promises does not exist.
+ * This used to be a hand-maintained copy of that list, which is the very bug
+ * this script exists to catch, one level up: adding a localized page in one
+ * file and not the other would have left the new group silently unguarded.
+ * Parsing the real list means a page cannot claim an hreflang alternate
+ * without also coming under this check. If the parse fails the script fails —
+ * never falls back to a stale copy.
  */
-const GROUPS = [
-  ["/", "/es/"],
-  ["/how-it-works/", "/es/how-it-works/"],
-  [
-    "/call-without-internet/",
-    "/es/call-without-internet/",
-    "/ar/call-without-internet/",
-    "/tr/call-without-internet/",
-    "/hi/call-without-internet/",
-    "/ur/call-without-internet/",
-    "/bn/call-without-internet/",
-    "/tl/call-without-internet/",
-    "/vi/call-without-internet/",
-  ],
-  ["/call/", "/es/call/"],
-  ["/call/mexico/", "/es/call/mexico/"],
-  ["/call/colombia/", "/es/call/colombia/"],
-  ["/call/guatemala/", "/es/call/guatemala/"],
-  ["/call/honduras/", "/es/call/honduras/"],
-  ["/call/el-salvador/", "/es/call/el-salvador/"],
-];
+async function localizedGroups() {
+  const src = await readFile(I18N, "utf8");
+  const block = src.match(/export const localizedGroups[^=]*=\s*\[([\s\S]*?)\n\];/);
+  if (!block) {
+    console.error(
+      `Locale parity check ABORTED — could not find localizedGroups in ${I18N}.\n` +
+        "The array was renamed or reformatted. Fix this parser; do not delete the check."
+    );
+    process.exit(2);
+  }
+  const groups = [];
+  for (const row of block[1].matchAll(/\{([\s\S]*?)\}/g)) {
+    const paths = [...row[1].matchAll(/"(\/[^"]*)"/g)].map((m) => m[1]);
+    if (paths.length) groups.push(paths);
+  }
+  if (!groups.length) {
+    console.error(`Locale parity check ABORTED — parsed zero groups from ${I18N}.`);
+    process.exit(2);
+  }
+  return groups;
+}
+
+const GROUPS = await localizedGroups();
 
 /** Every role must be reachable from at least one group, or it is a typo. */
 const KNOWN_ROLES = new Set([

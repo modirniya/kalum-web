@@ -134,3 +134,69 @@ audited during this sprint and both render matching sections today, so they are
 under the guard even though they are not under a shared component. Folding them
 onto shared components is the obvious follow-up and is not urgent while the
 guard holds.
+
+## Follow-up, same day: the last two hand-written families
+
+The first pass left `/how-it-works/` and `/call/` hand-written per locale. They
+passed the guard, which only proved they had not yet lost a whole section. When
+they were read line by line they had already drifted, in both directions and
+with no decision behind any of it:
+
+| | `/how-it-works/` EN | ES |
+| --- | --- | --- |
+| FAQPage structured data | absent | present |
+| Store badges in the hero | absent | present |
+| Link to the rates hub | absent | present |
+| Hero treatment | plain white header | brand-gradient, like the rest of the site |
+
+| | `/call/` EN | ES |
+| --- | --- | --- |
+| Store badges in the hero | absent | present |
+| Hero treatment | flat cream block holding hero, finder and index | brand-gradient hero, then the index |
+| UAE corridor box | present | absent, correctly |
+
+Both families now render from `HowItWorksPage.astro` and `RatesHubPage.astro`,
+with copy in `src/lib/how-it-works-copy.ts` and `src/lib/hub-copy.ts`.
+`components/howitworks/Steps.astro` and `FAQ.astro` are deleted: they held
+their copy inline with no locale seam, which is precisely why the Spanish page
+could not use them and became a hand-written twin in the first place.
+
+**The union rule applied.** Where the two differed by accident, each locale
+gained what the other had. English picked up FAQPage structured data, hero
+badges on both pages, a link to the rates hub, and the site's standard gradient
+hero. Spanish gained nothing because it was already the richer of the two,
+which is worth noticing on its own: the English pages had been the neglected
+ones here, the exact opposite of the original bug.
+
+Where they differ on purpose, the difference is now declared rather than
+implicit. The two explainers end on links to different pages, because an
+English reader on the hub is choosing a destination and a Spanish reader is
+more often checking whether the person they call needs internet. The UAE
+corridor box is English-only and carries no `data-section` marker, so the guard
+ignores it instead of demanding a Spanish twin that would link three pages that
+do not exist in Spanish.
+
+**Verification.** Same method. Against the previous commit, across all 61 built
+pages, exactly one page's text changed: `/how-it-works/`, by exactly the new
+rates-hub link. `/es/how-it-works/`, `/call/` and `/es/call/` are word-for-word
+identical to what was deployed. Titles, descriptions, canonicals and hreflang
+counts are unchanged on every page. No internal 404s, every JSON-LD block
+parses, all four snippets inside budget.
+
+One string had no prior original: the English rates-hub link under the steps
+reads "Want rates by country? See the destinations and their rates". The
+Spanish page had carried its equivalent since it was written and the English
+page had nothing pointing at the hub from below the steps.
+
+**The guard no longer keeps its own copy of the group list.** It now parses
+`localizedGroups` out of `src/lib/i18n.ts`, the same array that emits hreflang,
+and exits 2 if it cannot. That removes the last duplicated list: a page cannot
+claim an hreflang alternate without coming under the check. Proven by adding a
+group to `i18n.ts` alone and watching the guard pick it up and fail on it.
+
+**What the guard still cannot catch.** Removing a section from *every* locale
+at once, or deleting a `data-section` marker everywhere. Both are symmetric,
+which makes them content decisions rather than drift. The bug this whole sprint
+was about is asymmetric: one locale quietly falling behind another. With all
+five page families now rendering from shared components, that failure mode is
+gone by construction, and the guard is the backstop that says so on every build.

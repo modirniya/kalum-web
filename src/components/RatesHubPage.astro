@@ -1,0 +1,225 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AppStoreBadge from "./AppStoreBadge.astro";
+import GooglePlayBadge from "./GooglePlayBadge.astro";
+import RateDisclosure from "./RateDisclosure.astro";
+import RateFinder from "./RateFinder.astro";
+import Breadcrumb from "./Breadcrumb.astro";
+import { pricedDestinations, formatRate, fromPrefix, coverage } from "../lib/rates";
+import { alternatesFor } from "../lib/i18n";
+import { localNamesByDialCode } from "../lib/rate-finder";
+import { ES_NAMES, DESTINATION_COPY_ES } from "../pages/es/_destinations-es";
+import { HUB_COPY, type HubLocale } from "../lib/hub-copy";
+
+/**
+ * Shared body for the /call/ rates hubs.
+ *
+ * Replaced two hand-written twins on 2026-09-19. Rates come from the live rate
+ * card at build time and are baked into the HTML — see src/lib/rates.ts.
+ * Prose lives in src/lib/hub-copy.ts.
+ *
+ * Locale shows up in exactly three places beyond the copy object, and all
+ * three are here rather than in a per-locale page:
+ *   1. Country names. Spanish uses ES_NAMES, falling back to the card's
+ *      English spelling so a destination added without a Spanish name keeps
+ *      its row instead of vanishing.
+ *   2. Card link targets. A Spanish card links its Spanish page when one
+ *      exists and the English page otherwise, which is honest about where the
+ *      reader lands and never advertises a Spanish URL that does not exist.
+ *   3. The rate finder's local names, keyed by dial code. The other ~187
+ *      countries keep the card's English spelling rather than dropping out —
+ *      a visitor must always be able to find a destination we price.
+ */
+interface Props {
+  locale: HubLocale;
+}
+const { locale } = Astro.props;
+
+const copy = HUB_COPY[locale];
+const countries = await coverage();
+const { card, priced } = await pricedDestinations();
+const from = fromPrefix(card.basis, locale);
+
+const names = locale === "es" ? ES_NAMES : {};
+const localName = (slug: string, fallback: string) => names[slug] ?? fallback;
+const finderNames = locale === "es" ? localNamesByDialCode(ES_NAMES) : undefined;
+
+const href = (slug: string) =>
+  locale === "es" && slug in DESTINATION_COPY_ES
+    ? `/es/call/${slug}/`
+    : `/call/${slug}/`;
+
+// Fixed display order; empty regions are dropped so adding or removing a
+// destination just works. This is a grouping order, not a ranking — Kalum is
+// a general international calling provider, so the hub favours no region.
+const regionOrder = ["Americas", "Middle East", "Asia", "Africa"] as const;
+const grouped = regionOrder
+  .map((region) => ({
+    label: copy.regions[region] ?? region,
+    items: priced.filter((d) => d.region === region),
+  }))
+  .filter((g) => g.items.length > 0);
+---
+
+<BaseLayout
+  title={copy.title(priced.length)}
+  description={copy.description(priced.length)}
+  canonical={`https://kalum.app${copy.path}`}
+  lang={locale}
+  alternates={alternatesFor(copy.path)}
+>
+  <!-- Hero -->
+  <section data-section="hero" class="brand-gradient relative overflow-hidden text-white">
+    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
+      <Breadcrumb
+        items={[
+          { name: copy.crumbHome, href: copy.crumbHomeHref },
+          { name: copy.crumbSelf },
+        ]}
+      />
+      <p class="eyebrow text-[var(--color-teal-light)]">{copy.eyebrow}</p>
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-display sm:text-5xl lg:text-6xl">
+        {copy.h1}
+        {copy.h1Accent && <span class="block text-white/85">{copy.h1Accent}</span>}
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+        {copy.intro(countries)}
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <AppStoreBadge size="lg" utm={copy.utm} />
+        <GooglePlayBadge size="lg" utm={copy.utm} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Finder + destination index -->
+  <section class="bg-[var(--color-cream)] py-16 md:py-24">
+    <div class="mx-auto max-w-4xl px-5 md:px-8">
+      <div data-section="finder">
+        <RateFinder card={card} locale={locale} localNames={finderNames} class="mb-12" />
+      </div>
+
+      <div data-section="destinations" class="space-y-12">
+        {
+          grouped.map((group) => (
+            <div>
+              <h2 class="text-2xl font-extrabold tracking-display text-[var(--color-text)] sm:text-3xl">
+                {group.label}
+              </h2>
+              <ul class="mt-5 grid gap-4 sm:grid-cols-2">
+                {group.items.map((d) => (
+                  <li>
+                    <a
+                      href={href(d.slug)}
+                      class="flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white p-6 shadow-sm transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
+                    >
+                      <span>
+                        <span class="block text-lg font-bold text-[var(--color-text)]">
+                          {copy.callName(localName(d.slug, d.name))}
+                        </span>
+                        <span class="mt-1 block text-sm text-[var(--color-muted)]">
+                          +{d.dialCode} &middot; {copy.cardSubtitle}
+                        </span>
+                      </span>
+                      <span class="shrink-0 text-right">
+                        {from && (
+                          <span class="micro-label block text-[var(--color-muted)]">
+                            {copy.fromLabel}
+                          </span>
+                        )}
+                        <span class="text-2xl font-extrabold tabular-nums text-[var(--color-maroon)]">
+                          {formatRate(d.rateCents)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      {/*
+        English only, and deliberately so — the three pages it links exist in
+        no other language, so this block carries no data-section marker and
+        the parity guard does not demand a Spanish twin.
+
+        The corridor pages had 4-5 inbound links each at the 2026-09-19 audit,
+        under the ~7 that src/lib/corridors.ts records as the crawl cutoff, and
+        this hub, which every destination page links to, said nothing about
+        them. They are also genuinely the next thing a reader here wants: the
+        hub answers "what does it cost to call X", these answer "how do I call
+        X from where I am".
+      */}
+      {
+        locale === "en" && (
+          <div class="mt-12 rounded-2xl border border-black/5 bg-white p-6 shadow-sm sm:p-8">
+            <h2 class="text-xl font-extrabold tracking-display text-[var(--color-text)]">
+              Calling from the UAE
+            </h2>
+            <p class="mt-3 text-lg leading-relaxed text-[var(--color-muted)]">
+              Voice calls on many internet apps are restricted there, so a call
+              that dials the real number behaves differently from one that does
+              not. These pages cover the dialling itself:
+              <a class="font-semibold text-[var(--color-maroon)] underline decoration-[var(--color-maroon)]/30 underline-offset-4 hover:decoration-[var(--color-maroon)]" href="/call-from-uae/">calling abroad from the UAE</a>,
+              <a class="font-semibold text-[var(--color-maroon)] underline decoration-[var(--color-maroon)]/30 underline-offset-4 hover:decoration-[var(--color-maroon)]" href="/call-india-from-uae/">calling India from the UAE</a>, and
+              <a class="font-semibold text-[var(--color-maroon)] underline decoration-[var(--color-maroon)]/30 underline-offset-4 hover:decoration-[var(--color-maroon)]" href="/call-pakistan-from-uae/">calling Pakistan from the UAE</a>.
+            </p>
+          </div>
+        )
+      }
+
+      <RateDisclosure card={card} locale={locale} class="mt-8" />
+    </div>
+  </section>
+
+  <!-- Explainer -->
+  <section data-section="explainer" class="bg-white py-16 md:py-24">
+    <div class="mx-auto max-w-3xl px-5 md:px-8">
+      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+        {copy.explainerH2}
+      </h2>
+      <div class="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-muted)]">
+        {
+          copy.explainer.map((para, i) => (
+            <p>
+              {para}
+              {i === copy.explainer.length - 1 && (
+                <>
+                  {" "}
+                  <a
+                    href={copy.explainerLink.href}
+                    class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+                  >{copy.explainerLink.label} &rarr;</a>
+                </>
+              )}
+            </p>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section data-section="cta" class="brand-gradient text-white">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
+      <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl">
+        {copy.ctaH2}
+      </h2>
+      <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
+        {copy.ctaBody(countries)}
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="lg" utm={copy.utm} />
+        <GooglePlayBadge size="lg" utm={copy.utm} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
