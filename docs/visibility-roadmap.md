@@ -259,12 +259,15 @@ switcher only.
       *NOTE: Spanish is LLM-authored (native-quality, claims-checked). A
       native-speaker review pass is recommended and applies as plain content
       edits — no structural changes. Not a launch blocker.*
-- [ ] **Step 3 — measurement checkpoint:** GSC 8–12 weeks after `/es/`
-      launch (filter queries containing "llamadas"/"como llamar"). Expect
-      an incremental slice, not a step change. Arabic proceeds only on
-      positive signal. When scaling Spanish past Mexico, move destination
-      strings into a per-locale table beside `destinations.ts` and add
-      `/es/call/` with Spanish country names.
+- [x] **Step 3 — measurement checkpoint: PASSED (read 2026-09-01, six
+      weeks in).** Spanish returned 5.56% CTR against a 0.88% site average and
+      held the four best positions on the site (`/es/how-it-works/` 4.5,
+      `/es/call/` 5.7, `/es/` 7.5, `/es/call-without-internet/` 7.6);
+      `llamadas sin internet` converted at 40% from position 5.6. Well past
+      "an incremental slice". The per-locale table (`_destinations-es.ts`)
+      and `/es/call/` both shipped 2026-08-08. Full numbers in Phase 8.
+      Arabic proceeded — as one page in the winning intent, not the tree;
+      see Step 4.
 - [~] **Step 4 — Arabic `/ar/`: SUPERSEDED by Phase 9 (2026-09-10).** The
       plan here was a homepage plus five Arabic destination pages — six
       rate-led pages in the intent the site loses. Phase 9 ships one Arabic
