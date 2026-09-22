@@ -52,8 +52,14 @@ export async function fetchLegal(url: string): Promise<FetchedLegal> {
   // resolve to a 404 under kalum.app/privacy or kalum.app/terms. Done
   // after the kalum.app rewrites so the inserted absolute URL isn't
   // caught by the /kalum/privacy/ → /privacy rule above.
+  // The upstream privacy page writes it root-relative (/kalum/privacy/
+  // archive.html) rather than ./archive.html; that form shipped untouched
+  // and 404'd on kalum.app (Search Console coverage, 2026-09-08).
   const archiveUrl = url.replace(/\/$/, "") + "/archive.html";
-  body = body.replace(/href="\.\/archive\.html"/gi, `href="${archiveUrl}"`);
+  body = body.replace(
+    /href="(?:\.\/|\/kalum\/(?:privacy|terms)\/)archive\.html"/gi,
+    `href="${archiveUrl}"`,
+  );
 
   // The same link also appears ROOT-relative on some documents (the privacy
   // article carries `/kalum/privacy/archive.html`, terms carries only the
