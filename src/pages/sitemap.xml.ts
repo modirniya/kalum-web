@@ -98,6 +98,17 @@ const LANGUAGES_ADDED = "2026-09-10";
 /** The single-page locales, in the order the language bar lists them. */
 const SINGLE_PAGE_LOCALES = ["ar", "tr", "hi", "ur", "bn", "tl", "vi"] as const;
 
+/**
+ * 2026-09-23: Google was showing the H1 instead of the <title> on these two,
+ * so their titles were reworded to match it. A title is what the result
+ * shows, so it counts as a content change — same call as the 2026-09-02
+ * /whatsapp-calls-blocked/ retitle.
+ */
+const H1_RETITLE: Partial<Record<(typeof SINGLE_PAGE_LOCALES)[number], string>> = {
+  tr: "2026-09-23",
+  tl: "2026-09-23",
+};
+
 /** The later of two ISO dates. */
 const later = (a: string, b: string) => (a > b ? a : b);
 
@@ -171,7 +182,7 @@ export const GET: APIRoute = async () => {
     // nine-language hreflang set on every member of the group.
     ...SINGLE_PAGE_LOCALES.map((l) => ({
       path: `/${l}/call-without-internet/`,
-      lastmod: LANGUAGES_ADDED,
+      lastmod: H1_RETITLE[l] ?? LANGUAGES_ADDED,
     })),
   ];
 

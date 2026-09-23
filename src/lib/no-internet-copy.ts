@@ -256,7 +256,9 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
 
   /* ------------------------------------------------------------------ */
   tr: {
-    title: "İnterneti Olmayan Birini Arayın — Telefonu Normal Çalar",
+    // Worded as the H1: Google was replacing the old, differently-worded
+    // title with the H1 in results (seen 2026-09-23).
+    title: "İnterneti olmayanı arayın. Telefonu yine de çalar. | Kalum",
     description: (n) =>
       `İnterneti ve akıllı telefonu olmayan kişileri arayın. Kalum gerçek telefon şebekelerini kullanır; ${n}'den fazla ülkede sabit hat ve tuşlu telefon çalar.`,
     crumbHome: "Ana sayfa",
@@ -518,7 +520,9 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
 
   /* ------------------------------------------------------------------ */
   tl: {
-    title: "Tumawag sa Walang Internet — Tutunog Pa Rin ang Telepono",
+    // The H1 verbatim (no brand: it would pass 60). Google was showing the
+    // H1 in place of the old title-cased one (seen 2026-09-23).
+    title: "Tumawag sa walang internet. Tutunog pa rin ang telepono nila",
     description: (n) =>
       `Tumawag sa mga walang internet o smartphone. Totoong phone network ang gamit ng Kalum, kaya tutunog ang landline o keypad phone sa ${n}+ na bansa.`,
     crumbHome: "Home",
