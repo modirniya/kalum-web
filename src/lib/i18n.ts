@@ -6,7 +6,7 @@
 // Two shapes of locale live here and the distinction matters:
 //
 //   /es/   is a TREE — a home, a how-it-works, a hub, destination pages.
-//   /ar/ /tr/ /hi/ /ur/ /bn/ /tl/ /vi/ are SINGLE PAGES — one URL each, a
+//   /ar/ /tr/ /hi/ /ur/ /bn/ /tl/ /vi/ /id/ /pt/ are SINGLE PAGES — one URL each, a
 //          translation of /call-without-internet/ and nothing else.
 //
 // The single-page locales exist because that page is the only non-brand intent
@@ -21,7 +21,7 @@
 
 const SITE = "https://kalum.app";
 
-export type Locale = "en" | "es" | "ar" | "tr" | "hi" | "ur" | "bn" | "tl" | "vi";
+export type Locale = "en" | "es" | "ar" | "tr" | "hi" | "ur" | "bn" | "tl" | "vi" | "id" | "pt";
 
 export interface LocaleMeta {
   /** Endonym — how the language names itself, for switchers and language bars. */
@@ -50,10 +50,14 @@ export const LOCALES: Record<Locale, LocaleMeta> = {
   bn: { name: "বাংলা", dir: "ltr", ogLocale: "bn_BD", font: "bengali" },
   tl: { name: "Tagalog", dir: "ltr", ogLocale: "tl_PH", font: null },
   vi: { name: "Tiếng Việt", dir: "ltr", ogLocale: "vi_VN", font: null },
+  // Brazilian Portuguese: Brazil is ~4x Portugal in Search Console, and the
+  // hreflang stays the bare "pt" so a reader in Portugal is still matched.
+  id: { name: "Bahasa Indonesia", dir: "ltr", ogLocale: "id_ID", font: null },
+  pt: { name: "Português", dir: "ltr", ogLocale: "pt_BR", font: null },
 };
 
 /** Display order for language bars: house languages first, then by script. */
-export const LOCALE_ORDER: Locale[] = ["en", "es", "ar", "tr", "hi", "ur", "bn", "tl", "vi"];
+export const LOCALE_ORDER: Locale[] = ["en", "es", "ar", "tr", "hi", "ur", "bn", "tl", "vi", "id", "pt"];
 
 export interface Alternate {
   hreflang: string;
@@ -83,6 +87,8 @@ export const localizedGroups: Partial<Record<Locale, string>>[] = [
     bn: "/bn/call-without-internet/",
     tl: "/tl/call-without-internet/",
     vi: "/vi/call-without-internet/",
+    id: "/id/call-without-internet/",
+    pt: "/pt/call-without-internet/",
   },
   { en: "/call/", es: "/es/call/" },
   { en: "/call/mexico/", es: "/es/call/mexico/" },

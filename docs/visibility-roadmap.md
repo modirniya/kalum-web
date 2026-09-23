@@ -651,6 +651,27 @@ in six weeks. Read each language on its own — a language that never surfaces
 is a finding, not a failure, and should be recorded rather than propped up.
 Only build beyond a single page in a language that has earned it.
 
+### Phase 9b — Indonesian and Portuguese — SHIPPED (2026-09-23)
+
+- [x] `/id/call-without-internet/` and `/pt/call-without-internet/` (Brazilian
+      register, hreflang `pt`), same component and claim set as the other
+      seven. Titles are the H1 verbatim with no brand suffix, since the brand
+      would push them past 60 characters, and because Google had just been
+      caught swapping the Turkish and Tagalog titles for their H1s.
+- **Not demand-led, on purpose.** Search Console over 16 months had zero
+  Indonesian or Portuguese queries (IDN 203 / BRA 125 impressions, all English
+  or brand). The owner's rule is that a single-page locale is cheap enough
+  that one click pays for it, so languages are now added without a demand
+  gate. A page can't collect impressions in a language the site doesn't have.
+- **Corridors the copy speaks to:** Indonesian workers in Malaysia, Hong Kong,
+  Taiwan and Saudi Arabia; Brazilians in the US, Portugal and Japan. Every
+  one of those origins is in `signup-origins.json`. Both corridors are
+  sellable (Indonesia from $0.14, Brazil $0.05).
+- **Open:** the destination block links only `/call/`, because there is no
+  `/call/indonesia/` or `/call/brazil/`. Adding those (English) pages would
+  also give `readHere` somewhere to render.
+- Measured at the same November checkpoint as the other seven.
+
 ---
 
 ## Explicitly not planned (verifier-rejected — do not resurrect)

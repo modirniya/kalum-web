@@ -96,7 +96,7 @@ const FINDER_AND_COUNT = "2026-08-16";
 const LANGUAGES_ADDED = "2026-09-10";
 
 /** The single-page locales, in the order the language bar lists them. */
-const SINGLE_PAGE_LOCALES = ["ar", "tr", "hi", "ur", "bn", "tl", "vi"] as const;
+const SINGLE_PAGE_LOCALES = ["ar", "tr", "hi", "ur", "bn", "tl", "vi", "id", "pt"] as const;
 
 /**
  * 2026-09-23: Google was showing the H1 instead of the <title> on these two,
@@ -107,6 +107,9 @@ const SINGLE_PAGE_LOCALES = ["ar", "tr", "hi", "ur", "bn", "tl", "vi"] as const;
 const H1_RETITLE: Partial<Record<(typeof SINGLE_PAGE_LOCALES)[number], string>> = {
   tr: "2026-09-23",
   tl: "2026-09-23",
+  // Not retitles: Indonesian and Portuguese first shipped this day.
+  id: "2026-09-23",
+  pt: "2026-09-23",
 };
 
 /** The later of two ISO dates. */

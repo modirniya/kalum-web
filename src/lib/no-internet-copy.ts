@@ -649,6 +649,144 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
     utm: "kalum-web-vi-no-internet",
     readHere: "Tiếng Việt: gọi cho người không có internet",
   },
+  /* ------------------------------------------------------------------ */
+  // Indonesian. Written for a migrant worker in Malaysia, Hong Kong, Taiwan or
+  // Saudi Arabia — all four can sign up — calling parents in the kampung.
+  // Shipped 2026-09-23 with no Search Console demand behind it (0 Indonesian
+  // queries in 16 months): the owner's call is that a cheap page is worth even
+  // one click. Title is the H1 verbatim, brand dropped to fit 60.
+  id: {
+    title: "Telepon orang tanpa internet. Teleponnya tetap berdering.",
+    description: (n) =>
+      `Telepon orang yang tidak punya internet atau smartphone. Kalum memakai jaringan telepon sungguhan: telepon rumah dan HP biasa di ${n}+ negara berdering.`,
+    crumbHome: "Beranda",
+    crumbSelf: "Telepon tanpa internet",
+    eyebrow: "Mereka tidak perlu internet",
+    h1: ["Telepon orang tanpa internet.", "Teleponnya tetap berdering."],
+    intro: (n) =>
+      `Kalum adalah aplikasi telepon internasional yang menelepon nomor telepon sungguhan — telepon rumah dan HP di lebih dari ${n} negara. Orang yang Anda telepon tidak perlu aplikasi, smartphone, atau internet.`,
+    finePrint: "Mulai dari US$4,99. Tanpa langganan. Saldo Anda tidak pernah hangus.",
+    explainerH2: "Anda butuh internet. Mereka tidak.",
+    explainer: [
+      "Aplikasi telepon lewat internet hanya jalan kalau kedua pihak sedang online dan memakai aplikasi yang sama. Kalum bekerja dengan cara lain: aplikasinya memakai kuota data atau Wi-Fi Anda untuk memulai panggilan, lalu meneruskannya lewat jaringan telepon biasa ke nomor yang Anda tekan.",
+      "Di sisi mereka, tidak ada yang berubah. Teleponnya berdering seperti panggilan biasa — entah telepon rumah di kampung atau HP jadul yang sudah dipakai lima belas tahun. Mereka mengangkat, dan kalian bisa mengobrol.",
+      "Anda melihat tarif per menit negara tujuan sebelum menelepon; panggilan ditagih per menit, minimal satu menit.",
+    ],
+    reasonsH2: "Dibuat untuk telepon yang dilupakan aplikasi.",
+    reasons: [
+      {
+        title: "Rumah dengan telepon rumah",
+        body: "Orang tua dan kakek-nenek di kampung yang masih setia dengan telepon rumah. Telepon rumah tidak bisa dipasangi aplikasi — dengan Kalum, tidak perlu.",
+      },
+      {
+        title: "HP jadul",
+        body: "Banyak orang masih menelepon dari HP biasa bertombol. Nomor apa pun, operator apa pun, tetap berdering — tidak perlu smartphone.",
+      },
+      {
+        title: "Internet yang tidak bisa diandalkan",
+        body: "Listrik padam, sinyal lemah, kuota mahal. Saat internet di sisi mereka mati, panggilan telepon biasa tetap sampai.",
+      },
+    ],
+    destinationsH2: "Tarif menelepon ke Indonesia",
+    destinationsIntro: () =>
+      "Bekerja di Malaysia, Hong Kong, Taiwan, atau Arab Saudi? Cari Indonesia di halaman tarif untuk melihat tarif per menitnya.",
+    destinations: [{ label: "Semua negara dan tarif", href: "/call/" }],
+    destinationsNote: "Halaman tarif dalam bahasa Inggris.",
+    faqH2: "Telepon tanpa internet — tanya jawab",
+    faqs: (n) => [
+      {
+        q: "Bisakah saya menelepon orang yang sama sekali tidak punya internet?",
+        a: "Bisa. Kalum menyalurkan panggilan Anda lewat jaringan telepon sungguhan, jadi orang yang Anda telepon tidak perlu internet, aplikasi, atau smartphone. Telepon rumah lama atau HP bertombol biasa berdering seperti panggilan biasa.",
+      },
+      {
+        q: "Apakah saya perlu internet untuk menelepon?",
+        a: "Ya — hanya di sisi Anda. Aplikasi Kalum memakai kuota data atau Wi-Fi Anda untuk memulai panggilan, lalu meneruskannya ke jaringan telepon biasa. Orang yang Anda telepon tidak pernah butuh koneksi.",
+      },
+      {
+        q: "Bisakah saya menelepon telepon rumah?",
+        a: `Bisa. Kalum menelepon telepon rumah dan HP di lebih dari ${n} negara. Orang yang Anda telepon cukup mengangkat telepon yang sudah mereka punya — tidak ada yang perlu diunduh atau diatur di sisi mereka.`,
+      },
+      {
+        q: "Berapa biayanya?",
+        a: "Tarif berbeda per negara, dan aplikasi menampilkan tarif per menit yang pasti sebelum Anda menelepon. Anda mengisi saldo prabayar mulai dari US$4,99 — tanpa langganan, dan saldo tidak pernah hangus.",
+      },
+    ],
+    ctaH2: "Siap menelepon?",
+    ctaBody: (n) =>
+      `Unduh Kalum, isi saldo US$4,99, lalu telepon telepon rumah atau HP mana pun di lebih dari ${n} negara. Anda hanya membayar menit yang Anda pakai.`,
+    utm: "kalum-web-id-no-internet",
+    // Unused today: there is no /call/indonesia/ page to carry it.
+    readHere: "Bahasa Indonesia: telepon orang tanpa internet",
+  },
+
+  /* ------------------------------------------------------------------ */
+  // Portuguese, Brazilian register. Written for a Brazilian in the US,
+  // Portugal or Japan — all three can sign up — calling a landline back in
+  // the interior. Same footing as Indonesian: shipped 2026-09-23 on the
+  // owner's call, not on demand data. Title is the H1 verbatim, no brand.
+  pt: {
+    title: "Ligue para quem não tem internet. O telefone toca igual.",
+    description: (n) =>
+      `Ligue para quem não tem internet nem smartphone. O Kalum usa redes telefônicas de verdade: fixo e celular comum tocam em mais de ${n} países.`,
+    crumbHome: "Início",
+    crumbSelf: "Ligar sem internet",
+    eyebrow: "Do outro lado, sem internet",
+    h1: ["Ligue para quem não tem internet.", "O telefone toca igual."],
+    intro: (n) =>
+      `O Kalum é um app de ligações internacionais que liga para números de telefone de verdade — fixos e celulares em mais de ${n} países. Quem recebe não precisa de app, de smartphone nem de internet.`,
+    finePrint: "A partir de US$ 4,99. Sem assinatura. Seu saldo não expira.",
+    explainerH2: "Você precisa de internet. Eles, não.",
+    explainer: [
+      "Apps de chamada pela internet só funcionam quando os dois lados estão online e usam o mesmo app. O Kalum funciona de outro jeito: o app usa seus dados móveis ou seu Wi-Fi para iniciar a ligação e depois a leva pelas redes telefônicas comuns até o número que você discou.",
+      "Do outro lado, nada muda. O telefone toca como qualquer ligação — seja o fixo na casa da sua mãe no interior, seja um celular de teclinha com quinze anos de uso. A pessoa atende e vocês conversam.",
+      "Você vê a tarifa por minuto do país antes de ligar, e as ligações são cobradas por minuto, com mínimo de um minuto.",
+    ],
+    reasonsH2: "Feito para os telefones que os apps esqueceram.",
+    reasons: [
+      {
+        title: "Casas com telefone fixo",
+        body: "Pais e avós que nunca largaram o telefone de casa. Telefone fixo não instala app — com o Kalum, nem precisa.",
+      },
+      {
+        title: "Celular de teclinha",
+        body: "Muita gente ainda liga de um celular simples, de teclas. Qualquer número, de qualquer operadora, toca — sem precisar de smartphone.",
+      },
+      {
+        title: "Internet que não dá para confiar",
+        body: "Falta de luz, sinal fraco, pacote de dados caro. Quando a internet deles cai, uma ligação telefônica comum chega mesmo assim.",
+      },
+    ],
+    destinationsH2: "Tarifas para ligar para o Brasil",
+    destinationsIntro: () =>
+      "Mora nos Estados Unidos, em Portugal ou no Japão? Procure o Brasil na página de tarifas para ver o preço por minuto.",
+    destinations: [{ label: "Todos os países e tarifas", href: "/call/" }],
+    destinationsNote: "As páginas de tarifas estão em inglês.",
+    faqH2: "Ligar sem internet — perguntas frequentes",
+    faqs: (n) => [
+      {
+        q: "Posso ligar para alguém que não tem internet nenhuma?",
+        a: "Pode. O Kalum leva sua ligação pelas redes telefônicas de verdade, então quem recebe não precisa de internet, de app nem de smartphone. Um fixo antigo ou um celular simples de teclas toca como numa ligação normal.",
+      },
+      {
+        q: "Eu preciso de internet para ligar?",
+        a: "Sim — só do seu lado. O app Kalum usa seus dados ou seu Wi-Fi para iniciar a ligação e depois passa para as redes telefônicas comuns. Quem recebe nunca precisa de conexão.",
+      },
+      {
+        q: "Dá para ligar para telefone fixo?",
+        a: `Dá. O Kalum liga para fixos e celulares em mais de ${n} países. A pessoa atende no telefone que já tem — não precisa baixar nem configurar nada do lado dela.`,
+      },
+      {
+        q: "Quanto custa?",
+        a: "As tarifas variam por país, e o app mostra a tarifa exata por minuto antes de você ligar. Você coloca crédito pré-pago a partir de US$ 4,99 — sem assinatura, e o saldo não expira.",
+      },
+    ],
+    ctaH2: "Pronto para ligar?",
+    ctaBody: (n) =>
+      `Baixe o Kalum, coloque US$ 4,99 de crédito e ligue para qualquer fixo ou celular em mais de ${n} países. Você só paga pelos minutos que usar.`,
+    utm: "kalum-web-pt-no-internet",
+    // Unused today: there is no /call/brazil/ page to carry it.
+    readHere: "Em português: ligue para quem não tem internet",
+  },
 };
 
 /**
