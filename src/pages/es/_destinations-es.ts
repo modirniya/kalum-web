@@ -75,6 +75,7 @@ export interface DestinationCopyEs {
 export const ES_NAMES: Record<string, string> = {
   mexico: "México",
   colombia: "Colombia",
+  brazil: "Brasil",
   guatemala: "Guatemala",
   honduras: "Honduras",
   "el-salvador": "El Salvador",
@@ -104,6 +105,7 @@ export const ES_NAMES: Record<string, string> = {
   philippines: "Filipinas",
   "sri-lanka": "Sri Lanka",
   vietnam: "Vietnam",
+  indonesia: "Indonesia",
 };
 
 /** Region headings for the Spanish hub, in the same order the English hub uses. */

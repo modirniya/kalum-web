@@ -689,8 +689,11 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
     ],
     destinationsH2: "Tarif menelepon ke Indonesia",
     destinationsIntro: () =>
-      "Bekerja di Malaysia, Hong Kong, Taiwan, atau Arab Saudi? Cari Indonesia di halaman tarif untuk melihat tarif per menitnya.",
-    destinations: [{ label: "Semua negara dan tarif", href: "/call/" }],
+      "Bekerja di Malaysia, Hong Kong, Taiwan, atau Arab Saudi? Lihat tarif per menit untuk menelepon ke Indonesia.",
+    destinations: [
+      { label: "Telepon ke Indonesia", href: "/call/indonesia/" },
+      { label: "Semua negara dan tarif", href: "/call/" },
+    ],
     destinationsNote: "Halaman tarif dalam bahasa Inggris.",
     faqH2: "Telepon tanpa internet — tanya jawab",
     faqs: (n) => [
@@ -715,7 +718,6 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
     ctaBody: (n) =>
       `Unduh Kalum, isi saldo US$4,99, lalu telepon telepon rumah atau HP mana pun di lebih dari ${n} negara. Anda hanya membayar menit yang Anda pakai.`,
     utm: "kalum-web-id-no-internet",
-    // Unused today: there is no /call/indonesia/ page to carry it.
     readHere: "Bahasa Indonesia: telepon orang tanpa internet",
   },
 
@@ -758,8 +760,11 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
     ],
     destinationsH2: "Tarifas para ligar para o Brasil",
     destinationsIntro: () =>
-      "Mora nos Estados Unidos, em Portugal ou no Japão? Procure o Brasil na página de tarifas para ver o preço por minuto.",
-    destinations: [{ label: "Todos os países e tarifas", href: "/call/" }],
+      "Mora nos Estados Unidos, em Portugal ou no Japão? Veja o preço por minuto para ligar para o Brasil.",
+    destinations: [
+      { label: "Ligar para o Brasil", href: "/call/brazil/" },
+      { label: "Todos os países e tarifas", href: "/call/" },
+    ],
     destinationsNote: "As páginas de tarifas estão em inglês.",
     faqH2: "Ligar sem internet — perguntas frequentes",
     faqs: (n) => [
@@ -784,7 +789,6 @@ export const NO_INTERNET_COPY: Partial<Record<Locale, NoInternetCopy>> = {
     ctaBody: (n) =>
       `Baixe o Kalum, coloque US$ 4,99 de crédito e ligue para qualquer fixo ou celular em mais de ${n} países. Você só paga pelos minutos que usar.`,
     utm: "kalum-web-pt-no-internet",
-    // Unused today: there is no /call/brazil/ page to carry it.
     readHere: "Em português: ligue para quem não tem internet",
   },
 };
@@ -816,4 +820,6 @@ export const LOCALE_FOR_DESTINATION: Record<string, Locale> = {
   bangladesh: "bn",
   philippines: "tl",
   vietnam: "vi",
+  indonesia: "id",
+  brazil: "pt",
 };

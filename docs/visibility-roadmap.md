@@ -667,9 +667,10 @@ Only build beyond a single page in a language that has earned it.
   Taiwan and Saudi Arabia; Brazilians in the US, Portugal and Japan. Every
   one of those origins is in `signup-origins.json`. Both corridors are
   sellable (Indonesia from $0.14, Brazil $0.05).
-- **Open:** the destination block links only `/call/`, because there is no
-  `/call/indonesia/` or `/call/brazil/`. Adding those (English) pages would
-  also give `readHere` somewhere to render.
+- [x] `/call/indonesia/` and `/call/brazil/` added the same day (33
+  destinations). Both locale pages link them, and each shows its read-here
+  link back. Brazil is price-led at 5¢; Indonesia (14¢) leads with the
+  dialing format.
 - Measured at the same November checkpoint as the other seven.
 
 ---

@@ -325,6 +325,19 @@ export const destinations: Destination[] = [
       "Colombian mobiles are 10 digits starting with 3 — dial +57 and the full number.",
   },
   {
+    slug: "brazil",
+    region: "Americas",
+    name: "Brazil",
+    demonym: "Brazilian",
+    dialCode: "55",
+    intro:
+      "São Paulo, Rio, or a landline out in the interior — Kalum dials Brazilian numbers directly, so whoever you call just answers their phone.",
+    dialingNote:
+      "Brazilian mobiles are 11 digits: a 2-digit area code (like 11 for São Paulo) and 9 digits starting with 9; landlines have 8 digits after the area code. Dial +55, the area code, then the number — skip the 0 and carrier code used inside Brazil.",
+    numberFormat:
+      "Brazilian mobiles are 11 digits with the area code — dial +55 and the full number.",
+  },
+  {
     slug: "india",
     region: "Asia",
     name: "India",
@@ -414,6 +427,19 @@ export const destinations: Destination[] = [
       "Vietnamese mobiles are 9 digits starting with 3, 5, 7, 8, or 9 (written locally with a leading 0). Drop the leading 0 and dial +84, then the rest of the number.",
     numberFormat:
       "Vietnamese mobiles are 9 digits — drop the leading 0 and dial +84.",
+  },
+  {
+    slug: "indonesia",
+    region: "Asia",
+    name: "Indonesia",
+    demonym: "Indonesian",
+    dialCode: "62",
+    intro:
+      "Jakarta, Surabaya, or a village in Central Java — reach any Indonesian landline or mobile, no app or internet needed on their end.",
+    dialingNote:
+      "Indonesian mobiles are written locally with 08 and run 10 to 13 digits; landlines add an area code like 21 for Jakarta. Drop the leading 0 and dial +62, then the rest of the number.",
+    numberFormat:
+      "Indonesian mobiles are written 08… (10–13 digits) — drop the 0 and dial +62.",
   },
   {
     slug: "afghanistan",

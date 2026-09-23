@@ -112,6 +112,15 @@ const H1_RETITLE: Partial<Record<(typeof SINGLE_PAGE_LOCALES)[number], string>> 
   pt: "2026-09-23",
 };
 
+/**
+ * Destination pages added after the snippet rewrite. Without this their
+ * lastmod would come from rateLastmod() alone and predate the page itself.
+ */
+const DESTINATION_LAUNCH: Record<string, string> = {
+  indonesia: "2026-09-23",
+  brazil: "2026-09-23",
+};
+
 /** The later of two ISO dates. */
 const later = (a: string, b: string) => (a > b ? a : b);
 
@@ -156,7 +165,7 @@ export const GET: APIRoute = async () => {
     { path: "/call/", lastmod: later(hubLastmod, SNIPPET_REWRITE) },
     ...priced.map((d) => ({
       path: `/call/${d.slug}/`,
-      lastmod: rateLastmod(d.dialCode),
+      lastmod: later(rateLastmod(d.dialCode), DESTINATION_LAUNCH[d.slug] ?? ""),
     })),
     // Spanish locale. Expanded 3 -> 9 pages on 2026-08-08: /es/ is the
     // highest-efficiency content on the site, ranking roughly twice as well
