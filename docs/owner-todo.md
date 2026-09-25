@@ -1,7 +1,7 @@
 > **STATUS 2026-08-16.** The public rates route this file asks you to approve has
 > been live since 2026-08-05 and the site has been building from it since. That item
 > is done. Items about internal linking and featuredSlugs also shipped, and measured
-> inert. See GROWTH_RESEARCH_2026-08-16.md in kalum-backend for what the data now says.
+> inert. See `kalum-backend/docs/research/GROWTH_RESEARCH_2026-08-16.md` for what the data now says.
 
 # Owner to-do — kalum.app visibility
 
