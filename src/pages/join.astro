@@ -1,0 +1,130 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AppStoreBadge from "../components/AppStoreBadge.astro";
+import GooglePlayBadge from "../components/GooglePlayBadge.astro";
+
+/*
+ * Landing page for a Family Wallet invite link:
+ *   https://www.kalum.app/join/?code=ABCD-EFGH
+ *
+ * The app has no universal links, so this page does the handing-over: it shows
+ * the code big, lets the person copy it, and says where to enter it. The code is
+ * read and rendered in the browser only — it is never sent anywhere, and the
+ * page is noindex and absent from the sitemap. Cross-origin navigation (the
+ * store badges) sends only our origin as the referrer, never the query.
+ *
+ * English and Spanish, like the app. The language follows the browser.
+ */
+---
+
+<BaseLayout
+  title="Join a Kalum family wallet"
+  description="Someone invited you to their Kalum family wallet. Install Kalum, then enter the invite code in Settings → Family wallet."
+  canonical="https://kalum.app/join/"
+  noindex
+>
+  <section class="bg-[var(--color-cream)] py-16 md:py-24">
+    <div class="mx-auto max-w-xl px-5 md:px-8 text-center">
+      <p class="eyebrow text-[var(--color-maroon)]" data-i18n="eyebrow">Family wallet invite</p>
+      <h1 class="mt-3 text-3xl md:text-4xl font-bold" data-i18n="title">
+        You're invited to a Kalum family wallet
+      </h1>
+      <p class="mt-4 text-base text-slate-700" data-i18n="lede">
+        The person who invited you lets you call on their Kalum balance. They will see how much
+        you spend from it each month — not who you call.
+      </p>
+
+      <div id="code-box" class="mt-8 hidden">
+        <p class="text-sm text-slate-600" data-i18n="yourCode">Your invite code</p>
+        <p
+          id="code"
+          class="mt-2 font-mono text-4xl md:text-5xl font-bold tracking-widest select-all"
+        >
+        </p>
+        <button
+          id="copy"
+          type="button"
+          class="mt-4 rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold hover:bg-slate-50"
+          data-i18n="copy"
+        >
+          Copy code
+        </button>
+        <p id="copied" class="mt-2 h-5 text-sm text-emerald-700" aria-live="polite"></p>
+      </div>
+
+      <p id="no-code" class="mt-8 hidden text-slate-700" data-i18n="noCode">
+        This link has no invite code. Ask the person who invited you to send it again.
+      </p>
+
+      <ol class="mt-10 space-y-3 text-left text-slate-800">
+        <li><span class="font-semibold">1.</span> <span data-i18n="step1">Install Kalum.</span></li>
+        <li>
+          <span class="font-semibold">2.</span>
+          <span data-i18n="step2">Open it and go to Settings → Family wallet → Join with a code.</span>
+        </li>
+        <li>
+          <span class="font-semibold">3.</span>
+          <span data-i18n="step3">Enter the code above (or paste this link) and accept.</span>
+        </li>
+      </ol>
+
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <AppStoreBadge size="md" utm="family-invite" loading="eager" />
+        <GooglePlayBadge size="md" utm="family-invite" loading="eager" />
+      </div>
+
+      <p class="mt-8 text-xs text-slate-500" data-i18n="expiry">
+        Invite codes work once and expire 48 hours after they are created.
+      </p>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var es = {
+        eyebrow: "Invitación a la billetera familiar",
+        title: "Te invitaron a una billetera familiar de Kalum",
+        lede:
+          "Quien te invitó te deja llamar con su saldo de Kalum. Verá cuánto gastas de él cada mes, pero no a quién llamas.",
+        yourCode: "Tu código de invitación",
+        copy: "Copiar código",
+        copied: "Copiado",
+        noCode:
+          "Este enlace no tiene código de invitación. Pide a quien te invitó que lo envíe de nuevo.",
+        step1: "Instala Kalum.",
+        step2: "Ábrelo y ve a Ajustes → Billetera familiar → Unirme con un código.",
+        step3: "Escribe el código de arriba (o pega este enlace) y acepta.",
+        expiry: "Los códigos sirven una sola vez y vencen 48 horas después de crearse.",
+      };
+      var copiedText = "Copied";
+      var lang = (navigator.language || "en").toLowerCase();
+      if (lang.indexOf("es") === 0) {
+        document.documentElement.lang = "es";
+        document.querySelectorAll("[data-i18n]").forEach(function (el) {
+          var t = es[el.getAttribute("data-i18n")];
+          if (t) el.textContent = t;
+        });
+        copiedText = es.copied;
+      }
+
+      // Only the characters a code can hold; anything else is dropped, and
+      // it is written as text, never as HTML.
+      var raw = new URLSearchParams(location.search).get("code") || "";
+      var clean = raw.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
+      if (clean.length === 8) {
+        var shown = clean.slice(0, 4) + "-" + clean.slice(4);
+        document.getElementById("code").textContent = shown;
+        document.getElementById("code-box").classList.remove("hidden");
+        document.getElementById("copy").addEventListener("click", function () {
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(shown).then(function () {
+              document.getElementById("copied").textContent = copiedText;
+            });
+          }
+        });
+      } else {
+        document.getElementById("no-code").classList.remove("hidden");
+      }
+    })();
+  </script>
+</BaseLayout>
