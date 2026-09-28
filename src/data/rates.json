@@ -1,7 +1,7 @@
 {
   "note": "Last-good rate card. The build fetches the live card and renders that; this file is only what it falls back to when the API is unreachable, and the baseline the refresh workflow diffs against to decide which pages actually changed. Refreshed and committed by .github/workflows/refresh-rates.yml — hand-edit only to bootstrap or correct it.",
   "source": "live",
-  "fetchedAt": "2026-08-31T08:19:08.116Z",
+  "fetchedAt": "2026-09-28T08:24:45.635Z",
   "basis": "from",
   "rates": [
     {
@@ -72,7 +72,7 @@
     {
       "country_code": "43",
       "country_name": "Austria",
-      "rate_per_minute": "0.22"
+      "rate_per_minute": "0.03"
     },
     {
       "country_code": "994",
@@ -337,7 +337,7 @@
     {
       "country_code": "358",
       "country_name": "Finland",
-      "rate_per_minute": "0.59"
+      "rate_per_minute": "0.06"
     },
     {
       "country_code": "33",
