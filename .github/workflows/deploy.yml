@@ -5,9 +5,14 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    # Monday 03:00 UTC — keeps /privacy and /terms within ~7 days of the
-    # legal.neuera.app source (build-time fetch).
-    - cron: '0 3 * * 1'
+    # Daily 03:00 UTC. /privacy and /terms are fetched from legal.neuera.app
+    # at build time, and the app's sign-in screen links to these copies, so a
+    # newly published notice must reach them within a day, not a week (weekly
+    # left kalum.app two versions behind on 2026-09-29). Publishing a notice
+    # should still be followed by `gh workflow run deploy.yml -R
+    # modirniya/kalum-web`; this is the backstop. The Monday run is still the
+    # one an hour after refresh-rates.yml.
+    - cron: '0 3 * * *'
 
 permissions:
   contents: read
