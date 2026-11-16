@@ -1,0 +1,43 @@
+---
+import Wave from "./Wave.astro";
+import StoreBadges from "./StoreBadges.astro";
+
+/**
+ * The closing download band (MASTER.md §2). A wave rises out of the cream into
+ * maroon, and the footer below continues in the deeper maroon, so the bottom
+ * of every page reads as one base, like the app's bottom bar.
+ *
+ * Put it last in the page: the footer is meant to follow directly.
+ * `body` is plain text; pass a `body` slot for markup.
+ */
+interface Props {
+  title: string;
+  body?: string;
+  utm: string;
+  section?: string;
+  /** Anchor id, e.g. "download" for the header's in-page link. */
+  id?: string;
+  /** Tag the badges as conversion CTAs (paid landing pages). */
+  cta?: boolean;
+  class?: string;
+}
+const { title, body, utm, section = "cta", id, cta = false, class: cls = "" } = Astro.props;
+---
+
+<div class:list={["mt-8 md:mt-12", cls]}>
+  <Wave direction="up" />
+  <section id={id} data-section={section || undefined} class="scroll-mt-16 bg-[var(--color-brand)] text-white md:scroll-mt-20">
+    <div class="mx-auto max-w-3xl px-5 pb-14 pt-6 text-center md:px-8 md:pb-20 md:pt-8">
+      <h2 class="text-title tracking-display text-balance">{title}</h2>
+      {
+        (body || Astro.slots.has("body")) && (
+          <p class="text-lead mx-auto mt-4 max-w-2xl text-white/85">
+            {Astro.slots.has("body") ? <slot name="body" /> : body}
+          </p>
+        )
+      }
+      <StoreBadges utm={utm} cta={cta} align="center" loading="lazy" class="mt-8" />
+      <slot />
+    </div>
+  </section>
+</div>

@@ -1,7 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import AppStoreBadge from "../components/AppStoreBadge.astro";
-import GooglePlayBadge from "../components/GooglePlayBadge.astro";
+import PageHero from "../components/kit/PageHero.astro";
+import StoreBadges from "../components/kit/StoreBadges.astro";
+import Faq from "../components/kit/Faq.astro";
+import CtaBand from "../components/kit/CtaBand.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { coverage } from "../lib/rates";
 
@@ -75,50 +77,39 @@ const structuredData = {
   description="Internet calling apps need both people online with the same app. An international calling app needs only you — the other side just answers their phone."
   canonical="https://kalum.app/calling-app-vs-internet-calling/"
 >
-  <!-- Hero -->
-  <section class="brand-gradient relative overflow-hidden text-white">
-    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
-      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
-      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
-    </div>
+  <PageHero section="">
+    <Breadcrumb items={[{ name: "Home", href: "/" }, { name: "App vs internet calling" }]} />
+    <p class="eyebrow text-[var(--color-on-brand-accent)]">
+      Choosing how to call abroad
+    </p>
+    <h1 class="text-display tracking-display mt-4 text-balance">
+      Internet calling apps vs an international calling app.
+    </h1>
+    <p class="text-lead mt-5 max-w-2xl text-white/85">
+      Free internet calls only work when both sides are online with the
+      same app. An international calling app like Kalum dials real phone
+      numbers instead — so the other side just answers their phone.
+    </p>
 
-    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
-      <Breadcrumb items={[{ name: "Home", href: "/" }, { name: "App vs internet calling" }]} />
-      <p class="eyebrow text-[var(--color-teal-light)]">
-        Choosing how to call abroad
-      </p>
-      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-display sm:text-5xl lg:text-6xl">
-        Internet calling apps vs an international calling app.
-      </h1>
-      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
-        Free internet calls only work when both sides are online with the
-        same app. An international calling app like Kalum dials real phone
-        numbers instead — so the other side just answers their phone.
-      </p>
-
-      <div class="mt-9 flex flex-wrap items-center gap-4">
-        <AppStoreBadge size="lg" utm="kalum-web-vs-internet" />
-        <GooglePlayBadge size="lg" utm="kalum-web-vs-internet" />
-      </div>
-    </div>
-  </section>
+    <StoreBadges utm="kalum-web-vs-internet" class="mt-8" />
+  </PageHero>
 
   <!-- Comparison table -->
-  <section class="bg-white py-20 md:py-28">
-    <div class="mx-auto max-w-4xl px-5 md:px-8">
-      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+  <section class="py-12 md:py-16">
+    <div class="mx-auto max-w-6xl px-5 md:px-8 [&>*]:max-w-4xl">
+      <h2 class="text-title tracking-display text-balance">
         The difference at a glance
       </h2>
 
-      <div class="mt-10 overflow-x-auto">
-        <table class="w-full min-w-[36rem] border-collapse text-left">
+      <div class="card mt-8 overflow-x-auto">
+        <table class="w-full min-w-[36rem] border-collapse text-start">
           <thead>
-            <tr class="border-b-2 border-black/10">
-              <th scope="col" class="py-4 pr-4 micro-label text-[var(--color-muted)]"></th>
-              <th scope="col" class="py-4 pr-4 text-lg font-extrabold text-[var(--color-maroon)]">
+            <tr class="border-b-2 border-[var(--color-outline)]">
+              <th scope="col" class="px-4 py-4 micro-label text-[var(--color-ink-2)]"></th>
+              <th scope="col" class="bg-[var(--color-call)]/15 px-4 py-4 text-lg font-bold">
                 Kalum
               </th>
-              <th scope="col" class="py-4 text-lg font-bold text-[var(--color-text)]">
+              <th scope="col" class="px-4 py-4 text-lg font-bold">
                 Internet calling apps
               </th>
             </tr>
@@ -126,14 +117,14 @@ const structuredData = {
           <tbody>
             {
               rows.map((row) => (
-                <tr class="border-b border-black/10">
-                  <th scope="row" class="py-4 pr-4 align-top text-base font-semibold text-[var(--color-text)]">
+                <tr class="border-b border-[var(--color-outline)] last:border-b-0">
+                  <th scope="row" class="px-4 py-4 align-top font-semibold">
                     {row.label}
                   </th>
-                  <td class="py-4 pr-4 align-top text-base text-[var(--color-muted)]">
+                  <td class="bg-[var(--color-call)]/10 px-4 py-4 align-top text-[var(--color-ink)]">
                     {row.kalum}
                   </td>
-                  <td class="py-4 align-top text-base text-[var(--color-muted)]">
+                  <td class="px-4 py-4 align-top text-[var(--color-ink-2)]">
                     {row.internet}
                   </td>
                 </tr>
@@ -146,41 +137,41 @@ const structuredData = {
   </section>
 
   <!-- When each is right -->
-  <section class="bg-[var(--color-cream)] py-20 md:py-28">
-    <div class="mx-auto max-w-3xl px-5 md:px-8">
-      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+  <section class="py-12 md:py-16">
+    <div class="mx-auto max-w-6xl px-5 md:px-8 [&>*]:max-w-3xl">
+      <h2 class="text-title tracking-display text-balance">
         When each one is the right choice
       </h2>
 
       <div class="mt-8 space-y-8">
-        <div class="rounded-2xl border border-black/5 bg-white p-8 shadow-sm">
-          <h3 class="text-xl font-bold text-[var(--color-text)]">
+        <div class="card p-6 md:p-8">
+          <h3 class="text-heading">
             Use a free internet app when&hellip;
           </h3>
-          <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+          <p class="mt-2 text-base leading-relaxed text-[var(--color-ink-2)]">
             Both of you have smartphones, the same app installed, and reliable
             internet. App-to-app calls are free, and that's hard to beat. If
             that describes the person you're calling, use it.
           </p>
         </div>
 
-        <div class="rounded-2xl border border-black/5 bg-white p-8 shadow-sm">
-          <h3 class="text-xl font-bold text-[var(--color-text)]">
+        <div class="card p-6 md:p-8">
+          <h3 class="text-heading">
             Use Kalum when&hellip;
           </h3>
-          <ul class="mt-2 space-y-2 text-base leading-relaxed text-[var(--color-muted)]">
+          <ul class="mt-2 space-y-2 text-base leading-relaxed text-[var(--color-ink-2)]">
             <li>&bull; The number is a landline.</li>
             <li>&bull; They carry a feature phone, not a smartphone.</li>
             <li>&bull; Their internet is down, slow, or expensive.</li>
             <li>&bull; Voice calls on internet apps are restricted where they live, as in the UAE.</li>
             <li>&bull; They can't — or won't — install another app.</li>
           </ul>
-          <p class="mt-4 text-base leading-relaxed text-[var(--color-muted)]">
+          <p class="mt-4 text-base leading-relaxed text-[var(--color-ink-2)]">
             In all of those cases, Kalum dials the real phone number and it
             rings like any normal call.
             <a
               href="/call-without-internet/"
-              class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+              class="link"
             >More on calling without internet &rarr;</a>
           </p>
         </div>
@@ -189,61 +180,27 @@ const structuredData = {
   </section>
 
   <!-- FAQ -->
-  <section class="bg-white py-20 md:py-28">
-    <div class="mx-auto max-w-3xl px-5 md:px-8">
-      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+  <section class="py-12 md:py-16">
+    <div class="mx-auto max-w-6xl px-5 md:px-8 [&>*]:max-w-3xl">
+      <h2 class="text-title tracking-display text-balance">
         Common questions
       </h2>
 
-      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
-        {
-          faqs.map((faq) => (
-            <li>
-              <details class="group py-5">
-                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
-                  <span>{faq.q}</span>
-                  <span
-                    aria-hidden="true"
-                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
-                  >
-                    +
-                  </span>
-                </summary>
-                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
-                  {faq.a}
-                </p>
-              </details>
-            </li>
-          ))
-        }
-      </ul>
+      <Faq items={faqs} class="mt-8" />
 
-      <p class="mt-8 text-base text-[var(--color-muted)]">
+      <p class="mt-8 text-base text-[var(--color-ink-2)]">
         Curious what a call costs?
         <a
           href="/call/"
-          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+          class="link"
         >See per-minute rates by destination &rarr;</a>
       </p>
     </div>
   </section>
 
-  <!-- Final CTA -->
-  <section class="brand-gradient text-white">
-    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
-      <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl">
-        Call any phone, not just apps.
-      </h2>
-      <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
-        Download Kalum, add $4.99 in credit, and dial landlines and mobiles
-        in {countries}+ countries. Pay only for the minutes you use.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <AppStoreBadge size="lg" utm="kalum-web-vs-internet" />
-        <GooglePlayBadge size="lg" utm="kalum-web-vs-internet" />
-      </div>
-    </div>
-  </section>
+  <CtaBand title="Call any phone, not just apps." utm="kalum-web-vs-internet" section="">
+    <Fragment slot="body">Download Kalum, add $4.99 in credit, and dial landlines and mobiles in {countries}+ countries. Pay only for the minutes you use.</Fragment>
+  </CtaBand>
 
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 </BaseLayout>

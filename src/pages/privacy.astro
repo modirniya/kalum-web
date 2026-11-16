@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { fetchLegal } from "../lib/legal";
+import PageHero from "../components/kit/PageHero.astro";
+import Section from "../components/kit/Section.astro";
 
 const SOURCE = "https://legal.neuera.app/kalum/privacy/";
 const { body, fetchedAt } = await fetchLegal(SOURCE);
@@ -18,21 +20,19 @@ const synced = new Date(fetchedAt).toLocaleDateString("en-US", {
   canonical={SOURCE}
   minimal
 >
-  <section class="bg-[var(--color-cream)] py-16 md:py-24">
-    <div class="mx-auto max-w-3xl px-5 md:px-8">
-      <article class="prose prose-lg">
-        <Fragment set:html={body} />
-      </article>
-      <p class="mt-12 border-t border-black/10 pt-6 text-xs leading-relaxed text-[var(--color-muted)]">
-        Source of truth:
-        <a
-          href={SOURCE}
-          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)]"
-        >
-          legal.neuera.app/kalum/privacy
-        </a>
-        &mdash; last synced {synced}.
-      </p>
-    </div>
-  </section>
+  <!-- Utility layout: a short wave header, the document in one white card. -->
+  <PageHero variant="compact" width="narrow" class="!pb-2">
+    <p class="eyebrow text-[var(--color-on-brand-accent)]">Kalum</p>
+  </PageHero>
+
+  <Section width="narrow" place="center" class="!pt-0">
+    <article class="card prose prose-lg relative z-10 -mt-16 max-w-none p-6 sm:p-10 md:-mt-20">
+      <Fragment set:html={body} />
+    </article>
+    <p class="mt-8 text-sm leading-relaxed text-[var(--color-ink-2)]">
+      Source of truth:
+      <a href={SOURCE} class="link">legal.neuera.app/kalum/privacy</a>
+      &mdash; last synced {synced}.
+    </p>
+  </Section>
 </BaseLayout>

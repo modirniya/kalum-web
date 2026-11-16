@@ -16,14 +16,17 @@ const popular = featuredDestinations();
 // Chrome strings from src/lib/chrome.ts. The popular-destinations row renders
 // English country names, so it is English-only — the Spanish footer has always
 // declined it, and the single-page locales follow suit.
+//
+// The deep maroon continues the CTA band above it, so the bottom of the page
+// reads as one base, like the app's bottom bar (MASTER.md §2).
 const locale = localeOf(Astro.url.pathname);
 const t = CHROME[locale];
 const isEN = locale === "en";
 ---
 
-<footer class="bg-[var(--color-navy)] text-white/80">
-  <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-4 md:px-8">
-    <div class="md:col-span-1">
+<footer class="bg-[var(--color-brand-deep)] text-white/75">
+  <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-2 md:grid-cols-4 md:px-8">
+    <div>
       <div class="flex items-center gap-3">
         <Image
           src={icon}
@@ -31,7 +34,7 @@ const isEN = locale === "en";
           width={36}
           height={36}
           densities={[1, 2, 3]}
-          class="h-9 w-9 rounded-md bg-white p-0.5"
+          class="size-9 rounded-lg bg-white p-0.5"
         />
         <span class="text-lg font-extrabold tracking-[0.18em] text-white">KALUM</span>
       </div>
@@ -40,27 +43,27 @@ const isEN = locale === "en";
 
     <div>
       <h4 class="micro-label text-white">{t.product}</h4>
-      <ul class="mt-4 space-y-2 text-sm">
+      <ul class="mt-4 space-y-1 text-sm">
         {t.productLinks.map((l) => (
-          <li><a href={l.href} class="hover:text-white">{l.label}</a></li>
+          <li><a href={l.href} class="inline-block py-1 transition-colors hover:text-white">{l.label}</a></li>
         ))}
       </ul>
     </div>
 
     <div>
       <h4 class="micro-label text-white">{t.legal}</h4>
-      <ul class="mt-4 space-y-2 text-sm">
+      <ul class="mt-4 space-y-1 text-sm">
         {t.legalLinks.map((l) => (
-          <li><a href={l.href} class="hover:text-white">{l.label}</a></li>
+          <li><a href={l.href} class="inline-block py-1 transition-colors hover:text-white">{l.label}</a></li>
         ))}
       </ul>
     </div>
 
     <div>
       <h4 class="micro-label text-white">{t.getApp}</h4>
-      <div class="mt-4 flex flex-col gap-3">
-        <AppStoreBadge size="md" utm="kalum-web-footer" loading="lazy" />
-        <GooglePlayBadge size="md" utm="kalum-web-footer" loading="lazy" />
+      <div class="mt-4 flex flex-col items-start gap-3">
+        <AppStoreBadge size="sm" utm="kalum-web-footer" loading="lazy" />
+        <GooglePlayBadge size="sm" utm="kalum-web-footer" loading="lazy" />
       </div>
     </div>
   </div>
@@ -72,16 +75,16 @@ const isEN = locale === "en";
           <h4 class="micro-label text-white">
             Popular destinations
           </h4>
-          <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+          <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
             {popular.map((d) => (
               <li>
-                <a href={`/call/${d.slug}/`} class="hover:text-white">
+                <a href={`/call/${d.slug}/`} class="inline-block py-1 transition-colors hover:text-white">
                   Call {d.name}
                 </a>
               </li>
             ))}
             <li>
-              <a href="/call/" class="font-semibold text-white/90 hover:text-white">
+              <a href="/call/" class="inline-block py-1 font-semibold text-white/90 transition-colors hover:text-white">
                 All destinations &rarr;
               </a>
             </li>

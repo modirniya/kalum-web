@@ -2,28 +2,83 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-maroon: #420905;
-  --color-maroon-light: #6B1208;
-  --color-maroon-dark: #2A0603;
-  --color-teal: #38B2AC;
-  --color-teal-light: #4FD1C5;
-  /* Teal reads as a wash at text sizes on a light ground — 2.4:1 on cream.
-     The app darkens it the same way for light-mode labels and icons. */
-  --color-teal-ink: #0E8F86;
-  --color-navy: #1A1A2E;
-  /* Warm neutrals, matching the app's light theme rather than the cool
-     blue-greys the site launched with. --color-muted carries ~87 body
-     paragraphs and was failing AA at 3.83:1 on cream; this is 5.54:1. */
-  --color-cream: #FAF6EE;
-  --color-text: #241E1B;
-  --color-muted: #6B6259;
-  --color-success: #48BB78;
-  --color-error: #F56565;
+  /* ---- Semantic tokens (design-system/kalum/MASTER.md §3) ----
+     Components use these, never raw hex: each one
+     is a role from kalum-mobile's AppTheme, and dark mode (below) swaps the
+     values without a single dark: class in the markup. Light values are the
+     app's light theme. */
+  --color-bg: #FAF6EE;          /* creamBackground: the page */
+  --color-surface: #FFFFFF;     /* lightSurface: cards */
+  --color-surface-2: #F0EBE1;   /* lightSurfaceVariant: inputs, raised rows */
+  --color-outline: #E0D9CD;     /* lightOutline: hairlines, dividers */
+  /* Card edge: none in light, where the shadow lifts the card; the outline
+     in dark, where a shadow on navy is invisible. */
+  --color-edge: transparent;
+  --color-ink: #241E1B;         /* lightTextPrimary */
+  --color-ink-2: #6B6259;       /* lightTextSecondary — 5.54:1 on cream */
+  /* The wave header, CTA band and footer. Maroon in both modes, as the
+     app's header is (AppColors.brandMaroon). */
+  --color-brand: #420905;
+  --color-brand-deep: #2A0603;
+  --color-on-brand: #FFFFFF;
+  /* The cream pill on maroon: the app's selected bottom-nav tab. Same in
+     both modes, like the maroon it sits on. */
+  --color-pill: #FAF6EE;
+  --color-on-pill: #420905;
+  /* Teal on maroon: eyebrows and links inside the hero and CTA band. The
+     app's accentLight; 8.8:1 on the brand maroon. */
+  --color-on-brand-accent: #4FD1C5;
+  /* Buttons on the page body. In dark the app lifts these to maroon-light. */
+  --color-primary: #420905;
+  --color-primary-hover: #6B1208;
+  --color-on-primary: #FFFFFF;
+  /* Teal: icons, eyebrows and large accents (context.tealAccent). Text
+     links need a deeper teal; the app's #0E8F86 is 3.68:1 on cream. */
+  --color-accent: #0E8F86;
+  --color-link: #097369;        /* 5.31:1 on cream, 5.73:1 on white */
+  /* The app's call-button green, kept for prices. White on it is 2.43:1,
+     so the ink is the app's dark onSecondary. */
+  --color-call: #48BB78;
+  --color-on-call: #10262B;     /* 6.8:1 on call */
+  --color-danger: #C53030;      /* lightCallEnd; #F56565 is 3.0:1 on white */
+
+  /* App shadow presets (AppTheme.shadowSmall/Medium/Large). */
+  --shadow-card: 0 2px 4px rgb(0 0 0 / 0.05);
+  --shadow-raised: 0 4px 8px rgb(0 0 0 / 0.10);
+  --shadow-float: 0 8px 16px rgb(0 0 0 / 0.15);
 
   /* Same face the app ships (Plus Jakarta Sans v2.071, aliased "Kalum" there).
      The Variable suffix is Fontsource's family name for the wght-axis file. */
   --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", system-ui,
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Dark mode: the app's dark theme, following the OS like the app's
+   ThemeMode.system. Only the semantic tokens change; the brand maroon stays.
+   Cards use the app's navy-tinted call-screen surfaces, because its neutral
+   #1E1E1E disappears on the navy page (1.02:1).
+
+   Scoped to html.theme-auto so it can be switched on in one place;
+   BaseLayout sets the class. Unlayered, so it beats the @theme defaults. */
+@media (prefers-color-scheme: dark) {
+  html.theme-auto {
+    color-scheme: dark;
+    --color-bg: #1A1A2E;        /* darkBackground */
+    --color-surface: #25253B;   /* darkCallSurface */
+    --color-surface-2: #2F2F48; /* darkCallRaised */
+    --color-outline: #3A3A55;   /* darkCallOutline */
+    --color-edge: #3A3A55;
+    --color-ink: #E2E8F0;       /* darkTextPrimary — 13.8:1 on navy */
+    --color-ink-2: #A0AEC0;     /* darkTextSecondary — 6.6:1 on surface */
+    --color-primary: #6B1208;   /* colorScheme.primary (dark) */
+    --color-primary-hover: #84180B;
+    --color-accent: #4FD1C5;    /* accentLight */
+    --color-link: #4FD1C5;      /* 9.15:1 on navy */
+    --color-danger: #F56565;    /* 5.6:1 on navy */
+    --shadow-card: 0 0 #0000;
+    --shadow-raised: 0 0 #0000;
+    --shadow-float: 0 8px 24px rgb(0 0 0 / 0.35);
+  }
 }
 
 @layer base {
@@ -35,15 +90,28 @@
 
   body {
     font-family: var(--font-sans);
-    color: var(--color-text);
-    background: var(--color-cream);
+    color: var(--color-ink);
+    background: var(--color-bg);
   }
 
   ::selection {
-    background: var(--color-maroon);
+    background: var(--color-brand);
     color: white;
   }
 
+  /* One focus ring for the whole site (MASTER §6): teal, 2px, offset. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 /* Script faces for the single-page locales (src/lib/i18n.ts). Deliberately
@@ -140,28 +208,194 @@ html[lang="ur"] h3 {
   letter-spacing: 0.12em;
 }
 
-@utility brand-gradient {
-  background-image: linear-gradient(
-    135deg,
-    var(--color-maroon) 0%,
-    var(--color-maroon-dark) 45%,
-    var(--color-navy) 100%
-  );
+/* ---- Type scale (MASTER.md §4), from the app's AppTypography ----
+   Sizes step up from the app's (it tops out at 44px for a phone); weights and
+   line heights follow its roles. Pair with tracking-display on headings. */
+@utility text-display {
+  font-size: clamp(2.25rem, 4.5vw + 1rem, 3.5rem);
+  line-height: 1.08;
+  font-weight: 700;
+}
+@utility text-title {
+  font-size: clamp(1.75rem, 2vw + 1rem, 2.25rem);
+  line-height: 1.15;
+  font-weight: 700;
+}
+@utility text-heading {
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+@utility text-lead {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+/* Prices, as the app sets its balance: tabular, semibold. */
+@utility text-price {
+  font-size: 1.75rem;
+  line-height: 1.15;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* ---- Surfaces ----
+   card: a white card on the cream page (the app's CardTheme: r12, small
+   shadow). In dark the shadow is dropped and the edge token draws an outline. */
+@utility card {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  border: 1px solid var(--color-edge);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-card);
+}
+/* The price chip: the app's call-button green, dark ink. */
+@utility price-chip {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--color-call);
+  color: var(--color-on-call);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+/* Dial code tag: "+91". Always LTR so the plus stays in front. */
+@utility dial-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.5rem;
+  border-radius: 9999px;
+  padding: 0.25rem 0.625rem;
+  background-color: var(--color-surface-2);
+  color: var(--color-ink-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* ---- Buttons (the app's ElevatedButton / OutlinedButton themes) ----
+   r8, 44px minimum, semibold. btn-pill is the cream pill used on maroon. */
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-weight: 600;
+  line-height: 1.25;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out;
+  cursor: pointer;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+@utility btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-card);
+  &:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+  }
+}
+@utility btn-outline {
+  border: 1px solid var(--color-outline);
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  &:hover {
+    border-color: var(--color-ink-2);
+  }
+}
+@utility btn-pill {
+  border-radius: 9999px;
+  background-color: var(--color-pill);
+  color: var(--color-on-pill);
+  font-weight: 700;
+  &:hover {
+    background-color: #fff;
+  }
+}
+@utility btn-ghost-light {
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 0.4);
+  color: #fff;
+  &:hover {
+    background-color: rgb(255 255 255 / 0.1);
+  }
+}
+
+/* Form fields: the app's InputDecorationTheme (filled surface-2, outline
+   border, r8, 2px primary border on focus). */
+@utility field {
+  display: block;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-outline);
+  background-color: var(--color-surface-2);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+  &::placeholder {
+    color: var(--color-ink-2);
+    opacity: 0.8;
+  }
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+}
+
+/* Text links on the page body: deep teal, underlined on hover. */
+@utility link {
+  color: var(--color-link);
+  font-weight: 600;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 150ms ease-out;
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* A hero that shares its row with a card gets a smaller display size: the
+   copy column is ~55% wide, and at full size "Call any Sudanese phone…" ran
+   to six lines. Unlayered so it beats the text-display utility. */
+@media (min-width: 64rem) {
+  .hero-has-card .text-display {
+    font-size: clamp(2.25rem, 2.2vw + 1.25rem, 3rem);
+  }
+}
+
+/* Arrows and chevrons that point "forward" flip in RTL. */
+[dir="rtl"] .flip-rtl {
+  transform: scaleX(-1);
 }
 
 /* Kalum brand-tinted prose for /privacy and /terms */
 .prose {
-  --tw-prose-headings: var(--color-text);
-  --tw-prose-links: var(--color-maroon);
-  --tw-prose-bold: var(--color-text);
-  --tw-prose-bullets: var(--color-maroon);
-  --tw-prose-counters: var(--color-muted);
-  --tw-prose-quotes: var(--color-text);
-  --tw-prose-quote-borders: var(--color-maroon);
-  --tw-prose-code: var(--color-maroon-dark);
-  --tw-prose-th-borders: var(--color-muted);
-  --tw-prose-td-borders: var(--color-muted);
+  --tw-prose-body: var(--color-ink);
+  --tw-prose-headings: var(--color-ink);
+  --tw-prose-links: var(--color-link);
+  --tw-prose-bold: var(--color-ink);
+  --tw-prose-bullets: var(--color-accent);
+  --tw-prose-counters: var(--color-ink-2);
+  --tw-prose-quotes: var(--color-ink);
+  --tw-prose-quote-borders: var(--color-outline);
+  --tw-prose-code: var(--color-ink);
+  --tw-prose-hr: var(--color-outline);
+  --tw-prose-th-borders: var(--color-outline);
+  --tw-prose-td-borders: var(--color-outline);
 }
 .prose a:hover {
-  color: var(--color-maroon-light);
+  text-decoration-color: currentColor;
 }

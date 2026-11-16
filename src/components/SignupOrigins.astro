@@ -42,15 +42,15 @@ const t =
       };
 ---
 
-<div class:list={["rounded-2xl border border-black/5 bg-white p-6 shadow-sm md:p-8", klass]}>
-  <h2 class="text-xl font-bold text-[var(--color-text)]">
+<div class:list={["card p-6 md:p-8", klass]}>
+  <h2 class="text-heading">
     {t.h}
   </h2>
-  <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">{t.lead}</p>
+  <p class="mt-2 leading-relaxed text-[var(--color-ink-2)]">{t.lead}</p>
 
   <details class="mt-4 group">
     <summary
-      class="cursor-pointer list-none text-sm font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+      class="link inline-flex min-h-11 cursor-pointer list-none items-center gap-1 text-sm [&::-webkit-details-marker]:hidden"
     >
       {t.toggle}
       <span aria-hidden="true" class="inline-block transition group-open:rotate-90">&rsaquo;</span>
@@ -59,11 +59,11 @@ const t =
          for crawlers and for anyone who lands here from a search for their own
          country. -->
     <ul
-      class="mt-4 grid gap-x-6 gap-y-1 text-sm text-[var(--color-text)] sm:grid-cols-2 md:grid-cols-3"
+      class="mt-2 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2 md:grid-cols-3"
     >
       {list.map((c) => <li>{c}</li>)}
     </ul>
   </details>
 
-  <p class="mt-4 text-xs leading-relaxed text-[var(--color-muted)]">{t.why}</p>
+  <p class="mt-4 text-sm leading-relaxed text-[var(--color-ink-2)]">{t.why}</p>
 </div>

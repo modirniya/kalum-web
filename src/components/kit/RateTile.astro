@@ -1,0 +1,45 @@
+---
+import Arrow from "./Arrow.astro";
+
+/**
+ * One destination as a linked white card: dial-code tag and name at the start,
+ * the "from" price in the app's call-green at the end.
+ *
+ * Rate data contract (MASTER.md §6a): `rate` is the country's cheapest-prefix
+ * figure, already formatted ("4¢"). Pass `from` whenever the card basis is
+ * "from" — it is rendered beside every price, never dropped. Keep a
+ * RateDisclosure near any block of these.
+ */
+interface Props {
+  href: string;
+  name: string;
+  dialCode?: string;
+  sub?: string;
+  /** "from" / "desde", or "" on a flat card. */
+  from?: string;
+  /** Formatted figure, e.g. "4¢" or "$1.20". */
+  rate: string;
+  hreflang?: string;
+  class?: string;
+}
+const { href, name, dialCode, sub, from = "", rate, hreflang, class: cls = "" } = Astro.props;
+---
+
+<a
+  href={href}
+  hreflang={hreflang}
+  class:list={[
+    "card group flex min-h-16 items-center gap-3 p-4 transition-shadow duration-200 hover:shadow-[var(--shadow-raised)] hover:border-[var(--color-outline)] sm:p-5",
+    cls,
+  ]}
+>
+  {dialCode && <span class="dial-tag">+{dialCode}</span>}
+  <span class="min-w-0 flex-1">
+    <span class="block font-semibold leading-snug">{name}</span>
+    {sub && <span class="mt-0.5 block text-sm text-[var(--color-ink-2)]">{sub}</span>}
+  </span>
+  <span class="price-chip shrink-0 text-[0.9375rem]">
+    {from && <span class="me-1 text-[0.8125rem] font-medium">{from.trim()}</span>}<bdi>{rate}/min</bdi>
+  </span>
+  <Arrow class="hidden size-4 shrink-0 text-[var(--color-ink-2)] transition-transform group-hover:translate-x-0.5 sm:inline-block rtl:group-hover:-translate-x-0.5" />
+</a>

@@ -1,10 +1,13 @@
 ---
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import AppStoreBadge from "../components/AppStoreBadge.astro";
-import GooglePlayBadge from "../components/GooglePlayBadge.astro";
 import brandIcon from "../assets/kalum-icon.jpg";
-import heroScreen from "../assets/screenshots/home.png";
+import PageHero from "../components/kit/PageHero.astro";
+import HeroCopy from "../components/kit/HeroCopy.astro";
+import StoreBadges from "../components/kit/StoreBadges.astro";
+import PhoneMockup from "../components/kit/PhoneMockup.astro";
+import Section from "../components/kit/Section.astro";
+import CtaBand from "../components/kit/CtaBand.astro";
 import RateDisclosure from "../components/RateDisclosure.astro";
 import { pricedDestination, formatRate, fromPrefix } from "../lib/rates";
 
@@ -76,149 +79,110 @@ const finePrint = "Calls billed per minute, rounded up, one-minute minimum.";
   </Fragment>
 
   <!-- Minimal brand bar — no nav, keeps the visitor on-message. -->
-  <header class="bg-[var(--color-maroon)]">
-    <div class="mx-auto flex max-w-6xl items-center gap-3 px-5 py-4 md:px-8">
+  <header class="bg-[var(--color-brand)]">
+    <div class="mx-auto flex h-16 max-w-6xl items-center gap-3 px-5 md:h-[4.5rem] md:px-8">
       <Image
         src={brandIcon}
         alt=""
         width={36}
         height={36}
         densities={[1, 2, 3]}
-        class="h-9 w-9 rounded-md bg-white p-0.5"
+        class="size-9 rounded-lg bg-white p-0.5"
       />
       <span class="text-lg font-extrabold tracking-[0.18em] text-white">KALUM</span>
     </div>
   </header>
 
-  <!-- Hero -->
-  <section class="brand-gradient relative overflow-hidden text-white">
-    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
-      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
-      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
-    </div>
-
-    <div class="relative mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-[1.15fr_1fr] md:gap-10 md:px-8 md:py-28 lg:py-32">
-      <div class="flex flex-col justify-center">
-        <p class="eyebrow text-[var(--color-teal-light)]">
-          Calling Mexico from the United States
-        </p>
-        <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-display sm:text-5xl lg:text-6xl">
-          Call Mexico {preposition} {rate} a minute.
-          <span class="block text-white/85">Landlines and cell phones.</span>
-        </h1>
-        <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/85 sm:text-xl">
-          Reach any phone in Mexico. They don't need an app, a smartphone, or
-          internet — they just answer their phone.
-        </p>
-
-        <div class="mt-9 flex flex-wrap items-center gap-4">
-          <AppStoreBadge size="lg" utm={utm} cta={true} />
-          <GooglePlayBadge size="lg" utm={utm} cta={true} />
-        </div>
-
-        <p class="mt-5 text-sm text-white/70">
-          No contract, no subscription, no hidden fees. {finePrint}
-        </p>
-      </div>
-
-      <div class="relative flex items-center justify-center md:justify-end">
-        <div class="relative">
-          <div
-            class="absolute -inset-4 rounded-[2.5rem] bg-black/30 blur-2xl"
-            aria-hidden="true"
-          ></div>
-          <div class="relative rounded-[2.2rem] border-[10px] border-black/80 bg-black shadow-2xl ring-1 ring-white/10">
-            <Image
-              src={heroScreen}
-              alt="Kalum dialer showing the per-minute rate to Mexico before placing a call"
-              widths={[260, 300, 600]}
-              sizes="(min-width: 640px) 300px, 260px"
-              class="h-auto w-[260px] rounded-[1.6rem] sm:w-[300px]"
-              loading="eager"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <PageHero variant="showcase" section="">
+    <HeroCopy
+      eyebrow="Calling Mexico from the United States"
+      title={`Call Mexico ${preposition} ${rate} a minute.`}
+      accent="Landlines and cell phones."
+      lead="Reach any phone in Mexico. They don't need an app, a smartphone, or internet — they just answer their phone."
+    />
+    <StoreBadges utm={utm} cta class="mt-8" />
+    <p class="mt-4 text-sm text-white/70">
+      No contract, no subscription, no hidden fees. {finePrint}
+    </p>
+    <PhoneMockup
+      slot="card"
+      alt="Kalum dialer showing the per-minute rate to Mexico before placing a call"
+    />
+  </PageHero>
 
   <!-- Value props -->
-  <section class="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-20">
-    <div class="grid gap-8 md:grid-cols-3">
-      <div class="rounded-2xl bg-white p-7 shadow-sm ring-1 ring-black/5">
-        <p class="text-3xl font-extrabold tabular-nums text-[var(--color-maroon)]">
-          {from}{rate}/min
+  <Section>
+    <div class="grid gap-4 md:grid-cols-3">
+      <div class="card p-6 md:p-7">
+        <p class="flex items-baseline gap-1.5">
+          {from && <span class="text-sm font-medium text-[var(--color-ink-2)]">{from.trim()}</span>}
+          <span class="price-chip text-xl">{rate}/min</span>
         </p>
-        <h2 class="mt-3 text-lg font-bold">You see it before you dial</h2>
-        <p class="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+        <h2 class="text-heading mt-4">You see it before you dial</h2>
+        <p class="mt-2 leading-relaxed text-[var(--color-ink-2)]">
           A landline in Guadalajara or a cell phone in Mexico City — the app
           shows the exact per-minute rate for the number you typed, before the
           call starts. No tiers, no surprises.
         </p>
       </div>
 
-      <div class="rounded-2xl bg-white p-7 shadow-sm ring-1 ring-black/5">
-        <p class="text-3xl font-extrabold text-[var(--color-maroon)]">No app</p>
-        <h2 class="mt-3 text-lg font-bold">They just pick up</h2>
-        <p class="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+      <div class="card p-6 md:p-7">
+        <p class="text-price text-[var(--color-ink)]">No app</p>
+        <h2 class="text-heading mt-4">They just pick up</h2>
+        <p class="mt-2 leading-relaxed text-[var(--color-ink-2)]">
           Your family in Mexico needs nothing on their end — no app, no
           smartphone, no internet. Their phone simply rings like any other call.
         </p>
       </div>
 
-      <div class="rounded-2xl bg-white p-7 shadow-sm ring-1 ring-black/5">
-        <p class="text-3xl font-extrabold text-[var(--color-maroon)]">Prepaid</p>
-        <h2 class="mt-3 text-lg font-bold">Pay as you go</h2>
-        <p class="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+      <div class="card p-6 md:p-7">
+        <p class="text-price text-[var(--color-ink)]">Prepaid</p>
+        <h2 class="text-heading mt-4">Pay as you go</h2>
+        <p class="mt-2 leading-relaxed text-[var(--color-ink-2)]">
           Add credit and pay only for the minutes you use. No monthly bill,
           no commitment — your credit is there when you need to call.
         </p>
       </div>
     </div>
-  </section>
+  </Section>
 
   <!-- Pricing band -->
-  <section class="bg-[var(--color-cream)]">
-    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
-      <p class="text-5xl font-extrabold tracking-display tabular-nums text-[var(--color-maroon)] sm:text-6xl">
-        {from}{rate}/min
+  <Section width="narrow" place="center" flush>
+    <div class="card px-6 py-10 text-center md:px-10">
+      <p class="flex flex-wrap items-baseline justify-center gap-x-2">
+        {from && <span class="text-lg font-medium text-[var(--color-ink-2)]">{from.trim()}</span>}
+        <span class="text-[3.5rem] font-semibold leading-none tracking-tight tabular-nums sm:text-6xl">{rate}</span>
+        <span class="text-lg font-medium text-[var(--color-ink-2)]">/min</span>
       </p>
-      <p class="mt-3 text-lg font-semibold">
+      <p class="mt-4 text-lg font-semibold">
         To any phone in Mexico — landlines &amp; cell phones.
       </p>
-      <p class="mt-2 text-sm text-[var(--color-muted)]">{finePrint}</p>
+      <p class="mt-2 text-sm text-[var(--color-ink-2)]">{finePrint}</p>
       <RateDisclosure card={card} class="mx-auto mt-4 max-w-xl" />
     </div>
-  </section>
+  </Section>
 
-  <!-- Final CTA -->
-  <section class="brand-gradient text-white">
-    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
-      <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl">
-        Ready to call Mexico?
-      </h2>
-      <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
-        Download Kalum, add credit, and dial. Pay only for the minutes you use.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <AppStoreBadge size="lg" utm={utm} cta={true} />
-        <GooglePlayBadge size="lg" utm={utm} cta={true} />
-      </div>
-      <p class="mt-5 text-sm text-white/70">
-        No contract, no subscription, no hidden fees. {finePrint}
-      </p>
-    </div>
-  </section>
+  <CtaBand
+    title="Ready to call Mexico?"
+    body="Download Kalum, add credit, and dial. Pay only for the minutes you use."
+    utm={utm}
+    section=""
+    cta
+  >
+    <p class="mt-5 text-sm text-white/70">
+      No contract, no subscription, no hidden fees. {finePrint}
+    </p>
+  </CtaBand>
 
   <!-- Minimal footer — legal links for ad-quality compliance, no general marketing copy. -->
-  <footer class="bg-[var(--color-navy)] text-white/70">
+  <footer class="bg-[var(--color-brand-deep)] text-white/70">
     <div class="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-8 text-xs md:flex-row md:items-center md:justify-between md:px-8">
       <p>&copy; {new Date().getFullYear()} Neuera &middot; Kalum is a product of Neuera</p>
       <nav class="flex flex-wrap gap-x-5 gap-y-2">
-        <a href="/privacy/" class="hover:text-white">Privacy policy</a>
-        <a href="/terms/" class="hover:text-white">Terms of service</a>
-        <a href="/support/" class="hover:text-white">Support</a>
-        <a href="mailto:hello@neuera.app" class="hover:text-white">hello@neuera.app</a>
+        <a href="/privacy/" class="inline-block py-1 hover:text-white">Privacy policy</a>
+        <a href="/terms/" class="inline-block py-1 hover:text-white">Terms of service</a>
+        <a href="/support/" class="inline-block py-1 hover:text-white">Support</a>
+        <a href="mailto:hello@neuera.app" class="inline-block py-1 hover:text-white">hello@neuera.app</a>
       </nav>
     </div>
   </footer>

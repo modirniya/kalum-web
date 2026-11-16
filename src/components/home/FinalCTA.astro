@@ -1,6 +1,5 @@
 ---
-import GooglePlayBadge from "../GooglePlayBadge.astro";
-import AppStoreBadge from "../AppStoreBadge.astro";
+import CtaBand from "../kit/CtaBand.astro";
 import { coverage } from "../../lib/rates";
 import { HOME_COPY, fill, type HomeLocale } from "../../lib/home-copy";
 
@@ -14,28 +13,5 @@ const utm = HOME_COPY[locale].utmPrefix;
 const countries = await coverage();
 ---
 
-<!-- Also the target of the header's download link. -->
-<section
-  id="download"
-  data-section="cta"
-  class="brand-gradient relative overflow-hidden text-white"
->
-  <div class="absolute inset-0 opacity-[0.06]" aria-hidden="true">
-    <div class="absolute top-0 right-0 h-96 w-96 rounded-full bg-white blur-3xl"></div>
-    <div class="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
-  </div>
-
-  <div class="relative mx-auto max-w-3xl px-5 py-20 text-center md:px-8 md:py-28">
-    <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl lg:text-5xl">
-      {c.heading}
-    </h2>
-    <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
-      {fill(c.body, countries)}
-    </p>
-
-    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-      <AppStoreBadge size="lg" utm={`${utm}-final`} />
-      <GooglePlayBadge size="lg" utm={`${utm}-final`} />
-    </div>
-  </div>
-</section>
+<!-- Also the target of the header's download link (#download). -->
+<CtaBand id="download" title={c.heading} body={fill(c.body, countries)} utm={`${utm}-final`} />

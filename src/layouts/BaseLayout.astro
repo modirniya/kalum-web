@@ -25,6 +25,8 @@ import notoBengali from "@fontsource-variable/noto-sans-bengali/files/noto-sans-
 
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import StickyCta from "../components/kit/StickyCta.astro";
+import { CHROME } from "../lib/chrome";
 import { storeUrls } from "../lib/stores";
 import { LOCALES, type Alternate, type Locale } from "../lib/i18n";
 import { coverage } from "../lib/rates";
@@ -97,6 +99,12 @@ if (description.length > DESCRIPTION_BUDGET) {
   );
 }
 
+// The mobile sticky download pill (MASTER.md §6). Same label and fallback
+// target as the header's "Get the app"; it only ever shows on pages that
+// carry download buttons, and never on the minimal legal pages.
+const chrome = CHROME[lang];
+const stickyHref = lang === "en" ? "/#download" : chrome.home;
+
 const siteUrl = "https://kalum.app";
 const absoluteOg = ogImage.startsWith("http") ? ogImage : `${siteUrl}${ogImage}`;
 const ogLocale = LOCALES[lang].ogLocale;
@@ -159,10 +167,16 @@ const structuredData = {
 ---
 
 <!doctype html>
-<html lang={lang} dir={dir}>
+<!--
+  theme-auto turns on the app's dark palette when the OS asks for it
+  (global.css). The header and hero are maroon in both modes, so the browser
+  chrome colour stays the brand maroon either way.
+-->
+<html lang={lang} dir={dir} class="theme-auto">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#420905" />
     <meta name="generator" content={Astro.generator} />
 
@@ -212,11 +226,12 @@ const structuredData = {
 
     <slot name="head" />
   </head>
-  <body class="min-h-screen flex flex-col bg-[var(--color-cream)] text-[var(--color-text)]">
+  <body class="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-ink)]">
     {!bare && <Header />}
     <main class="flex-1">
       <slot />
     </main>
     {!bare && <Footer />}
+    {!bare && !minimal && <StickyCta label={chrome.download} fallbackHref={stickyHref} />}
   </body>
 </html>

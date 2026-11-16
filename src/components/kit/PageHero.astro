@@ -1,0 +1,59 @@
+---
+import Wave from "./Wave.astro";
+
+/**
+ * The top of every page: the app's maroon wave header (MASTER.md §2).
+ *
+ *  - `landing`  — copy at the start side, an optional hero card at the end
+ *                 side (slot "card"). The card hangs over the wave the way the
+ *                 app's number field sits under its header.
+ *  - `showcase` — the home page: same grid, taller, card slot holds the phone.
+ *  - `compact`  — utility pages: breadcrumb and title only, short.
+ *
+ * The section keeps `data-section` (default "hero") for the locale parity
+ * check. The card overhang is paid back by a spacer under the wave, so the
+ * section that follows needs no special padding.
+ */
+interface Props {
+  variant?: "landing" | "showcase" | "compact";
+  section?: string;
+  /** Content width; match it to the body below (narrow = 48rem). */
+  width?: "wide" | "narrow";
+  class?: string;
+}
+const { variant = "landing", section = "hero", width = "wide", class: cls = "" } = Astro.props;
+const hasCard = Astro.slots.has("card");
+// How far a card hangs below the maroon, mobile / desktop.
+const overhang = hasCard && variant !== "compact";
+---
+
+<section
+  data-section={section || undefined}
+  class:list={["relative bg-[var(--color-brand)] text-white", overhang && "hero-has-card", cls]}
+>
+  <div
+    class:list={[
+      "mx-auto px-5 md:px-8",
+      width === "wide" ? "max-w-6xl" : "max-w-3xl",
+      variant === "compact" && "pb-6 pt-10 md:pb-8 md:pt-14",
+      variant === "landing" && "pb-6 pt-10 md:pt-14 lg:pb-8",
+      variant === "showcase" && "pb-6 pt-12 md:pt-16 lg:pb-10 lg:pt-20",
+      hasCard &&
+        variant !== "compact" &&
+        "grid items-end gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-14",
+    ]}
+  >
+    <div class:list={["min-w-0", hasCard && "lg:self-center"]}>
+      <slot />
+    </div>
+    {
+      hasCard && variant !== "compact" && (
+        <div class="relative z-10 -mb-24 min-w-0 lg:-mb-28">
+          <slot name="card" />
+        </div>
+      )
+    }
+  </div>
+</section>
+<Wave />
+{overhang && <div aria-hidden="true" class="h-12 md:h-10 lg:h-8"></div>}

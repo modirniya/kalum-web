@@ -24,6 +24,9 @@ interface Props {
    * in one section is a document-outline bug, not a style preference.
    */
   showHeading?: boolean;
+  /** `split`: search and readout side by side (wide sections). `stacked`:
+   *  readout under the search, for a hero card. */
+  layout?: "split" | "stacked";
   class?: string;
 }
 
@@ -32,6 +35,7 @@ const {
   locale = "en",
   localNames = {},
   showHeading = true,
+  layout = "split",
   class: klass = "",
 } = Astro.props;
 
@@ -80,18 +84,18 @@ const popular = popularCodes
 ---
 
 <div
-  class:list={["rounded-2xl border border-black/5 bg-white shadow-sm", klass]}
+  class:list={["card overflow-hidden", layout === "stacked" && "shadow-[var(--shadow-float)]", klass]}
   data-rate-finder
 >
-  <div class="grid gap-0 md:grid-cols-[1fr_20rem]">
-    <div class="p-6 md:p-8">
+  <div class:list={["grid gap-0", layout === "split" && "md:grid-cols-[1fr_20rem]"]}>
+    <div class="p-5 sm:p-6 md:p-7">
       {
         showHeading && (
           <>
-            <h2 class="text-xl font-bold text-[var(--color-text)]">
+            <h2 class="text-heading">
               {t.heading}
             </h2>
-            <p class="mt-1 text-sm text-[var(--color-muted)]">{t.sub}</p>
+            <p class="mt-1 text-sm text-[var(--color-ink-2)]">{t.sub}</p>
           </>
         )
       }
@@ -109,7 +113,7 @@ const popular = popularCodes
           spellcheck="false"
           placeholder={t.placeholder}
           data-finder-input
-          class="w-full rounded-md border border-black/10 bg-white px-4 py-3 text-base text-[var(--color-text)] placeholder:text-[var(--color-muted)] outline-none focus:border-[var(--color-maroon)] focus:ring-2 focus:ring-[var(--color-maroon)]/30"
+          class="field"
         />
       </form>
 
@@ -118,18 +122,18 @@ const popular = popularCodes
         role="listbox"
         aria-label={t.search}
         data-finder-results
-        class="mt-2 max-h-60 overflow-y-auto rounded-md border border-black/10 empty:hidden"
+        class="mt-2 max-h-60 overflow-y-auto rounded-lg border border-[var(--color-outline)] bg-[var(--color-surface)] empty:hidden"
       >
       </div>
 
       <div class="mt-4 flex flex-wrap items-center gap-2">
-        <span class="text-xs text-[var(--color-muted)]">{t.popular}</span>
+        <span class="text-sm text-[var(--color-ink-2)]">{t.popular}</span>
         {
           popular.map((r) => (
             <button
               type="button"
               data-finder-chip={r[0]}
-              class="rounded-full border border-black/10 bg-[var(--color-cream)] px-3 py-1 text-sm text-[var(--color-text)] transition hover:border-[var(--color-maroon)]/40 hover:text-[var(--color-maroon)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-maroon)]/40"
+              class="inline-flex min-h-9 items-center rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-2)] px-3.5 text-sm font-medium transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-link)]"
             >
               {r[1]}
             </button>
@@ -139,17 +143,20 @@ const popular = popularCodes
     </div>
 
     <aside
-      class="flex flex-col border-t border-black/5 bg-[var(--color-cream)] p-6 md:border-t-0 md:border-l md:p-8"
+      class:list={[
+        "flex flex-col border-t border-[var(--color-outline)] bg-[var(--color-surface-2)] p-5 sm:p-6 md:p-7",
+        layout === "split" && "md:border-s md:border-t-0",
+      ]}
     >
       <p
-        class="micro-label text-[var(--color-muted)]"
+        class="micro-label text-[var(--color-ink-2)]"
       >
         {t.rateLabel}
       </p>
       <div class="mt-3" data-finder-readout>
-        <p class="text-sm leading-relaxed text-[var(--color-muted)]">{t.idle}</p>
+        <p class="text-sm leading-relaxed text-[var(--color-ink-2)]">{t.idle}</p>
       </div>
-      <p class="mt-auto pt-6 text-xs text-[var(--color-muted)]">{t.asOf}</p>
+      <p class:list={["mt-auto text-sm text-[var(--color-ink-2)]", layout === "split" ? "pt-6" : "pt-4"]}>{t.asOf}</p>
     </aside>
   </div>
 
@@ -226,7 +233,7 @@ const popular = popularCodes
       cursor = -1;
       if (!input!.value.trim()) return close();
       if (!shown.length) {
-        list!.innerHTML = `<p class="px-4 py-3 text-sm text-[var(--color-muted)]">${esc(copy.none)}</p>`;
+        list!.innerHTML = `<p class="px-4 py-3 text-sm text-[var(--color-ink-2)]">${esc(copy.none)}</p>`;
         input!.setAttribute("aria-expanded", "true");
         return;
       }
@@ -234,10 +241,10 @@ const popular = popularCodes
         .map(
           (r, i) =>
             `<button type="button" role="option" aria-selected="false" data-i="${i}" ` +
-            `class="flex w-full items-center gap-3 border-b border-black/5 px-4 py-2.5 text-left last:border-b-0 hover:bg-[var(--color-cream)] aria-selected:bg-[var(--color-cream)]">` +
-            `<span class="min-w-[3.5rem] text-sm font-semibold text-[var(--color-maroon)] tabular-nums">+${esc(r[0])}</span>` +
-            `<span class="flex-1 truncate text-sm text-[var(--color-text)]">${esc(r[1])}</span>` +
-            `<span class="text-sm text-[var(--color-muted)] tabular-nums">${money(r[2])}</span>` +
+            `class="flex min-h-11 w-full items-center gap-3 border-b border-[var(--color-outline)] px-4 py-2 text-start last:border-b-0 hover:bg-[var(--color-surface-2)] aria-selected:bg-[var(--color-surface-2)]">` +
+            `<span class="dial-tag">+${esc(r[0])}</span>` +
+            `<span class="flex-1 truncate text-sm">${esc(r[1])}</span>` +
+            `<span class="text-sm text-[var(--color-ink-2)] tabular-nums">${esc(copy.from)}${money(r[2])}</span>` +
             `</button>`
         )
         .join("");
@@ -246,16 +253,16 @@ const popular = popularCodes
 
     function choose(r: Row) {
       readout!.innerHTML =
-        `<p class="text-sm font-semibold text-[var(--color-text)]">${esc(r[1])}</p>` +
-        `<p class="mt-0.5 text-sm text-[var(--color-maroon)] tabular-nums">+${esc(r[0])}</p>` +
-        `<p class="mt-4 flex items-baseline gap-1.5">` +
+        `<p class="flex items-center gap-2"><span class="dial-tag">+${esc(r[0])}</span>` +
+        `<span class="font-semibold">${esc(r[1])}</span></p>` +
+        `<p class="mt-3 flex items-baseline gap-1.5">` +
         (copy.from
-          ? `<span class="text-sm font-semibold text-[var(--color-muted)]">${esc(copy.from.trim())}</span>`
+          ? `<span class="text-sm font-medium text-[var(--color-ink-2)]">${esc(copy.from.trim())}</span>`
           : "") +
-        `<span class="text-4xl font-extrabold tracking-display text-[var(--color-maroon)] tabular-nums">${money(r[2])}</span>` +
-        `<span class="text-sm text-[var(--color-muted)]">${esc(copy.perMin)}</span>` +
+        `<span class="text-[2.5rem] font-semibold leading-none tracking-tight tabular-nums">${money(r[2])}</span>` +
+        `<span class="text-sm text-[var(--color-ink-2)]">${esc(copy.perMin)}</span>` +
         `</p>` +
-        `<p class="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">${esc(copy.note)}</p>`;
+        `<p class="mt-3 text-sm leading-relaxed text-[var(--color-ink-2)]">${esc(copy.note)}</p>`;
       input!.value = r[1];
       close();
     }

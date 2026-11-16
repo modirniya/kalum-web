@@ -1,8 +1,8 @@
 ---
-import { Image } from "astro:assets";
-import heroScreen from "../../assets/screenshots/home.png";
-import GooglePlayBadge from "../GooglePlayBadge.astro";
-import AppStoreBadge from "../AppStoreBadge.astro";
+import PageHero from "../kit/PageHero.astro";
+import HeroCopy from "../kit/HeroCopy.astro";
+import StoreBadges from "../kit/StoreBadges.astro";
+import PhoneMockup from "../kit/PhoneMockup.astro";
 import { coverage } from "../../lib/rates";
 import { HOME_COPY, fill, type HomeLocale } from "../../lib/home-copy";
 
@@ -16,53 +16,15 @@ const utm = HOME_COPY[locale].utmPrefix;
 const countries = await coverage();
 ---
 
-<section data-section="hero" class="brand-gradient relative overflow-hidden text-white">
-  <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
-    <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
-    <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
-  </div>
-
-  <div class="relative mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-[1.15fr_1fr] md:gap-10 md:px-8 md:py-28 lg:py-32">
-    <div class="flex flex-col justify-center">
-      <p class="eyebrow text-[var(--color-teal-light)]">
-        {c.eyebrow}
-      </p>
-      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-display sm:text-5xl lg:text-6xl">
-        {c.headline}
-        <span class="block text-white/85">{c.headlineAccent}</span>
-      </h1>
-      <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/85 sm:text-xl">
-        {fill(c.body, countries)}
-      </p>
-
-      <div class="mt-9 flex flex-wrap items-center gap-4">
-        <AppStoreBadge size="lg" utm={`${utm}-hero`} />
-        <GooglePlayBadge size="lg" utm={`${utm}-hero`} />
-      </div>
-
-      <p class="mt-5 text-sm text-white/70">
-        {c.note}
-      </p>
-    </div>
-
-    <div class="relative flex items-center justify-center md:justify-end">
-      <div class="relative">
-        <div
-          class="absolute -inset-4 rounded-[2.5rem] bg-black/30 blur-2xl"
-          aria-hidden="true"
-        ></div>
-        <div class="relative rounded-[2.2rem] border-[10px] border-black/80 bg-black shadow-2xl ring-1 ring-white/10">
-          <Image
-            src={heroScreen}
-            alt={c.imageAlt}
-            widths={[260, 300, 600]}
-            sizes="(min-width: 640px) 300px, 260px"
-            class="h-auto w-[260px] rounded-[1.6rem] sm:w-[300px]"
-            loading="eager"
-            fetchpriority="high"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!--
+  Showcase layout (design-system/kalum/MASTER.md §2): the app's own dial
+  screen hangs over the wave, so the app's wave header meets the page's.
+-->
+<PageHero variant="showcase">
+  <HeroCopy eyebrow={c.eyebrow} title={c.headline} accent={c.headlineAccent} lead={fill(c.body, countries)} />
+  <StoreBadges utm={`${utm}-hero`} class="mt-8" />
+  <p class="mt-4 text-sm text-white/70">
+    {c.note}
+  </p>
+  <PhoneMockup slot="card" alt={c.imageAlt} />
+</PageHero>

@@ -32,17 +32,19 @@ const items =
       ];
 ---
 
-<section data-section="trust" class="bg-[var(--color-navy)] text-white">
-  <div class="mx-auto max-w-6xl px-5 py-7 md:px-8">
-    <ul class="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-center text-sm font-medium text-white/85 md:gap-x-3">
+<!--
+  The four plain facts, as a row of checked pills on the cream page rather
+  than the old navy band: the app has no navy in light mode.
+-->
+<section data-section="trust" class="py-6 md:py-8">
+  <div class="mx-auto max-w-6xl px-5 md:px-8">
+    <ul class="card flex flex-wrap items-center justify-center gap-x-6 gap-y-3 px-5 py-4 text-sm font-semibold md:gap-x-10">
       {
-        items.map((item, i) => (
-          <>
-            <li>{item}</li>
-            {i < items.length - 1 && (
-              <li aria-hidden="true" class="text-white/40">&middot;</li>
-            )}
-          </>
+        items.map((item) => (
+          <li class="flex items-center gap-2">
+            <svg class="size-4 shrink-0 text-[var(--color-accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+            {item}
+          </li>
         ))
       }
     </ul>

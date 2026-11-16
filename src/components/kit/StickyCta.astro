@@ -1,0 +1,83 @@
+---
+import { Image } from "astro:assets";
+import icon from "../../assets/kalum-icon.jpg";
+import { appleHref, playHref } from "../../lib/stores";
+
+/**
+ * Mobile-only download pill (MASTER.md §6), echoing the app's maroon bottom
+ * bar. It appears once the reader has scrolled past every download button and
+ * hides again whenever one is on screen (anything marked data-cta-zone: the
+ * store badge rows, the CTA band, the footer), so it never covers a badge.
+ * A page with no zones never shows it.
+ *
+ * The link goes straight to the reader's store when the platform is known;
+ * otherwise to `fallbackHref`, the same target as the header's button.
+ */
+interface Props {
+  label: string;
+  fallbackHref: string;
+  utm?: string;
+}
+const { label, fallbackHref, utm = "kalum-web-sticky" } = Astro.props;
+---
+
+<div
+  id="sticky-cta"
+  hidden
+  class="fixed inset-x-3 bottom-3 z-40 md:hidden"
+  data-ios={appleHref(utm)}
+  data-android={playHref(utm)}
+>
+  <div
+    class="flex items-center justify-between gap-3 rounded-full bg-[var(--color-brand)] py-2 pe-2 ps-2.5 text-white shadow-[0_8px_24px_rgb(0_0_0/0.28)] transition duration-200 ease-out"
+    data-pill
+  >
+    <span class="flex items-center gap-2.5">
+      <Image src={icon} alt="" width={32} height={32} densities={[1, 2, 3]} class="size-8 rounded-full bg-white p-0.5" />
+      <span class="text-sm font-extrabold tracking-[0.18em]">KALUM</span>
+    </span>
+    <a
+      href={fallbackHref}
+      rel="noopener"
+      data-aw-cta
+      class="inline-flex min-h-11 items-center rounded-full bg-[var(--color-pill)] px-5 text-sm font-bold text-[var(--color-on-pill)]"
+    >
+      {label}
+    </a>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById("sticky-cta");
+  const zones = document.querySelectorAll("[data-cta-zone], footer");
+  if (root && zones.length > 1) {
+    const link = root.querySelector("a")!;
+    const ua = navigator.userAgent;
+    if (/iPhone|iPad|iPod/.test(ua)) link.href = root.dataset.ios!;
+    else if (/Android/.test(ua)) link.href = root.dataset.android!;
+
+    // Hidden until the first badge row has scrolled past, then shown whenever
+    // no zone is visible.
+    const visible = new Set<Element>();
+    let passedFirst = false;
+    const first = zones[0];
+    const update = () => {
+      const show = passedFirst && visible.size === 0;
+      root.hidden = false;
+      root.toggleAttribute("inert", !show);
+      root.style.transform = show ? "" : "translateY(160%)";
+      root.style.opacity = show ? "" : "0";
+    };
+    root.style.transition = "transform .25s ease-out, opacity .25s ease-out";
+    update();
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) visible.add(e.target);
+        else visible.delete(e.target);
+        if (e.target === first) passedFirst = !e.isIntersecting && e.boundingClientRect.top < 0;
+      }
+      update();
+    });
+    zones.forEach((z) => io.observe(z));
+  }
+</script>

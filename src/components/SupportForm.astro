@@ -9,7 +9,7 @@
   />
 
   <div>
-    <label for="name" class="block text-sm font-semibold text-[var(--color-text)]">
+    <label for="name" class="block text-sm font-semibold">
       Your name
     </label>
     <input
@@ -19,13 +19,13 @@
       required
       maxlength="80"
       autocomplete="name"
-      class="mt-2 w-full rounded-md border border-black/10 bg-white px-4 py-3 text-base text-[var(--color-text)] placeholder:text-[var(--color-muted)] outline-none focus:border-[var(--color-maroon)] focus:ring-2 focus:ring-[var(--color-maroon)]/30"
+      class="field mt-2"
       placeholder="Your full name"
     />
   </div>
 
   <div>
-    <label for="email" class="block text-sm font-semibold text-[var(--color-text)]">
+    <label for="email" class="block text-sm font-semibold">
       Email address
     </label>
     <input
@@ -35,16 +35,16 @@
       required
       maxlength="200"
       autocomplete="email"
-      class="mt-2 w-full rounded-md border border-black/10 bg-white px-4 py-3 text-base text-[var(--color-text)] placeholder:text-[var(--color-muted)] outline-none focus:border-[var(--color-maroon)] focus:ring-2 focus:ring-[var(--color-maroon)]/30"
+      class="field mt-2"
       placeholder="you@example.com"
     />
-    <p class="mt-2 text-xs text-[var(--color-muted)]">
+    <p class="mt-2 text-sm text-[var(--color-ink-2)]">
       We'll only use this to reply to your message.
     </p>
   </div>
 
   <div>
-    <label for="message" class="block text-sm font-semibold text-[var(--color-text)]">
+    <label for="message" class="block text-sm font-semibold">
       Your message
     </label>
     <textarea
@@ -54,7 +54,7 @@
       rows="6"
       minlength="10"
       maxlength="5000"
-      class="mt-2 w-full rounded-md border border-black/10 bg-white px-4 py-3 text-base text-[var(--color-text)] placeholder:text-[var(--color-muted)] outline-none focus:border-[var(--color-maroon)] focus:ring-2 focus:ring-[var(--color-maroon)]/30"
+      class="field mt-2"
       placeholder="Tell us what's going on. The phone number you used to sign up helps us find your account."
     ></textarea>
   </div>
@@ -62,7 +62,7 @@
   <div
     id="support-form-error"
     role="alert"
-    class="hidden rounded-md border border-[var(--color-error)]/40 bg-[var(--color-error)]/10 px-4 py-3 text-sm text-[var(--color-error)]"
+    class="hidden rounded-lg border border-[var(--color-danger)]/40 bg-[var(--color-danger)]/10 px-4 py-3 text-sm text-[var(--color-danger)]"
   >
     Something went wrong. Please try again, or email
     <a href="mailto:hello@neuera.app" class="underline">hello@neuera.app</a> directly.
@@ -71,7 +71,7 @@
   <button
     type="submit"
     id="support-form-submit"
-    class="w-full rounded-md bg-[var(--color-maroon)] px-5 py-3 text-base font-semibold text-white hover:bg-[var(--color-maroon-light)] disabled:cursor-not-allowed disabled:opacity-60 transition sm:w-auto"
+    class="btn btn-primary w-full sm:w-auto"
   >
     Send message
   </button>
@@ -79,10 +79,10 @@
 
 <div
   id="support-form-success"
-  class="hidden rounded-2xl border border-[var(--color-success)]/30 bg-[var(--color-success)]/10 p-6"
+  class="hidden rounded-xl border border-[var(--color-call)]/40 bg-[var(--color-call)]/10 p-6"
 >
-  <h3 class="text-xl font-bold text-[var(--color-text)]">Message received.</h3>
-  <p class="mt-2 text-base text-[var(--color-text)]/80">
+  <h3 class="text-heading">Message received.</h3>
+  <p class="mt-2 text-[var(--color-ink-2)]">
     We've got your message and will reply to the email you gave us.
     No need to do anything else &mdash; just keep an eye on your inbox.
   </p>

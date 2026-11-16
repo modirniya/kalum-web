@@ -14,6 +14,7 @@
  * two headings inside one section is a document-outline bug.
  */
 import RateFinder from "../RateFinder.astro";
+import Section from "../kit/Section.astro";
 import { fetchRates } from "../../lib/rates";
 import { localNamesByDialCode } from "../../lib/rate-finder";
 import { ES_NAMES } from "../../pages/es/_destinations-es";
@@ -41,25 +42,11 @@ const t =
       };
 ---
 
-<section data-section="finder" class="bg-white py-20 md:py-28">
-  <div class="mx-auto max-w-6xl px-5 md:px-8">
-    <div class="max-w-2xl">
-      <h2
-        class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl lg:text-5xl"
-      >
-        {t.h2}
-      </h2>
-      <p class="mt-5 text-lg leading-relaxed text-[var(--color-muted)]">
-        {t.sub}
-      </p>
-    </div>
-
-    <RateFinder
-      card={card}
-      locale={locale}
-      localNames={localNames}
-      showHeading={false}
-      class="mt-10"
-    />
-  </div>
-</section>
+<Section section="finder" title={t.h2} lead={t.sub}>
+  <RateFinder
+    card={card}
+    locale={locale}
+    localNames={localNames}
+    showHeading={false}
+  />
+</Section>

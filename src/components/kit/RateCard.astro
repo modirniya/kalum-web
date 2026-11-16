@@ -1,0 +1,40 @@
+---
+import RateDisclosure from "../RateDisclosure.astro";
+import type { RateCard as Card } from "../../lib/rates";
+
+/**
+ * The hero card on a destination or corridor page: the country, its dial
+ * code, and its one rate, large, with the site's own disclosure under it.
+ *
+ * Rate data contract (MASTER.md §6a): the card holds ONE figure per country,
+ * the cheapest prefix. This shows it with its "from", never splits it into
+ * mobile and landline, never turns it into minutes-per-dollar, and carries
+ * RateDisclosure verbatim instead of any billing summary of its own.
+ */
+interface Props {
+  /** Heading line, e.g. "India" or "UAE → India". */
+  name: string;
+  dialCode: string;
+  /** "from " / "desde ", or "" on a flat card. */
+  from: string;
+  /** Formatted figure, e.g. "4¢". */
+  rate: string;
+  card: Card;
+  locale?: "en" | "es";
+  class?: string;
+}
+const { name, dialCode, from, rate, card, locale = "en", class: cls = "" } = Astro.props;
+---
+
+<aside class:list={["card p-6 text-[var(--color-ink)] shadow-[var(--shadow-float)] sm:p-7", cls]}>
+  <div class="flex items-center justify-between gap-3">
+    <p class="text-heading">{name}</p>
+    <span class="dial-tag">+{dialCode}</span>
+  </div>
+  <p class="mt-5 flex flex-wrap items-baseline gap-x-2">
+    {from && <span class="text-base font-medium text-[var(--color-ink-2)]">{from.trim()}</span>}
+    <bdi class="text-[3.25rem] font-semibold leading-none tracking-tight tabular-nums">{rate}</bdi>
+    <span class="text-base font-medium text-[var(--color-ink-2)]">/min</span>
+  </p>
+  <RateDisclosure card={card} locale={locale} class="mt-5 border-t border-[var(--color-outline)] pt-4 leading-relaxed" />
+</aside>

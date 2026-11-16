@@ -1,0 +1,33 @@
+---
+/**
+ * A wrap of pill links: related destinations, sibling pages. Labels are
+ * passed fully formed (a rate inside one must already carry its "from").
+ */
+interface Chip {
+  label: string;
+  href: string;
+  hreflang?: string;
+}
+interface Props {
+  items: Chip[];
+  section?: string;
+  class?: string;
+}
+const { items, section, class: cls = "" } = Astro.props;
+---
+
+<ul data-section={section} class:list={["flex flex-wrap gap-2.5", cls]}>
+  {
+    items.map((c) => (
+      <li>
+        <a
+          href={c.href}
+          hreflang={c.hreflang}
+          class="inline-flex min-h-11 items-center rounded-full border border-[var(--color-outline)] bg-[var(--color-surface)] px-4 text-sm font-semibold transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-link)]"
+        >
+          {c.label}
+        </a>
+      </li>
+    ))
+  }
+</ul>

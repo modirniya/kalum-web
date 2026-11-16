@@ -1,5 +1,5 @@
 ---
-// Breadcrumb for use inside a brand-gradient hero. Renders the visible nav
+// Breadcrumb for use inside the maroon wave hero (kit/PageHero). Renders the visible nav
 // AND the matching BreadcrumbList JSON-LD from ONE items array, so markup and
 // structured data can never disagree (matters given the prior cloaking flag).
 // The last item is the current page: pass it without an href.
@@ -10,7 +10,7 @@ interface Item {
 interface Props {
   items: Item[];
   /**
-   * Which ground the trail sits on. The default is the brand-gradient hero
+   * Which ground the trail sits on. The default is the maroon wave hero
    * this was written for; `light` is for the cream sections (the /call/ and
    * /how-it-works/ hubs), where the white variant would be invisible. Never
    * render the JSON-LD without its visible counterpart — one array feeds
@@ -24,10 +24,10 @@ const ink =
   tone === "dark"
     ? { base: "text-white/70", sep: "text-white/40", here: "text-white/90", hover: "hover:text-white" }
     : {
-        base: "text-[var(--color-muted)]",
-        sep: "text-[var(--color-muted)]/50",
-        here: "text-[var(--color-text)]",
-        hover: "hover:text-[var(--color-maroon)]",
+        base: "text-[var(--color-ink-2)]",
+        sep: "text-[var(--color-ink-2)]/50",
+        here: "text-[var(--color-ink)]",
+        hover: "hover:text-[var(--color-link)]",
       };
 
 const SITE = "https://kalum.app";
@@ -43,7 +43,7 @@ const jsonld = {
 };
 ---
 
-<nav aria-label="Breadcrumb" class:list={["mb-6 text-sm", ink.base]}>
+<nav aria-label="Breadcrumb" class:list={["mb-5 text-sm", ink.base]}>
   <ol class="flex flex-wrap items-center gap-x-2">
     {
       items.map((it, i) => (

@@ -1,0 +1,32 @@
+---
+/**
+ * The standard copy column inside PageHero: eyebrow, H1 (with an optional
+ * softer second line, the site's "They just pick up." pattern), lead, then
+ * whatever the page slots in (badges, fine print, language bar).
+ *
+ * Any of the text props may be omitted; pages with unusual H1 markup can pass
+ * a `title` slot instead of `title`/`accent`.
+ */
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  accent?: string;
+  lead?: string;
+  size?: "display" | "title";
+}
+const { eyebrow, title, accent, lead, size = "display" } = Astro.props;
+---
+
+{eyebrow && <p class="eyebrow text-[var(--color-on-brand-accent)]">{eyebrow}</p>}
+<h1
+  class:list={[
+    "tracking-display text-balance",
+    eyebrow && "mt-4",
+    size === "display" ? "text-display" : "text-title",
+  ]}
+>
+  {Astro.slots.has("title") ? <slot name="title" /> : title}
+  {accent && <span class="block text-white/75">{accent}</span>}
+</h1>
+{lead && <p class="text-lead mt-5 max-w-2xl text-white/85">{lead}</p>}
+<slot />
