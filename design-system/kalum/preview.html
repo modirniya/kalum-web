@@ -103,8 +103,13 @@ a { color: var(--link); text-underline-offset: 3px; }
 .flag { font-size: 1.6rem; line-height: 1; }
 .hc-dest { font-weight: 700; font-size: 1.15rem; }
 .hc-sub { color: var(--text-2); font-size: .875rem; }
-.hc-rows { margin-top: 18px; display: grid; gap: 10px; }
-.hc-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--surface-2); border-radius: var(--r-sm); }
+.code { background: var(--surface-2); color: var(--text-2); font-weight: 600; font-size: .85rem; border-radius: 9999px; padding: 4px 10px; }
+.hc-price { margin-top: 16px; display: flex; align-items: baseline; gap: 6px; font-size: 3rem; font-weight: 600; line-height: 1.05; letter-spacing: -0.02em; }
+.hc-from, .hc-unit { font-size: 1rem; font-weight: 500; color: var(--text-2); letter-spacing: 0; }
+.hc-price + .hc-sub { margin-top: 8px; }
+.hc-facts { list-style: none; padding: 16px 0 0; margin: 16px 0 0; border-top: 1px solid var(--outline); display: grid; gap: 8px; font-size: .9rem; }
+.hc-facts li { display: flex; align-items: center; gap: 10px; }
+.hc-facts .icon { width: 18px; height: 18px; color: var(--accent); }
 .price-chip { background: var(--call); color: var(--on-call); font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: .95rem; }
 .call-btn { margin-top: 18px; display: flex; align-items: center; justify-content: center; gap: 10px; height: 52px; border-radius: 9999px; background: var(--call); color: var(--on-call); font-weight: 700; font-size: 1.05rem; text-decoration: none; }
 .hc-note { font-size: .78rem; color: var(--text-2); margin-top: 12px; text-align: center; }
@@ -130,6 +135,7 @@ a { color: var(--link); text-underline-offset: 3px; }
 .rate-row:first-child { border-top: 0; }
 .rate-row:hover { background: var(--surface-2); }
 .rate-row .name { font-weight: 600; flex: 1; }
+.rate-row .code { min-width: 3.75rem; text-align: center; }
 .rate-row .kind { color: var(--text-2); font-size: .85rem; }
 .rate-row .icon { width: 18px; height: 18px; color: var(--text-2); }
 
@@ -187,6 +193,7 @@ a { color: var(--link); text-underline-offset: 3px; }
   <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01M8.5 16.43a5 5 0 0 1 7 0M2 8.82a15 15 0 0 1 4.17-2.65M10.66 5c4.01-.36 8.14.9 11.34 3.76M16.85 11.25a10 10 0 0 1 2.22 1.68M5 13a10 10 0 0 1 5.24-2.76M2 2l20 20"/></symbol>
   <symbol id="i-smartphone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
   <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
   <symbol id="i-apple" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M16.37 12.6c-.02-2.3 1.88-3.4 1.97-3.46-1.07-1.57-2.74-1.78-3.33-1.8-1.42-.14-2.77.83-3.49.83-.72 0-1.83-.81-3.01-.79-1.55.02-2.98.9-3.78 2.29-1.61 2.8-.41 6.94 1.16 9.21.77 1.11 1.68 2.36 2.88 2.32 1.16-.05 1.59-.75 2.99-.75 1.4 0 1.79.75 3.01.72 1.24-.02 2.03-1.13 2.79-2.25.88-1.29 1.24-2.54 1.26-2.6-.03-.01-2.42-.93-2.45-3.68zM14.08 5.84c.64-.77 1.07-1.85.95-2.92-.92.04-2.03.61-2.69 1.38-.59.68-1.11 1.78-.97 2.83 1.02.08 2.07-.52 2.71-1.29z"/></symbol>
@@ -219,15 +226,19 @@ a { color: var(--link); text-underline-offset: 3px; }
     </div>
     <!-- Hero card slot: the rate -->
     <aside class="hero-card" aria-label="India rates">
+      <!-- Data contract (src/lib/rates.ts): one "from" rate per country, the
+           cheapest prefix. Never split it into mobile/landline, never derive
+           minutes-per-dollar from it, always say "from". -->
       <div class="hc-top">
-        <div><div class="hc-dest">India</div><div class="hc-sub">Per-minute rate, billed per minute</div></div>
-        <span class="flag" aria-hidden="true">🇮🇳</span>
+        <div><div class="hc-dest">India</div><div class="hc-sub">Mobiles and landlines</div></div>
+        <bdi class="code num">+91</bdi>
       </div>
-      <div class="hc-rows">
-        <div class="hc-row"><span>Mobiles</span><bdi class="price-chip num">4¢/min</bdi></div>
-        <div class="hc-row"><span>Landlines</span><bdi class="price-chip num">4¢/min</bdi></div>
-      </div>
-      <a class="call-btn" href="#"><svg class="icon" style="width:20px;height:20px"><use href="#i-phone"/></svg><bdi class="num">$4.99 ≈ 124 min to India</bdi></a>
+      <div class="hc-price"><span class="hc-from">from</span> <bdi class="num">4¢</bdi><span class="hc-unit">/min</span></div>
+      <p class="hc-sub">The rate the app shows before you dial is the rate you pay.</p>
+      <ul class="hc-facts">
+        <li><svg class="icon"><use href="#i-check"/></svg><span>Start with <bdi class="num">$4.99</bdi></span></li>
+        <li><svg class="icon"><use href="#i-check"/></svg>No subscription. Credit never expires.</li>
+      </ul>
       <p class="hc-note">Rates updated September 28, 2026</p>
     </aside>
   </div>
@@ -268,12 +279,13 @@ a { color: var(--link); text-underline-offset: 3px; }
       <p class="eyebrow">Nearby destinations</p>
       <h2 class="tracking-display">Calling the region.</h2>
       <div class="rates">
-        <a class="rate-row" href="#"><span class="flag" aria-hidden="true">🇵🇰</span><span class="name">Pakistan <span class="kind">· +92</span></span><bdi class="price-chip num">19¢/min</bdi><svg class="icon flip"><use href="#i-arrow"/></svg></a>
-        <a class="rate-row" href="#"><span class="flag" aria-hidden="true">🇧🇩</span><span class="name">Bangladesh <span class="kind">· +880</span></span><bdi class="price-chip num">8¢/min</bdi><svg class="icon flip"><use href="#i-arrow"/></svg></a>
-        <a class="rate-row" href="#"><span class="flag" aria-hidden="true">🇳🇵</span><span class="name">Nepal <span class="kind">· +977</span></span><bdi class="price-chip num">36¢/min</bdi><svg class="icon flip"><use href="#i-arrow"/></svg></a>
-        <a class="rate-row" href="#"><span class="flag" aria-hidden="true">🇱🇰</span><span class="name">Sri Lanka <span class="kind">· +94</span></span><bdi class="price-chip num">35¢/min</bdi><svg class="icon flip"><use href="#i-arrow"/></svg></a>
+        <a class="rate-row" href="#"><bdi class="code num">+92</bdi><span class="name">Pakistan</span><span class="kind">from</span><bdi class="price-chip num">19¢/min</bdi><svg class="icon flip"><use href="#i-arrow"/></svg></a>
+        <a class="rate-row" href="#"><bdi class="code num">+880</bdi><span class="name">Bangladesh</span><span class="kind">from</span><bdi class="price-chip num">8¢/min</bdi><svg class="icon flip"><use href="#i-arrow"/></svg></a>
+        <a class="rate-row" href="#"><bdi class="code num">+977</bdi><span class="name">Nepal</span><span class="kind">from</span><bdi class="price-chip num">36¢/min</bdi><svg class="icon flip"><use href="#i-arrow"/></svg></a>
+        <a class="rate-row" href="#"><bdi class="code num">+94</bdi><span class="name">Sri Lanka</span><span class="kind">from</span><bdi class="price-chip num">35¢/min</bdi><svg class="icon flip"><use href="#i-arrow"/></svg></a>
       </div>
-      <p class="disclosure">Indicative rates in USD, updated September 28, 2026. Rates vary by destination and can change; the app shows the exact rate before you call. <a href="#">Terms</a>.</p>
+      <!-- RateDisclosure.astro, verbatim (en, basis "from") -->
+      <p class="disclosure">Indicative rates in USD, updated September 28, 2026. Rates vary by destination and can change, and mobile and landline numbers in the same country can price differently. The rate the Kalum app shows before you dial is the rate you pay (<a href="#">Terms §5.3</a>). Calls are billed per minute, rounded up, with a one-minute minimum — <a href="#">Terms §5</a> has the full billing details.</p>
     </div>
   </section>
 
@@ -295,7 +307,7 @@ a { color: var(--link); text-underline-offset: 3px; }
     <div class="wrap">
       <h3 style="font-size:1.125rem;font-weight:600">More destinations</h3>
       <div class="chips">
-        <a class="chip" href="#">Mexico <bdi class="num">3¢</bdi></a><a class="chip" href="#">Philippines <bdi class="num">25¢</bdi></a><a class="chip" href="#">Nigeria <bdi class="num">28¢</bdi></a><a class="chip" href="#">Egypt <bdi class="num">22¢</bdi></a><a class="chip" href="#">Vietnam <bdi class="num">22¢</bdi></a><a class="chip" href="#">All destinations <svg class="icon flip" style="width:16px;height:16px"><use href="#i-arrow"/></svg></a>
+        <a class="chip" href="#">Mexico <span class="num">from <bdi>3¢</bdi></span></a><a class="chip" href="#">Philippines <span class="num">from <bdi>25¢</bdi></span></a><a class="chip" href="#">Nigeria <span class="num">from <bdi>28¢</bdi></span></a><a class="chip" href="#">Egypt <span class="num">from <bdi>22¢</bdi></span></a><a class="chip" href="#">Vietnam <span class="num">from <bdi>22¢</bdi></span></a><a class="chip" href="#">All destinations <svg class="icon flip" style="width:16px;height:16px"><use href="#i-arrow"/></svg></a>
       </div>
     </div>
   </section>

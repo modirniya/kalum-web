@@ -75,7 +75,7 @@ parts:
 | Layout | Used by | Hero | Body |
 |---|---|---|---|
 | **Showcase** | Home (en, es) | Tall wave hero, phone mockup at the end side; rate finder sits in a white card overlapping the wave, the way the app's number field sits under its wave | Section kit |
-| **Landing** | How it works, no-internet ×11, destination ×46, corridor ×4, rates hub ×2, editorial | Wave hero + a **hero card** slot at the end side: destination shows its rate card; corridor shows "UAE → India, from 4¢/min"; no-internet shows a mini "they just pick up" call card; hub shows the search | Section kit |
+| **Landing** | How it works, no-internet ×11, destination ×46, corridor ×4, rates hub ×2, editorial | Wave hero + a **hero card** slot at the end side: destination shows its "from" rate card (§6a); corridor shows "UAE → India, from 4¢/min"; no-internet shows a mini "they just pick up" call card; hub shows the search | Section kit |
 | **Utility** | Support, join, 404, privacy, terms | Short wave header (breadcrumb + title only) | One white content card on cream, like an app settings screen |
 
 ### Section kit (shared components that replace the 19 copies)
@@ -86,7 +86,7 @@ parts:
 | `Section` | ad-hoc `<section>` bands | Eyebrow, H2, lead, slot; cream only |
 | `Card`, `CardGrid` | "Made for…", "Landline-only" etc. | White, r=12, `shadow-sm` |
 | `StepList` | 2 step styles | Numbered 1-2-3, horizontal ≥md |
-| `RateCard`, `RateList` | 4 rate-card styles | Tabular figures; price chip in call-green |
+| `RateCard`, `RateList` | 4 rate-card styles | Tabular figures; price chip in call-green; always "from" (§6a) |
 | `FAQ` | 3 FAQ styles | `<details>`; keeps FAQPage JSON-LD |
 | `CompareTable` | editorial + corridor tables | Kalum column tinted |
 | `LinkChips` | popular / more destinations | Pill chips |
@@ -204,6 +204,30 @@ connected scripts as today.
   a floating maroon pill at the bottom reading "Get Kalum, from $4.99" plus a
   store link, echoing the app's bottom nav. Hidden when the CTA band is in
   view.
+
+---
+
+## 6a. Rate data contract (applies to every rate on every page)
+
+What the site has: **one number per country**, `rate_per_minute` (218
+countries), from the public API, with `src/data/rates.json` as the fallback
+snapshot. Under the production basis `"from"` (`src/lib/rates.ts`), that
+number is the country's **cheapest prefix**. The site has no landline/mobile
+split, no per-prefix rates and no per-city rates.
+
+So every design that shows a rate must:
+
+- Say **"from"** next to every figure: hero card, rate rows, chips, meta
+  copy.
+- **Never** show separate mobile/landline prices, imply one price covers both,
+  or work out minutes-per-dollar ("$4.99 ≈ 124 min") from the figure.
+- Put `RateDisclosure` near every rate block and keep its wording as it is.
+  Billing mechanics are **linked to Terms §5, not summarised**; don't add
+  bullets like "billed per minute" or "no connection fees" to cards.
+- Get the rate date from `card.fetchedAt` (`formatRatesAsOf`), never hard-code
+  it.
+- Treat flags as emoji, which the no-emoji-icons rule forbids (Windows shows
+  them as letters). Identify destinations by name and a `+code` tag instead.
 
 ---
 
