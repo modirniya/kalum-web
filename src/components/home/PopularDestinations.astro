@@ -1,5 +1,8 @@
 ---
 import RateDisclosure from "../RateDisclosure.astro";
+import Section from "../kit/Section.astro";
+import RateTile from "../kit/RateTile.astro";
+import Arrow from "../kit/Arrow.astro";
 import {
   featuredPricedDestinations,
   pricedDestinations,
@@ -60,55 +63,28 @@ const copy =
       };
 ---
 
-<section data-section="destinations" class="bg-[var(--color-cream)] py-20 md:py-28">
-  <div class="mx-auto max-w-5xl px-5 md:px-8">
-    <div class="max-w-2xl">
-      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl lg:text-5xl">
-        {copy.h2}
-      </h2>
-      <p class="mt-5 text-lg leading-relaxed text-[var(--color-muted)]">
-        {copy.blurb}
-      </p>
-    </div>
+<Section section="destinations" title={copy.h2} lead={copy.blurb}>
+  <ul class="grid gap-3 md:grid-cols-2">
+    {
+      featured.map((d) => (
+        <li>
+          <RateTile
+            href={copy.href(d.slug)}
+            name={copy.call(copy.name(d.slug, d.name))}
+            dialCode={d.dialCode}
+            from={from}
+            rate={formatRate(d.rateCents)}
+          />
+        </li>
+      ))
+    }
+  </ul>
 
-    <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        featured.map((d) => (
-          <li>
-            <a
-              href={copy.href(d.slug)}
-              class="flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white p-5 shadow-sm transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
-            >
-              <span class="text-lg font-bold text-[var(--color-text)]">
-                {copy.call(copy.name(d.slug, d.name))}
-              </span>
-              <span class="shrink-0 text-right">
-                {from && (
-                  <span class="micro-label block text-[var(--color-muted)]">
-                    {from.trim()}
-                  </span>
-                )}
-                <span class="text-2xl font-extrabold tabular-nums text-[var(--color-maroon)]">
-                  {formatRate(d.rateCents)}
-                  <span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
-                </span>
-              </span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+  <RateDisclosure card={card} locale={locale} class="mt-6 max-w-4xl" />
 
-    <RateDisclosure card={card} locale={locale} class="mt-8 max-w-3xl" />
-
-    <div class="mt-10">
-      <a
-        href={copy.allHref}
-        class="inline-flex items-center gap-2 text-base font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
-      >
-        {copy.all}
-        <span aria-hidden="true">&rarr;</span>
-      </a>
-    </div>
-  </div>
-</section>
+  <p class="mt-8">
+    <a href={copy.allHref} class="link inline-flex items-center gap-1.5">
+      {copy.all} <Arrow />
+    </a>
+  </p>
+</Section>

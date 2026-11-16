@@ -1,5 +1,8 @@
 ---
 import { HOME_COPY, type HomeLocale } from "../../lib/home-copy";
+import Section from "../kit/Section.astro";
+import Steps from "../kit/Steps.astro";
+import Arrow from "../kit/Arrow.astro";
 
 interface Props {
   locale?: HomeLocale;
@@ -9,47 +12,15 @@ const { locale = "en" } = Astro.props;
 const c = HOME_COPY[locale].steps;
 ---
 
-<section data-section="steps" class="bg-white py-20 md:py-28">
-  <div class="mx-auto max-w-6xl px-5 md:px-8">
-    <div class="mx-auto max-w-2xl text-center">
-      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl lg:text-5xl">
-        {c.heading}
-      </h2>
-    </div>
-
-    <ol class="mt-14 grid gap-6 md:grid-cols-3">
-      {
-        c.items.map((step) => (
-          <li class="relative rounded-2xl border border-black/5 bg-[var(--color-cream)] p-8">
-            <span
-              aria-hidden="true"
-              class="text-6xl font-extrabold leading-none text-[var(--color-teal-ink)]"
-            >
-              {step.n}
-            </span>
-            <h3 class="mt-4 text-xl font-bold text-[var(--color-text)]">
-              {step.title}
-            </h3>
-            <p class="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
-              {step.body}
-            </p>
-          </li>
-        ))
-      }
-    </ol>
-
-    {
-      c.more && (
-        <div class="mt-12 text-center">
-          <a
-            href={c.more.href}
-            class="inline-flex items-center gap-2 text-base font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
-          >
-            {c.more.label}
-            <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
-      )
-    }
-  </div>
-</section>
+<Section section="steps" title={c.heading} align="center">
+  <Steps steps={c.items.map((step) => ({ n: step.n, title: step.title, body: step.body }))} />
+  {
+    c.more && (
+      <p class="mt-8 text-center">
+        <a href={c.more.href} class="link inline-flex items-center gap-1.5">
+          {c.more.label} <Arrow />
+        </a>
+      </p>
+    )
+  }
+</Section>
