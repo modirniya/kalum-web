@@ -14,7 +14,7 @@ import { formatRatesAsOf, type RateCard } from "../lib/rates";
 interface Props {
   card: RateCard;
   locale?: "en" | "es";
-  /** "dark" for the brand-gradient hero, "light" for cream/white sections. */
+  /** "dark" for the maroon hero, "light" for cream/white sections. */
   tone?: "light" | "dark";
   class?: string;
 }
@@ -25,11 +25,11 @@ const date = formatRatesAsOf(card.fetchedAt, locale);
 const prefixPriced = card.basis === "from";
 
 const toneClass =
-  tone === "dark" ? "text-white/70" : "text-[var(--color-muted)]";
+  tone === "dark" ? "text-white/70" : "text-[var(--color-ink-2)]";
 const linkClass =
   tone === "dark"
     ? "underline underline-offset-2 hover:text-white transition"
-    : "underline underline-offset-2 hover:text-[var(--color-maroon)] transition";
+    : "text-[var(--color-link)] underline underline-offset-2 transition";
 
 const copy =
   locale === "es"

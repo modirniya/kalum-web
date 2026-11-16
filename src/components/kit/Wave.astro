@@ -1,0 +1,33 @@
+---
+/**
+ * The app's wave edge (kalum-mobile/lib/core/widgets/wave_clipper.dart), as an
+ * SVG strip in the brand maroon.
+ *
+ * The clipper's path, for a box of height h: start at (0, h-30), quadratic to
+ * (w/2, h-20) via (w/4, h+10), then to (w, h-10) via (3w/4, h-50). With h=60
+ * that is the path below; `T` reflects the first control point, which lands
+ * exactly on the app's second one.
+ *
+ * `down` (default) hangs under a maroon block, the hero. `up` sits on top of
+ * one, the CTA band. Not mirrored for RTL: it is decoration, not direction.
+ */
+interface Props {
+  direction?: "down" | "up";
+  class?: string;
+}
+const { direction = "down", class: cls = "" } = Astro.props;
+---
+
+<svg
+  class:list={[
+    "block h-12 w-full text-[var(--color-brand)] md:h-[4.5rem]",
+    direction === "up" && "-scale-y-100",
+    cls,
+  ]}
+  viewBox="0 0 400 60"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path fill="currentColor" d="M0 0V30Q100 70 200 40T400 50V0Z"></path>
+</svg>

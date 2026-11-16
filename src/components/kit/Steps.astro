@@ -1,0 +1,58 @@
+---
+/**
+ * Numbered steps (MASTER.md §2). `cards` lays out short steps as a row of
+ * white cards; `list` stacks longer ones, each with an optional note, for the
+ * how-it-works page. The number badge is the app's primary button colour.
+ */
+interface Step {
+  n?: string | number;
+  title: string;
+  body: string;
+  note?: string;
+}
+interface Props {
+  steps: Step[];
+  layout?: "cards" | "list";
+  section?: string;
+  class?: string;
+}
+const { steps, layout = "cards", section, class: cls = "" } = Astro.props;
+---
+
+<ol
+  data-section={section}
+  class:list={[
+    layout === "cards" ? "grid gap-4 md:grid-cols-3" : "grid gap-4",
+    cls,
+  ]}
+>
+  {
+    steps.map((s, i) => (
+      <li
+        class:list={[
+          "card p-6",
+          layout === "list" && "grid gap-4 md:grid-cols-[auto_1fr] md:gap-6 md:p-8",
+        ]}
+      >
+        <span
+          aria-hidden="true"
+          class:list={[
+            "grid shrink-0 place-items-center rounded-full bg-[var(--color-primary)] font-bold text-[var(--color-on-primary)] tabular-nums",
+            layout === "cards" ? "size-9" : "size-11 text-lg",
+          ]}
+        >
+          {s.n ?? i + 1}
+        </span>
+        <div>
+          <h3 class:list={["text-heading", layout === "cards" && "mt-4"]}>{s.title}</h3>
+          <p class="mt-2 leading-relaxed text-[var(--color-ink-2)]">{s.body}</p>
+          {s.note && (
+            <p class="mt-4 rounded-lg bg-[var(--color-surface-2)] px-4 py-3 text-sm text-[var(--color-ink-2)]">
+              {s.note}
+            </p>
+          )}
+        </div>
+      </li>
+    ))
+  }
+</ol>

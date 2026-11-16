@@ -12,11 +12,11 @@ interface Props {
 
 const { size = "lg", utm = "kalum-web", cta = false, loading = "eager" } = Astro.props;
 
-// Sized to match GooglePlayBadge's apparent height at each size.
-// Apple badge aspect ratio ≈ 2.99:1, Google Play ≈ 2.58:1.
-// lg widths chosen so heights line up with GooglePlayBadge w-56/w-48/w-40.
-const widthClass =
-  size === "lg" ? "w-[260px]" : size === "md" ? "w-[222px]" : "w-[185px]";
+// Sized by height so the pair always lines up with GooglePlayBadge: lg 56px
+// (hero), md 48px, sm 44px (footer, still a full tap target). Both assets are
+// trimmed edge to edge, so equal heights look equal. They were 87/74/62px,
+// which stacked into a wall of badges on a phone.
+const sizeClass = size === "lg" ? "h-14" : size === "md" ? "h-12" : "h-11";
 
 const href = appleHref(utm);
 ---
@@ -25,7 +25,7 @@ const href = appleHref(utm);
   href={href}
   rel="noopener"
   aria-label="Download Kalum on the App Store"
-  class="inline-block transition hover:scale-[1.02]"
+  class="inline-block rounded-[10px] transition hover:-translate-y-px"
   data-aw-cta={cta ? "" : undefined}
 >
   <img
@@ -33,7 +33,7 @@ const href = appleHref(utm);
     alt="Download on the App Store"
     width="119.66"
     height="40"
-    class={`h-auto ${widthClass}`}
+    class={`w-auto ${sizeClass}`}
     loading={loading}
     decoding="async"
   />

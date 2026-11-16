@@ -2,6 +2,10 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SupportForm from "../components/SupportForm.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
+import PageHero from "../components/kit/PageHero.astro";
+import HeroCopy from "../components/kit/HeroCopy.astro";
+import Section from "../components/kit/Section.astro";
+import Faq from "../components/kit/Faq.astro";
 
 /*
  * Answers to the things people actually write in about, so the page is worth
@@ -12,6 +16,9 @@ import Breadcrumb from "../components/Breadcrumb.astro";
  * destination FAQs, the corridor pages, the privacy policy). Nothing new is
  * claimed here, and the FAQPage schema below is built from this same array,
  * so the markup and the structured data cannot disagree.
+ *
+ * Utility layout (design-system/kalum/MASTER.md §2): a short wave header, then
+ * the form in one white card on the cream page.
  */
 const faqs = [
   {
@@ -52,57 +59,34 @@ const faqSchema = {
   description="Answers on credit, per-minute charging and account deletion, and a form that reaches us directly. We reply by email, usually within a day."
   canonical="https://kalum.app/support/"
 >
-  <section class="bg-[var(--color-cream)] py-20 md:py-28">
-    <div class="mx-auto max-w-2xl px-5 md:px-8">
-      <Breadcrumb tone="light" items={[{ name: "Home", href: "/" }, { name: "Support" }]} />
-      <header>
-        <p class="eyebrow text-[var(--color-maroon)]">
-          We're here to help
-        </p>
-        <h1 class="mt-4 text-4xl font-extrabold leading-[1.05] tracking-display text-[var(--color-text)] sm:text-5xl">
-          Get in touch
-        </h1>
-        <p class="mt-5 text-lg leading-relaxed text-[var(--color-muted)]">
-          Send us a message about your account, a call you made,
-          billing, or anything else. We'll reply by email, usually within a day.
-        </p>
-      </header>
+  <PageHero variant="compact" width="narrow">
+    <Breadcrumb items={[{ name: "Home", href: "/" }, { name: "Support" }]} />
+    <HeroCopy
+      eyebrow="We're here to help"
+      title="Get in touch"
+      lead="Send us a message about your account, a call you made, billing, or anything else. We'll reply by email, usually within a day."
+    />
+  </PageHero>
 
-      <div class="mt-10 rounded-2xl border border-black/5 bg-white p-6 shadow-sm sm:p-8">
-        <SupportForm />
-      </div>
-
-      <div class="mt-16">
-        <h2 class="text-2xl font-extrabold tracking-display text-[var(--color-text)] sm:text-3xl">
-          Before you write
-        </h2>
-        <p class="mt-4 text-lg leading-relaxed text-[var(--color-muted)]">
-          These come up most often, and the answer may be quicker than a reply
-          from us.
-        </p>
-        <dl class="mt-8 space-y-7">
-          {
-            faqs.map((faq) => (
-              <div>
-                <dt class="text-lg font-bold text-[var(--color-text)]">{faq.q}</dt>
-                <dd class="mt-2 text-lg leading-relaxed text-[var(--color-muted)]">{faq.a}</dd>
-              </div>
-            ))
-          }
-        </dl>
-      </div>
-
-      <p class="mt-6 text-sm text-[var(--color-muted)]">
-        Prefer email? Write to
-        <a
-          href="mailto:hello@neuera.app"
-          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)]"
-        >
-          hello@neuera.app
-        </a>
-        directly.
-      </p>
+  <Section width="narrow" class="!pt-8 md:!pt-10">
+    <div class="card p-6 sm:p-8">
+      <SupportForm />
     </div>
-  </section>
-<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    <p class="mt-5 text-sm text-[var(--color-ink-2)]">
+      Prefer email? Write to
+      <a href="mailto:hello@neuera.app" class="link">hello@neuera.app</a>
+      directly.
+    </p>
+  </Section>
+
+  <Section
+    width="narrow"
+    title="Before you write"
+    lead="These come up most often, and the answer may be quicker than a reply from us."
+    flush
+  >
+    <Faq items={faqs} />
+  </Section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 </BaseLayout>

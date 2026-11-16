@@ -31,9 +31,9 @@ const group = groupFor(path);
 const here = localeOf(path);
 const langs: Locale[] = group ? LOCALE_ORDER.filter((l) => group[l]) : [];
 
-const textMuted = tone === "light" ? "text-white/70" : "text-[var(--color-muted)]";
-const textLink = tone === "light" ? "text-white/90 hover:text-white" : "text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)]";
-const textHere = tone === "light" ? "text-white" : "text-[var(--color-text)]";
+const textMuted = tone === "light" ? "text-white/70" : "text-[var(--color-ink-2)]";
+const textLink = tone === "light" ? "text-white/90 hover:text-white underline-offset-4 hover:underline" : "text-[var(--color-link)] underline-offset-4 hover:underline";
+const textHere = tone === "light" ? "text-white" : "text-[var(--color-ink)]";
 ---
 
 {

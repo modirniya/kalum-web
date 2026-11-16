@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import AppStoreBadge from "../components/AppStoreBadge.astro";
-import GooglePlayBadge from "../components/GooglePlayBadge.astro";
+import PageHero from "../components/kit/PageHero.astro";
+import Section from "../components/kit/Section.astro";
+import StoreBadges from "../components/kit/StoreBadges.astro";
 
 /*
  * Landing page for a Family Wallet invite link:
@@ -23,61 +24,66 @@ import GooglePlayBadge from "../components/GooglePlayBadge.astro";
   canonical="https://kalum.app/join/"
   noindex
 >
-  <section class="bg-[var(--color-cream)] py-16 md:py-24">
-    <div class="mx-auto max-w-xl px-5 md:px-8 text-center">
-      <p class="eyebrow text-[var(--color-maroon)]" data-i18n="eyebrow">Family wallet invite</p>
-      <h1 class="mt-3 text-3xl md:text-4xl font-bold" data-i18n="title">
+  <PageHero variant="compact" width="narrow" class="text-center">
+    <div class="mx-auto max-w-xl">
+      <p class="eyebrow text-[var(--color-teal-light)]" data-i18n="eyebrow">Family wallet invite</p>
+      <h1 class="text-title tracking-display mt-4 text-balance" data-i18n="title">
         You're invited to a Kalum family wallet
       </h1>
-      <p class="mt-4 text-base text-slate-700" data-i18n="lede">
+      <p class="text-lead mt-4 text-white/85" data-i18n="lede">
         The person who invited you lets you call on their Kalum balance. They will see how much
         you spend from it each month — not who you call.
       </p>
+    </div>
+  </PageHero>
 
-      <div id="code-box" class="mt-8 hidden">
-        <p class="text-sm text-slate-600" data-i18n="yourCode">Your invite code</p>
+  <Section width="narrow" class="!pt-8 md:!pt-10">
+    <div class="card mx-auto max-w-xl p-6 text-center sm:p-8">
+      <div id="code-box" class="hidden">
+        <p class="micro-label text-[var(--color-ink-2)]" data-i18n="yourCode">Your invite code</p>
         <p
           id="code"
-          class="mt-2 font-mono text-4xl md:text-5xl font-bold tracking-widest select-all"
+          class="mt-3 select-all rounded-xl bg-[var(--color-surface-2)] px-4 py-5 font-mono text-4xl font-bold tracking-widest md:text-5xl"
+          dir="ltr"
         >
         </p>
         <button
           id="copy"
           type="button"
-          class="mt-4 rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold hover:bg-slate-50"
+          class="btn btn-outline mt-4 rounded-full"
           data-i18n="copy"
         >
           Copy code
         </button>
-        <p id="copied" class="mt-2 h-5 text-sm text-emerald-700" aria-live="polite"></p>
+        <p id="copied" class="mt-2 h-5 text-sm font-semibold text-[var(--color-link)]" aria-live="polite"></p>
       </div>
 
-      <p id="no-code" class="mt-8 hidden text-slate-700" data-i18n="noCode">
+      <p id="no-code" class="hidden text-[var(--color-ink-2)]" data-i18n="noCode">
         This link has no invite code. Ask the person who invited you to send it again.
       </p>
 
-      <ol class="mt-10 space-y-3 text-left text-slate-800">
-        <li><span class="font-semibold">1.</span> <span data-i18n="step1">Install Kalum.</span></li>
-        <li>
-          <span class="font-semibold">2.</span>
-          <span data-i18n="step2">Open it and go to Settings → Family wallet → Join with a code.</span>
+      <ol class="mt-6 space-y-3 border-t border-[var(--color-outline)] pt-6 text-start">
+        <li class="flex gap-3">
+          <span aria-hidden="true" class="grid size-7 shrink-0 place-items-center rounded-full bg-[var(--color-primary)] text-sm font-bold text-[var(--color-on-primary)]">1</span>
+          <span class="pt-0.5" data-i18n="step1">Install Kalum.</span>
         </li>
-        <li>
-          <span class="font-semibold">3.</span>
-          <span data-i18n="step3">Enter the code above (or paste this link) and accept.</span>
+        <li class="flex gap-3">
+          <span aria-hidden="true" class="grid size-7 shrink-0 place-items-center rounded-full bg-[var(--color-primary)] text-sm font-bold text-[var(--color-on-primary)]">2</span>
+          <span class="pt-0.5" data-i18n="step2">Open it and go to Settings → Family wallet → Join with a code.</span>
+        </li>
+        <li class="flex gap-3">
+          <span aria-hidden="true" class="grid size-7 shrink-0 place-items-center rounded-full bg-[var(--color-primary)] text-sm font-bold text-[var(--color-on-primary)]">3</span>
+          <span class="pt-0.5" data-i18n="step3">Enter the code above (or paste this link) and accept.</span>
         </li>
       </ol>
 
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <AppStoreBadge size="md" utm="family-invite" loading="eager" />
-        <GooglePlayBadge size="md" utm="family-invite" loading="eager" />
-      </div>
+      <StoreBadges utm="family-invite" size="md" align="center" class="mt-8" />
 
-      <p class="mt-8 text-xs text-slate-500" data-i18n="expiry">
+      <p class="mt-6 text-sm text-[var(--color-ink-2)]" data-i18n="expiry">
         Invite codes work once and expire 48 hours after they are created.
       </p>
     </div>
-  </section>
+  </Section>
 
   <script is:inline>
     (function () {

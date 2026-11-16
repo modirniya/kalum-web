@@ -1,0 +1,70 @@
+---
+/**
+ * A block of the cream page body (MASTER.md §2). No background of its own:
+ * the page stays cream and content groups by sitting in white cards, the way
+ * the app lays out a screen. Carries `data-section` for the parity check.
+ *
+ * Heading parts are optional; pass `title` as a slot for rich markup.
+ */
+interface Props {
+  section?: string;
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  lead?: string;
+  /** Content width: wide 72rem, mid 56rem, narrow 48rem. */
+  width?: "wide" | "mid" | "narrow";
+  align?: "start" | "center";
+  /** Drop the top padding, for a block that continues the one above. */
+  flush?: boolean;
+  class?: string;
+}
+const {
+  section,
+  id,
+  eyebrow,
+  title,
+  lead,
+  width = "wide",
+  align = "start",
+  flush = false,
+  class: cls = "",
+} = Astro.props;
+
+const hasTitle = Boolean(title) || Astro.slots.has("title");
+const center = align === "center";
+---
+
+<section
+  data-section={section}
+  id={id}
+  class:list={["py-12 md:py-16", flush && "!pt-0", id && "scroll-mt-24", cls]}
+>
+  <div
+    class:list={[
+      "mx-auto px-5 md:px-8",
+      width === "wide" && "max-w-6xl",
+      width === "mid" && "max-w-4xl",
+      width === "narrow" && "max-w-3xl",
+    ]}
+  >
+    {
+      (eyebrow || hasTitle || lead) && (
+        <header class:list={["mb-8 md:mb-10", center && "mx-auto max-w-2xl text-center"]}>
+          {eyebrow && <p class="eyebrow text-[var(--color-accent)]">{eyebrow}</p>}
+          {hasTitle && (
+            <h2 class:list={["text-title tracking-display text-balance", eyebrow && "mt-3"]}>
+              {Astro.slots.has("title") ? <slot name="title" /> : title}
+            </h2>
+          )}
+          {lead && (
+            <p class:list={["text-lead mt-4 text-[var(--color-ink-2)]", !center && "max-w-2xl"]}>
+              {lead}
+            </p>
+          )}
+        </header>
+      )
+    }
+    <slot />
+  </div>
+</section>
