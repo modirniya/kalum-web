@@ -130,9 +130,12 @@ Contrast (measured): text/cream 15.3, text-2/cream 5.54, text-2/white 5.97,
 white/maroon 16.5, link/cream 5.31, on-call/call 6.8, dark text/navy 13.8,
 dark text-2/surface 6.6, dark link/navy 9.15.
 
-**Dark mode** follows `prefers-color-scheme`, matching the app's
-`ThemeMode.system`. There's no toggle in v1. The hero and CTA stay maroon in
-both modes, as the app's wave header does.
+**Dark mode** follows `prefers-color-scheme` by default, matching the app's
+`ThemeMode.system`. Like the app's appearance setting, the footer's
+`ThemeSwitch` offers System / Light / Dark; the choice is saved per visitor
+(`localStorage` "kalum-theme", restored in `<head>` before first paint) and
+sets `data-theme` on `<html>`. The hero and CTA stay maroon in both modes, as
+the app's wave header does.
 
 **Rules**
 - Components never use raw hex values, only tokens.
@@ -269,6 +272,7 @@ All six rollout steps are done; every page renders through the kit.
 | `PageHero` (+ `Wave`, `HeroCopy`), `Section`, `CtaBand`, `StoreBadges` | `src/components/kit/` |
 | `Faq`, `Steps`, `LinkChips`, `RateTile`, `RateCard` (hero rate), `PhoneMockup`, `Arrow` | `src/components/kit/` |
 | Mobile sticky pill | `src/components/kit/StickyCta.astro`, mounted in BaseLayout |
+| Appearance switch (System / Light / Dark) | `src/components/kit/ThemeSwitch.astro`, in the footer; labels in `src/lib/chrome.ts` |
 
 Layouts in use:
 

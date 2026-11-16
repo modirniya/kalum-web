@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import icon from "../assets/kalum-icon.jpg";
 import GooglePlayBadge from "./GooglePlayBadge.astro";
 import AppStoreBadge from "./AppStoreBadge.astro";
+import ThemeSwitch from "./kit/ThemeSwitch.astro";
 import { featuredDestinations } from "../lib/destinations";
 import { coverage } from "../lib/rates";
 import { localeOf } from "../lib/i18n";
@@ -95,12 +96,15 @@ const isEN = locale === "en";
   }
 
   <div class="border-t border-white/10">
-    <div class="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-6 text-xs text-white/60 md:flex-row md:items-center md:justify-between md:px-8">
-      <p>&copy; {year} Neuera &middot; {t.madeBy}</p>
-      <p>
-        <a href="mailto:hello@neuera.app" class="hover:text-white">hello@neuera.app</a>
-        &middot; kalum.app
-      </p>
+    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-6 text-xs text-white/60 md:flex-row md:items-center md:justify-between md:px-8">
+      <div class="space-y-1">
+        <p>&copy; {year} Neuera &middot; {t.madeBy}</p>
+        <p>
+          <a href="mailto:hello@neuera.app" class="hover:text-white">hello@neuera.app</a>
+          &middot; kalum.app
+        </p>
+      </div>
+      <ThemeSwitch {...t.theme} />
     </div>
   </div>
 </footer>

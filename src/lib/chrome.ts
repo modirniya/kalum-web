@@ -34,6 +34,13 @@ export interface Chrome {
   productLinks: { label: string; href: string }[];
   legalLinks: { label: string; href: string }[];
   madeBy: string;
+  /**
+   * The footer's appearance switch. English and Spanish are the app's own
+   * strings (kalum-mobile l10n: settingsSectionAppearance, settingsTheme*),
+   * so the site and the app name the setting the same way. The other
+   * locales use each platform's standard wording for the same setting.
+   */
+  theme: { label: string; system: string; light: string; dark: string };
   /** Aria label on the language link, per target. */
   switchTo: (target: "en" | "es") => string;
 }
@@ -68,6 +75,7 @@ export const CHROME: Record<Locale, Chrome> = {
     ],
     legalLinks: legalEn,
     madeBy: "Kalum is a product of Neuera",
+    theme: { label: "Appearance", system: "System", light: "Light", dark: "Dark" },
     switchTo: (t) => (t === "es" ? "Cambiar a español" : "Switch to English"),
   },
 
@@ -110,6 +118,7 @@ export const CHROME: Record<Locale, Chrome> = {
       { href: "/terms/", label: "Términos" },
     ],
     madeBy: "Kalum es un producto de Neuera",
+    theme: { label: "Apariencia", system: "Sistema", light: "Claro", dark: "Oscuro" },
     switchTo: (t) => (t === "es" ? "Cambiar a español" : "Switch to English"),
   },
 
@@ -138,6 +147,7 @@ export const CHROME: Record<Locale, Chrome> = {
       { href: "/terms/", label: "الشروط" },
     ],
     madeBy: "كالوم منتج من Neuera",
+    theme: { label: "المظهر", system: "النظام", light: "فاتح", dark: "داكن" },
     switchTo: (t) => (t === "es" ? "التبديل إلى الإسبانية" : "التبديل إلى الإنجليزية"),
   },
 
@@ -166,6 +176,7 @@ export const CHROME: Record<Locale, Chrome> = {
       { href: "/terms/", label: "Kullanım koşulları" },
     ],
     madeBy: "Kalum bir Neuera ürünüdür",
+    theme: { label: "Görünüm", system: "Sistem", light: "Açık", dark: "Koyu" },
     switchTo: (t) => (t === "es" ? "İspanyolcaya geç" : "İngilizceye geç"),
   },
 
@@ -194,6 +205,7 @@ export const CHROME: Record<Locale, Chrome> = {
       { href: "/terms/", label: "नियम व शर्तें" },
     ],
     madeBy: "Kalum, Neuera का प्रोडक्ट है",
+    theme: { label: "रूप", system: "सिस्टम", light: "लाइट", dark: "डार्क" },
     switchTo: (t) => (t === "es" ? "स्पैनिश में देखें" : "अंग्रेज़ी में देखें"),
   },
 
@@ -222,6 +234,7 @@ export const CHROME: Record<Locale, Chrome> = {
       { href: "/terms/", label: "شرائط" },
     ],
     madeBy: "Kalum ایک Neuera پروڈکٹ ہے",
+    theme: { label: "ظاہری شکل", system: "سسٹم", light: "لائٹ", dark: "ڈارک" },
     switchTo: (t) => (t === "es" ? "ہسپانوی میں دیکھیں" : "انگریزی میں دیکھیں"),
   },
 
@@ -250,6 +263,7 @@ export const CHROME: Record<Locale, Chrome> = {
       { href: "/terms/", label: "শর্তাবলি" },
     ],
     madeBy: "Kalum, Neuera-এর একটি প্রোডাক্ট",
+    theme: { label: "চেহারা", system: "সিস্টেম", light: "লাইট", dark: "ডার্ক" },
     switchTo: (t) => (t === "es" ? "স্প্যানিশে দেখুন" : "ইংরেজিতে দেখুন"),
   },
 
@@ -278,6 +292,7 @@ export const CHROME: Record<Locale, Chrome> = {
       { href: "/terms/", label: "Mga tuntunin" },
     ],
     madeBy: "Ang Kalum ay produkto ng Neuera",
+    theme: { label: "Hitsura", system: "System", light: "Light", dark: "Dark" },
     switchTo: (t) => (t === "es" ? "Lumipat sa Espanyol" : "Lumipat sa Ingles"),
   },
 
@@ -306,6 +321,7 @@ export const CHROME: Record<Locale, Chrome> = {
       { href: "/terms/", label: "Điều khoản" },
     ],
     madeBy: "Kalum là sản phẩm của Neuera",
+    theme: { label: "Giao diện", system: "Hệ thống", light: "Sáng", dark: "Tối" },
     switchTo: (t) => (t === "es" ? "Chuyển sang tiếng Tây Ban Nha" : "Chuyển sang tiếng Anh"),
   },
   id: {
@@ -333,6 +349,7 @@ export const CHROME: Record<Locale, Chrome> = {
       { href: "/terms/", label: "Ketentuan" },
     ],
     madeBy: "Kalum adalah produk Neuera",
+    theme: { label: "Tampilan", system: "Sistem", light: "Terang", dark: "Gelap" },
     switchTo: (t) => (t === "es" ? "Beralih ke bahasa Spanyol" : "Beralih ke bahasa Inggris"),
   },
   pt: {
@@ -360,6 +377,7 @@ export const CHROME: Record<Locale, Chrome> = {
       { href: "/terms/", label: "Termos" },
     ],
     madeBy: "O Kalum é um produto da Neuera",
+    theme: { label: "Aparência", system: "Sistema", light: "Claro", dark: "Escuro" },
     switchTo: (t) => (t === "es" ? "Mudar para espanhol" : "Mudar para inglês"),
   },
 };
