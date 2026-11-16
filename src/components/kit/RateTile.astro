@@ -38,9 +38,8 @@ const { href, name, dialCode, sub, from = "", rate, hreflang, class: cls = "" } 
     <span class="block font-semibold leading-snug">{name}</span>
     {sub && <span class="mt-0.5 block text-sm text-[var(--color-ink-2)]">{sub}</span>}
   </span>
-  <span class="flex shrink-0 items-center gap-2">
-    {from && <span class="text-sm text-[var(--color-ink-2)]">{from.trim()}</span>}
-    <span class="price-chip text-[0.9375rem]"><bdi>{rate}/min</bdi></span>
+  <span class="price-chip shrink-0 text-[0.9375rem]">
+    {from && <span class="me-1 text-[0.8125rem] font-medium opacity-80">{from.trim()}</span>}<bdi>{rate}/min</bdi>
   </span>
-  <Arrow class="size-4 shrink-0 text-[var(--color-ink-2)] transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+  <Arrow class="hidden size-4 shrink-0 text-[var(--color-ink-2)] transition-transform group-hover:translate-x-0.5 sm:inline-block rtl:group-hover:-translate-x-0.5" />
 </a>

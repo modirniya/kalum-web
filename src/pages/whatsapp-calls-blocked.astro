@@ -1,7 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import AppStoreBadge from "../components/AppStoreBadge.astro";
-import GooglePlayBadge from "../components/GooglePlayBadge.astro";
+import PageHero from "../components/kit/PageHero.astro";
+import StoreBadges from "../components/kit/StoreBadges.astro";
+import Faq from "../components/kit/Faq.astro";
+import RateTile from "../components/kit/RateTile.astro";
+import CtaBand from "../components/kit/CtaBand.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import RateDisclosure from "../components/RateDisclosure.astro";
 import { coverage } from "../lib/rates";
@@ -77,47 +80,36 @@ const structuredData = {
   description={description}
   canonical="https://kalum.app/whatsapp-calls-blocked/"
 >
-  <!-- Hero -->
-  <section class="brand-gradient relative overflow-hidden text-white">
-    <div class="absolute inset-0 opacity-[0.07]" aria-hidden="true">
-      <div class="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white blur-3xl"></div>
-      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[var(--color-teal)] blur-3xl"></div>
-    </div>
+  <PageHero section="">
+    <Breadcrumb items={[{ name: "Home", href: "/" }, { name: "Calling in the Gulf" }]} />
+    <p class="eyebrow text-[var(--color-teal-light)]">
+      When internet calls won't connect
+    </p>
+    <h1 class="text-display tracking-display mt-4 text-balance">
+      A calling app for the Gulf that dials real numbers.
+      <span class="block text-white/75">So it rings, even when app calls don't.</span>
+    </h1>
+    <p class="text-lead mt-5 max-w-2xl text-white/85">
+      In several Gulf countries, voice and video calls on many internet apps
+      are restricted. Kalum doesn't rely on those apps — it dials a regular
+      phone number over the phone network, so the person you're calling just
+      picks up.
+    </p>
 
-    <div class="relative mx-auto max-w-4xl px-5 py-20 md:px-8 md:py-28">
-      <Breadcrumb items={[{ name: "Home", href: "/" }, { name: "Calling in the Gulf" }]} />
-      <p class="eyebrow text-[var(--color-teal-light)]">
-        When internet calls won't connect
-      </p>
-      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-display sm:text-5xl lg:text-6xl">
-        A calling app for the Gulf that dials real numbers.
-        <span class="block text-white/85">So it rings, even when app calls don't.</span>
-      </h1>
-      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
-        In several Gulf countries, voice and video calls on many internet apps
-        are restricted. Kalum doesn't rely on those apps — it dials a regular
-        phone number over the phone network, so the person you're calling just
-        picks up.
-      </p>
+    <StoreBadges utm="kalum-web-whatsapp-blocked" class="mt-8" />
 
-      <div class="mt-9 flex flex-wrap items-center gap-4">
-        <AppStoreBadge size="lg" utm="kalum-web-whatsapp-blocked" />
-        <GooglePlayBadge size="lg" utm="kalum-web-whatsapp-blocked" />
-      </div>
-
-      <p class="mt-5 text-sm text-white/70">
-        Start with $4.99. No subscription. Credit never expires.
-      </p>
-    </div>
-  </section>
+    <p class="mt-4 text-sm text-white/70">
+      Start with $4.99. No subscription. Credit never expires.
+    </p>
+  </PageHero>
 
   <!-- Why internet calls get blocked -->
-  <section class="bg-white py-20 md:py-28">
-    <div class="mx-auto max-w-3xl px-5 md:px-8">
-      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+  <section class="py-12 md:py-16">
+    <div class="mx-auto max-w-6xl px-5 md:px-8 [&>*]:max-w-3xl">
+      <h2 class="text-title tracking-display text-balance">
         Why the call won't connect — and why Kalum does
       </h2>
-      <div class="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-muted)]">
+      <div class="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-ink-2)]">
         <p>
           Some countries restrict voice and video calls made over internet
           apps. Where that's the case, an app-to-app call can fail to connect
@@ -137,7 +129,7 @@ const structuredData = {
           calls are billed by the minute with a 60-second minimum.
           <a
             href="/how-it-works/"
-            class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+            class="link"
           >See how Kalum works &rarr;</a>
         </p>
       </div>
@@ -145,40 +137,23 @@ const structuredData = {
   </section>
 
   <!-- Where this comes up -->
-  <section class="bg-[var(--color-cream)] py-20 md:py-28">
-    <div class="mx-auto max-w-4xl px-5 md:px-8">
-      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+  <section class="py-12 md:py-16">
+    <div class="mx-auto max-w-6xl px-5 md:px-8 [&>*]:max-w-4xl">
+      <h2 class="text-title tracking-display text-balance">
         Calling the Gulf
       </h2>
-      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-ink-2)]">
         These are the destinations where callers most often run into internet
         app-call restrictions. With Kalum you dial the real number instead —
         landlines and mobiles alike, at the per-minute rate the app shows you
         before the call starts.
       </p>
 
-      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul class="mt-8 grid gap-3 md:grid-cols-2">
         {
           restricted.map((d) => (
             <li>
-              <a
-                href={`/call/${d.slug}/`}
-                class="flex items-center justify-between gap-4 rounded-2xl border border-black/5 bg-white p-5 shadow-sm transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
-              >
-                <span class="text-lg font-bold text-[var(--color-text)]">
-                  Call {d.name}
-                </span>
-                <span class="shrink-0 text-right">
-                  {from && (
-                    <span class="micro-label block text-[var(--color-muted)]">
-                      from
-                    </span>
-                  )}
-                  <span class="text-2xl font-extrabold tabular-nums text-[var(--color-maroon)]">
-                    {formatRate(d.rateCents)}<span class="text-sm font-semibold text-[var(--color-muted)]">/min</span>
-                  </span>
-                </span>
-              </a>
+              <RateTile href={`/call/${d.slug}/`} name={`Call ${d.name}`} dialCode={d.dialCode} from={from ? "from" : ""} rate={formatRate(d.rateCents)} />
             </li>
           ))
         }
@@ -186,11 +161,11 @@ const structuredData = {
 
       <RateDisclosure card={card} class="mt-6" />
 
-      <p class="mt-8 text-base text-[var(--color-muted)]">
+      <p class="mt-8 text-base text-[var(--color-ink-2)]">
         Comparing your options?
         <a
           href="/calling-app-vs-internet-calling/"
-          class="font-semibold text-[var(--color-maroon)] hover:text-[var(--color-maroon-light)] transition"
+          class="link"
         >Calling app vs internet calling apps &rarr;</a>
       </p>
     </div>
@@ -207,12 +182,12 @@ const structuredData = {
     daily. The corridor pages had one inbound link each and one of them had
     never been crawled at all. See src/lib/corridors.ts.
   -->
-  <section class="bg-white py-20 md:py-28">
-    <div class="mx-auto max-w-4xl px-5 md:px-8">
-      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+  <section class="py-12 md:py-16">
+    <div class="mx-auto max-w-6xl px-5 md:px-8 [&>*]:max-w-4xl">
+      <h2 class="text-title tracking-display text-balance">
         Calling home from the Gulf
       </h2>
-      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]">
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-ink-2)]">
         If you are the one in a country where app calls are restricted, these
         pages cover dialling out — the codes, the number formats, and what each
         route costs.
@@ -224,12 +199,12 @@ const structuredData = {
             <li>
               <a
                 href={c.path}
-                class="block h-full rounded-2xl border border-black/5 bg-[var(--color-cream)] p-6 transition hover:border-[var(--color-maroon)]/40 hover:shadow-md"
+                class="card block h-full p-6 transition-shadow hover:shadow-[var(--shadow-raised)]"
               >
-                <span class="block text-lg font-bold text-[var(--color-text)]">
+                <span class="block text-heading">
                   {c.label} &rarr;
                 </span>
-                <span class="mt-2 block text-base leading-relaxed text-[var(--color-muted)]">
+                <span class="mt-2 block text-base leading-relaxed text-[var(--color-ink-2)]">
                   {c.blurb}
                 </span>
               </a>
@@ -241,53 +216,19 @@ const structuredData = {
   </section>
 
   <!-- FAQ -->
-  <section class="bg-white py-20 md:py-28">
-    <div class="mx-auto max-w-3xl px-5 md:px-8">
-      <h2 class="text-3xl font-extrabold tracking-display text-[var(--color-text)] sm:text-4xl">
+  <section class="py-12 md:py-16">
+    <div class="mx-auto max-w-6xl px-5 md:px-8 [&>*]:max-w-3xl">
+      <h2 class="text-title tracking-display text-balance">
         Common questions
       </h2>
 
-      <ul class="mt-10 divide-y divide-black/10 border-y border-black/10">
-        {
-          faqs.map((faq) => (
-            <li>
-              <details class="group py-5">
-                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-semibold text-[var(--color-text)]">
-                  <span>{faq.q}</span>
-                  <span
-                    aria-hidden="true"
-                    class="mt-1 shrink-0 text-2xl font-light text-[var(--color-maroon)] transition-transform group-open:rotate-45"
-                  >
-                    +
-                  </span>
-                </summary>
-                <p class="mt-3 pr-10 text-base leading-relaxed text-[var(--color-muted)]">
-                  {faq.a}
-                </p>
-              </details>
-            </li>
-          ))
-        }
-      </ul>
+      <Faq items={faqs} class="mt-8" />
     </div>
   </section>
 
-  <!-- Final CTA -->
-  <section class="brand-gradient text-white">
-    <div class="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-20">
-      <h2 class="text-3xl font-extrabold tracking-display sm:text-4xl">
-        Reach them on a real phone.
-      </h2>
-      <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
-        Download Kalum, add $4.99 in credit, and dial any landline or mobile in
-        {countries}+ countries. Pay only for the minutes you use.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <AppStoreBadge size="lg" utm="kalum-web-whatsapp-blocked" />
-        <GooglePlayBadge size="lg" utm="kalum-web-whatsapp-blocked" />
-      </div>
-    </div>
-  </section>
+  <CtaBand title="Reach them on a real phone." utm="kalum-web-whatsapp-blocked" section="">
+    <Fragment slot="body">Download Kalum, add $4.99 in credit, and dial any landline or mobile in {countries}+ countries. Pay only for the minutes you use.</Fragment>
+  </CtaBand>
 
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 </BaseLayout>

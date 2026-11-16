@@ -28,8 +28,8 @@ const overhang = hasCard && variant !== "compact";
 ---
 
 <section
-  data-section={section}
-  class:list={["relative bg-[var(--color-brand)] text-white", cls]}
+  data-section={section || undefined}
+  class:list={["relative bg-[var(--color-brand)] text-white", overhang && "hero-has-card", cls]}
 >
   <div
     class:list={[

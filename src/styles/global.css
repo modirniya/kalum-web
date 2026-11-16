@@ -268,6 +268,7 @@ html[lang="ur"] h3 {
    shadow). In dark the shadow is dropped and the edge token draws an outline. */
 @utility card {
   background-color: var(--color-surface);
+  color: var(--color-ink);
   border: 1px solid var(--color-edge);
   border-radius: 0.75rem;
   box-shadow: var(--shadow-card);
@@ -387,6 +388,15 @@ html[lang="ur"] h3 {
   transition: text-decoration-color 150ms ease-out;
   &:hover {
     text-decoration-color: currentColor;
+  }
+}
+
+/* A hero that shares its row with a card gets a smaller display size: the
+   copy column is ~55% wide, and at full size "Call any Sudanese phone…" ran
+   to six lines. Unlayered so it beats the text-display utility. */
+@media (min-width: 64rem) {
+  .hero-has-card .text-display {
+    font-size: clamp(2.25rem, 2.2vw + 1.25rem, 3rem);
   }
 }
 
