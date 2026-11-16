@@ -2,26 +2,8 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-maroon: #420905;
-  --color-maroon-light: #6B1208;
-  --color-maroon-dark: #2A0603;
-  --color-teal: #38B2AC;
-  --color-teal-light: #4FD1C5;
-  /* Teal reads as a wash at text sizes on a light ground — 2.4:1 on cream.
-     The app darkens it the same way for light-mode labels and icons. */
-  --color-teal-ink: #0E8F86;
-  --color-navy: #1A1A2E;
-  /* Warm neutrals, matching the app's light theme rather than the cool
-     blue-greys the site launched with. --color-muted carries ~87 body
-     paragraphs and was failing AA at 3.83:1 on cream; this is 5.54:1. */
-  --color-cream: #FAF6EE;
-  --color-text: #241E1B;
-  --color-muted: #6B6259;
-  --color-success: #48BB78;
-  --color-error: #F56565;
-
   /* ---- Semantic tokens (design-system/kalum/MASTER.md §3) ----
-     Components use these, never the brand names above or raw hex: each one
+     Components use these, never raw hex: each one
      is a role from kalum-mobile's AppTheme, and dark mode (below) swaps the
      values without a single dark: class in the markup. Light values are the
      app's light theme. */
@@ -43,6 +25,9 @@
      both modes, like the maroon it sits on. */
   --color-pill: #FAF6EE;
   --color-on-pill: #420905;
+  /* Teal on maroon: eyebrows and links inside the hero and CTA band. The
+     app's accentLight; 8.8:1 on the brand maroon. */
+  --color-on-brand-accent: #4FD1C5;
   /* Buttons on the page body. In dark the app lifts these to maroon-light. */
   --color-primary: #420905;
   --color-primary-hover: #6B1208;
@@ -221,15 +206,6 @@ html[lang="ur"] h3 {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-}
-
-@utility brand-gradient {
-  background-image: linear-gradient(
-    135deg,
-    var(--color-maroon) 0%,
-    var(--color-maroon-dark) 45%,
-    var(--color-navy) 100%
-  );
 }
 
 /* ---- Type scale (MASTER.md §4), from the app's AppTypography ----

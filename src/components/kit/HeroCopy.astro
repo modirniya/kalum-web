@@ -17,7 +17,7 @@ interface Props {
 const { eyebrow, title, accent, lead, size = "display" } = Astro.props;
 ---
 
-{eyebrow && <p class="eyebrow text-[var(--color-teal-light)]">{eyebrow}</p>}
+{eyebrow && <p class="eyebrow text-[var(--color-on-brand-accent)]">{eyebrow}</p>}
 <h1
   class:list={[
     "tracking-display text-balance",

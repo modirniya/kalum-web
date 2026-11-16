@@ -258,17 +258,38 @@ So every design that shows a rate must:
 
 ---
 
-## 9. Rollout order
+## 9. As built (2026-11-16)
 
-1. **Tokens.** Add semantic tokens and dark mode to `global.css`, and alias
-   the old names (`--color-maroon`, `--color-cream`…) so nothing breaks.
-2. **Kit.** Build `PageHero`, `CtaBand`, `Section`, `Card`, `StepList`,
-   `RateCard`, `FAQ`, `CompareTable`, `LinkChips`, `Prose`, and restyle the
-   Header and Footer.
-3. **Utility layout:** support, join, 404, privacy, terms. These are the
-   smallest pages and prove the kit.
-4. **Landing layout:** no-internet ×11 (proves RTL), destination ×46,
-   corridor ×4, editorial, how it works, rates hub.
-5. **Showcase:** home (en, es).
-6. **Remove** `brand-gradient` and the old aliases, then run a full-site
-   screenshot QA pass.
+All six rollout steps are done; every page renders through the kit.
+
+| Piece | Where |
+|---|---|
+| Tokens, dark mode, type scale, `card` / `price-chip` / `dial-tag` / `btn-*` / `field` / `link` utilities | `src/styles/global.css` |
+| Dark-mode switch (`html.theme-auto`, follows the OS) | `src/layouts/BaseLayout.astro` |
+| `PageHero` (+ `Wave`, `HeroCopy`), `Section`, `CtaBand`, `StoreBadges` | `src/components/kit/` |
+| `Faq`, `Steps`, `LinkChips`, `RateTile`, `RateCard` (hero rate), `PhoneMockup`, `Arrow` | `src/components/kit/` |
+| Mobile sticky pill | `src/components/kit/StickyCta.astro`, mounted in BaseLayout |
+
+Layouts in use:
+
+- **Showcase:** `/`, `/es/`; the ad page `/call-mexico/` (bare chrome).
+- **Landing:** how it works (en, es), no-internet (11 locales), destinations
+  (`/call/*`, `/es/call/*`), rates hub (en, es), UAE corridors, the Gulf
+  explainer, the comparison article.
+- **Utility:** support, join, 404, privacy, terms.
+
+Checks the redesign was verified against: `npm run build` (including
+`check:parity`, 27 pages in 9 groups), `astro check` (0 errors), every
+`data-section` marker unchanged, no horizontal overflow at 375 / 768 / 1024 /
+1440 px, and an automated WCAG text-contrast scan of every page family in
+light and dark (0 failures).
+
+**Rules for new pages**
+
+1. Compose from the kit; don't hand-write heroes, FAQs, CTA bands or rate
+   cards.
+2. Use semantic tokens only (`--color-ink`, `--color-surface`…). Raw hex and
+   `bg-white` / `text-black` break dark mode.
+3. Any rate goes through `RateTile` / `RateCard` / `LinkChips` with its
+   "from", plus a `RateDisclosure` nearby (§6a).
+4. Keep `data-section` on every role a translated twin must also have.
