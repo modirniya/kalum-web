@@ -178,6 +178,18 @@ const structuredData = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#420905" />
+    <!--
+      Restore the visitor's appearance choice (kit/ThemeSwitch) before first
+      paint, so a reader who picked Light on a dark phone never sees a dark
+      flash. No saved choice means System: nothing is set and the CSS follows
+      prefers-color-scheme.
+    -->
+    <script is:inline>
+      try {
+        var t = localStorage.getItem("kalum-theme");
+        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
     <meta name="generator" content={Astro.generator} />
 
     <title>{title}</title>

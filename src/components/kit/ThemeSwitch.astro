@@ -1,0 +1,109 @@
+---
+/**
+ * Appearance switch: System / Light / Dark, the app's own three choices
+ * (kalum-mobile ThemeCubit, default ThemeMode.system). Sits in the footer.
+ *
+ * The choice is saved in localStorage ("kalum-theme") and restored by the
+ * inline script in BaseLayout's <head> before first paint, so a reader who
+ * picked Light never sees a dark flash. "System" removes both, and the page
+ * follows prefers-color-scheme again. Storage failing (private mode, blocked
+ * site data) only means the choice lasts for this page view.
+ *
+ * Without JS the buttons are inert and the site follows the OS, which is
+ * the default anyway.
+ */
+interface Props {
+  label: string;
+  system: string;
+  light: string;
+  dark: string;
+}
+const { label, system, light, dark } = Astro.props;
+
+const options = [
+  {
+    value: "system",
+    text: system,
+    // lucide monitor
+    path: '<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  },
+  {
+    value: "light",
+    text: light,
+    // lucide sun
+    path: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+  },
+  {
+    value: "dark",
+    text: dark,
+    // lucide moon
+    path: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  },
+];
+---
+
+<div class="flex flex-wrap items-center gap-3" data-theme-switch>
+  <span class="micro-label text-white" id="theme-switch-label">{label}</span>
+  <div
+    role="group"
+    aria-labelledby="theme-switch-label"
+    class="inline-flex rounded-full bg-white/10 p-1 ring-1 ring-white/10"
+  >
+    {
+      options.map((o) => (
+        <button
+          type="button"
+          data-theme-value={o.value}
+          aria-pressed={o.value === "system" ? "true" : "false"}
+          class="inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-white/75 transition-colors hover:text-white aria-pressed:bg-[var(--color-pill)] aria-pressed:text-[var(--color-on-pill)]"
+        >
+          <svg
+            class="size-4 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            set:html={o.path}
+          />
+          {o.text}
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  const KEY = "kalum-theme";
+  const root = document.documentElement;
+
+  const read = (): string => {
+    try {
+      const v = localStorage.getItem(KEY);
+      return v === "light" || v === "dark" ? v : "system";
+    } catch {
+      return root.dataset.theme ?? "system";
+    }
+  };
+
+  const apply = (value: string) => {
+    if (value === "light" || value === "dark") root.dataset.theme = value;
+    else delete root.dataset.theme;
+    try {
+      if (value === "system") localStorage.removeItem(KEY);
+      else localStorage.setItem(KEY, value);
+    } catch {
+      /* storage blocked: the choice lasts for this page view */
+    }
+    document.querySelectorAll<HTMLButtonElement>("[data-theme-value]").forEach((b) => {
+      b.setAttribute("aria-pressed", String(b.dataset.themeValue === value));
+    });
+  };
+
+  apply(read());
+  document.querySelectorAll<HTMLButtonElement>("[data-theme-value]").forEach((b) => {
+    b.addEventListener("click", () => apply(b.dataset.themeValue!));
+  });
+</script>

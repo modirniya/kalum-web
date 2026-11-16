@@ -53,32 +53,46 @@
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Dark mode: the app's dark theme, following the OS like the app's
-   ThemeMode.system. Only the semantic tokens change; the brand maroon stays.
-   Cards use the app's navy-tinted call-screen surfaces, because its neutral
-   #1E1E1E disappears on the navy page (1.02:1).
+/* Dark mode: the app's dark theme. Only the semantic tokens change; the
+   brand maroon stays. Cards use the app's navy-tinted call-screen surfaces,
+   because its neutral #1E1E1E disappears on the navy page (1.02:1).
 
-   Scoped to html.theme-auto so it can be switched on in one place;
-   BaseLayout sets the class. Unlayered, so it beats the @theme defaults. */
+   Like the app's ThemeMode setting there are three choices, made in the
+   footer's ThemeSwitch and saved per visitor:
+     - System (default, no data-theme): follows prefers-color-scheme.
+     - Light (data-theme="light"): light even on a dark OS.
+     - Dark  (data-theme="dark"): dark even on a light OS.
+   BaseLayout restores the saved choice in <head> before first paint. The
+   token values live once, in dark-tokens, and are applied from both places.
+   Unlayered, so they beat the @theme defaults. */
+@utility dark-tokens {
+  color-scheme: dark;
+  --color-bg: #1A1A2E;        /* darkBackground */
+  --color-surface: #25253B;   /* darkCallSurface */
+  --color-surface-2: #2F2F48; /* darkCallRaised */
+  --color-outline: #3A3A55;   /* darkCallOutline */
+  --color-edge: #3A3A55;
+  --color-ink: #E2E8F0;       /* darkTextPrimary — 13.8:1 on navy */
+  --color-ink-2: #A0AEC0;     /* darkTextSecondary — 6.6:1 on surface */
+  --color-primary: #6B1208;   /* colorScheme.primary (dark) */
+  --color-primary-hover: #84180B;
+  --color-accent: #4FD1C5;    /* accentLight */
+  --color-link: #4FD1C5;      /* 9.15:1 on navy */
+  --color-danger: #F56565;    /* 5.6:1 on navy */
+  --shadow-card: 0 0 #0000;
+  --shadow-raised: 0 0 #0000;
+  --shadow-float: 0 8px 24px rgb(0 0 0 / 0.35);
+}
 @media (prefers-color-scheme: dark) {
-  html.theme-auto {
-    color-scheme: dark;
-    --color-bg: #1A1A2E;        /* darkBackground */
-    --color-surface: #25253B;   /* darkCallSurface */
-    --color-surface-2: #2F2F48; /* darkCallRaised */
-    --color-outline: #3A3A55;   /* darkCallOutline */
-    --color-edge: #3A3A55;
-    --color-ink: #E2E8F0;       /* darkTextPrimary — 13.8:1 on navy */
-    --color-ink-2: #A0AEC0;     /* darkTextSecondary — 6.6:1 on surface */
-    --color-primary: #6B1208;   /* colorScheme.primary (dark) */
-    --color-primary-hover: #84180B;
-    --color-accent: #4FD1C5;    /* accentLight */
-    --color-link: #4FD1C5;      /* 9.15:1 on navy */
-    --color-danger: #F56565;    /* 5.6:1 on navy */
-    --shadow-card: 0 0 #0000;
-    --shadow-raised: 0 0 #0000;
-    --shadow-float: 0 8px 24px rgb(0 0 0 / 0.35);
+  html.theme-auto:not([data-theme="light"]) {
+    @apply dark-tokens;
   }
+}
+html.theme-auto[data-theme="dark"] {
+  @apply dark-tokens;
+}
+html.theme-auto[data-theme="light"] {
+  color-scheme: light;
 }
 
 @layer base {
